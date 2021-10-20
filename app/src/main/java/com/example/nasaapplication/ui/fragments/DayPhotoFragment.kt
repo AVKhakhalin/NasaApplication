@@ -5,7 +5,9 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -14,12 +16,17 @@ import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.observers.viewmodels.PODData
 import com.example.nasaapplication.controller.observers.viewmodels.PODViewModel
 import com.example.nasaapplication.databinding.FragmentDayPhotoBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class DayPhotoFragment: Fragment() {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     private val viewModel: PODViewModel by lazy {
         ViewModelProviders.of(this).get(PODViewModel::class.java)
     }
+    // BottomSheet
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    private lateinit var bottomSheetDescriptionTitle: TextView
+    private lateinit var bottomSheetDescriptionText: TextView
     // Binding
     private var _binding: FragmentDayPhotoBinding? = null
     private val binding: FragmentDayPhotoBinding
@@ -39,7 +46,6 @@ class DayPhotoFragment: Fragment() {
             .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
     }
 
-
     private fun renderData(data: PODData) {
         when (data) {
             is PODData.Success -> {
@@ -55,6 +61,10 @@ class DayPhotoFragment: Fragment() {
                         error(R.drawable.ic_load_error_vector)
 //                        placeholder(R.drawable.ic_downloading)
                     }
+                    // Показать описание фотографии дня
+                    bottomSheetDescriptionTitle.setText(serverResponseData.title)
+                    bottomSheetDescriptionText.setText(serverResponseData.explanation)
+
                     binding.pODImageView.visibility = View.VISIBLE
                     binding.pODLoadingLayout.visibility = View.INVISIBLE
                 }
@@ -92,4 +102,18 @@ class DayPhotoFragment: Fragment() {
         super.onDestroy()
         _binding = null
     }
+
+    //region МЕТОДЫ РАБОТЫ С BottomSheet
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setBottomSheetBehavior(view.findViewById(R.id.bottom_sheet_container))
+        bottomSheetDescriptionTitle = view.findViewById(R.id.bottom_sheet_description_title)
+        bottomSheetDescriptionText = view.findViewById(R.id.bottom_sheet_description_text)
+    }
+
+    private fun setBottomSheetBehavior(bottomSheet: ConstraintLayout) {
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+    //endregion
 }

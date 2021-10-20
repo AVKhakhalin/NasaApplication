@@ -16,5 +16,8 @@
 
     <!-- Основные цвета окна -->
     <color name="activity_background">#54EBF9</color>
+    <color name="bottom_sheet_line_color">#663b4351</color>
+    <color name="bottom_sheet_description_title_text_color">#000</color>
+    <color name="bottom_sheet_background_color">#B4F6FD</color>
 
 </resources>

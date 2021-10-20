@@ -26,6 +26,7 @@ class PODViewModel (
         if (ConstantsController.API_KEY.isBlank()) {
             PODData.Error(Throwable(ConstantsController.ERROR_NO_API_KEY))
         } else {
+            val proba: String = getCurDate()
             retrofitImpl.getRetrofitImpl().getPictureOfTheDay(getCurDate(), ConstantsController.API_KEY).enqueue(object:
                 Callback<PODServerResponseData> {
                 override fun onResponse(

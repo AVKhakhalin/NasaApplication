@@ -12,4 +12,6 @@
     <string name="error">Ошибка</string>
     <string name="error_need_api_key">Вам нужен API-ключ.</string>
     <string name="error_unknown">Неизвестная ошибка.</string>
+    <string name="bottom_sheet_description_title_text" />
+    <string name="bottom_sheet_description_text_text" />
 </resources>
