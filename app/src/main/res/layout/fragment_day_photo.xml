@@ -2,30 +2,51 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/main"
+            android:id="@+id/main_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp">
+            android:paddingStart="@dimen/main_constraint_layout_padding_start"
+            android:paddingEnd="@dimen/main_constraint_layout_padding_end"
+            android:layout_gravity="center">
+
+            <FrameLayout
+                android:id="@+id/p_o_d_loading_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                tools:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" >
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:indeterminateDrawable="@drawable/progress_bar_spinner"
+                    android:indeterminateOnly="true" />
+                    <!--android:indeterminateTint="@color/white"/>-->
+            </FrameLayout>
 
             <com.example.nasaapplication.ui.utils.LoadedImageView
-                android:id="@+id/image_view"
+                android:id="@+id/p_o_d_image_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_height="match_parent"
                 android:contentDescription="@string/photo_of_the_day_stub"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_downloading" />
+                app:layout_constraintTop_toTopOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 

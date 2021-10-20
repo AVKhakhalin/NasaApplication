@@ -3,11 +3,13 @@ package com.example.nasaapplication.ui.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.nasaapplication.R
+import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.controller.navigation.NavigationContent
 
 class MainActivity : AppCompatActivity() {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
-    val navigationContent: NavigationContent = NavigationContent(supportFragmentManager)
+    private val navigationContent: NavigationContent = NavigationContent(supportFragmentManager)
+    private val constantsController: ConstantsController = ConstantsController(this)
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {

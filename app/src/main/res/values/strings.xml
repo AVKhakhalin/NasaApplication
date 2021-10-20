@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">NasaApplication</string>
 
-    <string name="photo_of_the_day_stub">Photo of the day</string>
+    <string name="photo_of_the_day_stub">Фотография дня</string>
     <string name="search_in_wiki">Найти в Википедии</string>
     <string name="wiki_helper_text">Поищите термин в википедии</string>
-    <string name="favourite">favourite</string>
-    <string name="settings">settings</string>
-    <string name="search">Search</string>
+    <string name="favourite">Любимое</string>
+    <string name="settings">Настройки</string>
+    <string name="search">Поиск</string>
+
+    <!-- Переменные для сообщений об ошибках -->
+    <string name="error">Ошибка</string>
+    <string name="error_need_api_key">Вам нужен API-ключ.</string>
+    <string name="error_unknown">Неизвестная ошибка.</string>
 </resources>
