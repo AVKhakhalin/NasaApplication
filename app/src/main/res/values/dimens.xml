@@ -11,4 +11,5 @@
     <dimen name="bottom_sheet_description_title_padding_end">10dp</dimen>
     <dimen name="bottom_sheet_description_text_padding_start">10dp</dimen>
     <dimen name="bottom_sheet_description_text_padding_end">10dp</dimen>
+    <dimen name="input_wiki_field_width">0dp</dimen>
 </resources>

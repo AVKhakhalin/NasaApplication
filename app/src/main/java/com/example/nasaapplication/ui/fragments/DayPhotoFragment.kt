@@ -1,6 +1,10 @@
 package com.example.nasaapplication.ui.fragments
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +20,9 @@ import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.observers.viewmodels.PODData
 import com.example.nasaapplication.controller.observers.viewmodels.PODViewModel
 import com.example.nasaapplication.databinding.FragmentDayPhotoBinding
+import com.example.nasaapplication.ui.ConstantsUi
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+
 
 class DayPhotoFragment: Fragment() {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
@@ -88,7 +94,6 @@ class DayPhotoFragment: Fragment() {
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -109,6 +114,20 @@ class DayPhotoFragment: Fragment() {
         setBottomSheetBehavior(view.findViewById(R.id.bottom_sheet_container))
         bottomSheetDescriptionTitle = view.findViewById(R.id.bottom_sheet_description_title)
         bottomSheetDescriptionText = view.findViewById(R.id.bottom_sheet_description_text)
+
+        binding.inputWikiField.setEndIconOnClickListener {
+            if ((binding.inputWikiFieldText.text != null) &&
+                (binding.inputWikiFieldText.text!!.length <=
+                        binding.inputWikiField.counterMaxLength)) {
+                startActivity(Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(
+                        "${ConstantsUi.WIKI_URL}${
+                            binding.inputWikiFieldText.text.toString()
+                        }"
+                    )
+                })
+            }
+        }
     }
 
     private fun setBottomSheetBehavior(bottomSheet: ConstraintLayout) {

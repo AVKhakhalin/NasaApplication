@@ -2,11 +2,8 @@
     <string name="app_name">NasaApplication</string>
 
     <string name="photo_of_the_day_stub">Фотография дня</string>
-    <string name="search_in_wiki">Найти в Википедии</string>
-    <string name="wiki_helper_text">Поищите термин в википедии</string>
-    <string name="favourite">Любимое</string>
-    <string name="settings">Настройки</string>
-    <string name="search">Поиск</string>
+    <string name="input_wiki_field_hint">Найти в Википедии</string>
+    <string name="input_wiki_field_text">Поищите интересный термин в Википедии</string>
 
     <!-- Переменные для сообщений об ошибках -->
     <string name="error">Ошибка</string>
