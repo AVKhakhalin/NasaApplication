@@ -16,7 +16,12 @@ class PODViewModel (
     private val retrofitImpl: PODRetrofitImpl = PODRetrofitImpl()
 ): ViewModel() {
 
-    fun getData(): LiveData<PODData> {
+    //region ЗАДАНИЕ ПЕРЕМЕННЫХ
+    private var curDate: String = ""
+    //endregion
+
+    fun getData(curDate: String): LiveData<PODData> {
+        this.curDate = curDate
         sendServerRequest()
         return liveDataForViewToObserve
     }
@@ -56,10 +61,14 @@ class PODViewModel (
 
     // Получить текущую дату и выдать её в формате YYYY-MM-DD типа String
     fun getCurDate(): String {
-        val calendar: Calendar = Calendar.getInstance(TimeZone.getDefault())
-        val dateYear: Int = calendar.get(Calendar.YEAR)
-        val dateMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val dateDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
-        return "$dateYear-${if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}-${if (dateDay < 10) "0$dateDay" else "$dateDay"}"
+        if (curDate == "") {
+            val calendar: Calendar = Calendar.getInstance(TimeZone.getDefault())
+            val dateYear: Int = calendar.get(Calendar.YEAR)
+            val dateMonth: Int = calendar.get(Calendar.MONTH) + 1
+            val dateDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
+            return "$dateYear-${if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}-${if (dateDay < 10) "0$dateDay" else "$dateDay"}"
+        } else {
+            return curDate
+        }
     }
 }

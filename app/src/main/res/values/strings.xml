@@ -14,4 +14,5 @@
     <string name="app_bar_settings_title">Настройки</string>
     <string name="app_bar_save_title">Сохранить</string>
     <string name="app_bar_search_title">Поиск</string>
+    <string name="fragment_day_photo_current_date_text_view_text">\"Фотография дня\" от 21.10.2021</string>
 </resources>

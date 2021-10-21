@@ -13,11 +13,10 @@
             android:id="@+id/main_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:paddingStart="@dimen/main_constraint_layout_padding_start"
             android:paddingEnd="@dimen/main_constraint_layout_padding_end">
 
-            <com.google.android.material.textfield.TextInputLayout
+             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_wiki_field"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="@dimen/input_wiki_field_width"
@@ -29,7 +28,7 @@
                 app:endIconDrawable="@drawable/ic_wikipedia"
                 app:endIconMode="custom"
                 app:helperText="@string/input_wiki_field_text"
-                app:layout_constraintBottom_toTopOf="@+id/p_o_d_image_view"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
@@ -40,6 +39,53 @@
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.chip.Chip
+                android:id="@+id/button_before_yesterday_photo"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Позавчера"
+                android:textColor="@color/white"
+                app:chipBackgroundColor="@color/color_accent"
+                app:rippleColor="@color/color_primary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/input_wiki_field" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/button_yesterday_photo"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Вчера"
+                android:textColor="@color/white"
+                app:chipBackgroundColor="@color/color_accent"
+                app:rippleColor="@color/color_primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/input_wiki_field" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/button_today_photo"
+                style="@style/Widget.MaterialComponents.Chip.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Сегодня"
+                android:textColor="@color/white"
+                app:chipBackgroundColor="@color/color_accent"
+                app:rippleColor="@color/color_primary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/input_wiki_field" />
+
+            <TextView
+                android:id="@+id/fragment_day_photo_current_date_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_day_photo_current_date_text_view_text"
+                android:textStyle="bold"
+                android:textSize="@dimen/fragment_day_photo_current_date_text_view_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button_yesterday_photo" />
 
             <FrameLayout
                 android:id="@+id/p_o_d_loading_layout"
@@ -68,7 +114,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/fragment_day_photo_current_date_text_view" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 

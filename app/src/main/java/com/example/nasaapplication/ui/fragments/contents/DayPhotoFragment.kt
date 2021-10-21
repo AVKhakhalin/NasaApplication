@@ -15,21 +15,28 @@ import androidx.lifecycle.ViewModelProviders
 import coil.load
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
-import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogsGetter
 import com.example.nasaapplication.controller.observers.viewmodels.PODData
 import com.example.nasaapplication.controller.observers.viewmodels.PODViewModel
 import com.example.nasaapplication.databinding.FragmentDayPhotoBinding
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
-import com.example.nasaapplication.ui.fragments.dialogs.BottomNavigationDrawerDialogFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.chip.Chip
+import java.util.*
 
 
 class DayPhotoFragment: Fragment() {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // NavigationDialogs
     private var navigationDialogs: NavigationDialogs? = null
+    // Chips
+    private var buttonChipYesterday: Chip? = null
+    private var buttonChipToday: Chip? = null
+    private var buttonChipBeforeYesterday: Chip? = null
+    // TextView с датой
+    private var currentDateTextView: TextView? = null
+    private var curDate: String = ""
     // ViewModel
     private val viewModel: PODViewModel by lazy {
         ViewModelProviders.of(this).get(PODViewModel::class.java)
@@ -58,7 +65,7 @@ class DayPhotoFragment: Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.getData()
+        viewModel.getData(curDate)
 //            .observe(this@DayPhotoFragment, Observer<PODData> { renderData(it) })
             .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
     }
@@ -70,7 +77,7 @@ class DayPhotoFragment: Fragment() {
                 val url = serverResponseData.url
                 if (url.isNullOrEmpty()) {
                     //showError("Сообщение, что ссылка пустая")
-                    toast("Link is empty")
+                    toast(ConstantsUi.ERROR_LINK_EMPTY)
                 } else {
                     //showSuccess()
                     binding.pODImageView.load(url) {
@@ -79,8 +86,8 @@ class DayPhotoFragment: Fragment() {
 //                        placeholder(R.drawable.ic_downloading)
                     }
                     // Показать описание фотографии дня
-                    bottomSheetDescriptionTitle.setText(serverResponseData.title)
-                    bottomSheetDescriptionText.setText(serverResponseData.explanation)
+                    bottomSheetDescriptionTitle.text = serverResponseData.title
+                    bottomSheetDescriptionText.text = serverResponseData.explanation
 
                     binding.pODImageView.visibility = View.VISIBLE
                     binding.pODLoadingLayout.visibility = View.INVISIBLE
@@ -142,6 +149,41 @@ class DayPhotoFragment: Fragment() {
 
         // Установка BOTTOM MENU
         setBottomAppBar(view)
+
+        // Инициализация текстового блока для отображения текущей даты
+        currentDateTextView = view.findViewById(R.id.fragment_day_photo_current_date_text_view)
+
+        // Инициализация и настройка Chip-кнопок
+        if (currentDateTextView != null) {
+            buttonChipToday = view.findViewById(R.id.button_today_photo)
+            buttonChipToday?.let {
+                it.setOnClickListener {
+                    currentDateTextView!!.text =
+                        "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(0)}"
+                    viewModel.getData(curDate)
+                        .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
+
+                }
+            }
+            buttonChipYesterday = view.findViewById(R.id.button_yesterday_photo)
+            buttonChipYesterday?.let {
+                it.setOnClickListener {
+                    currentDateTextView!!.text =
+                        "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-1)}"
+                    viewModel.getData(curDate)
+                        .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
+                }
+            }
+            buttonChipBeforeYesterday = view.findViewById(R.id.button_before_yesterday_photo)
+            buttonChipBeforeYesterday?.let {
+                it.setOnClickListener {
+                    currentDateTextView!!.text =
+                        "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-2)}"
+                    viewModel.getData(curDate)
+                        .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
+                }
+            }
+        }
     }
 
     private fun setBottomSheetBehavior(bottomSheet: ConstraintLayout) {
@@ -190,4 +232,14 @@ class DayPhotoFragment: Fragment() {
         return super.onOptionsItemSelected(item)
     }
     //endregion
+
+    private fun getDate(deltaDayDate: Int): String {
+        val calendar: Calendar = Calendar.getInstance(TimeZone.getDefault())
+        calendar.add(Calendar.DATE, deltaDayDate)
+        val dateYear: Int = calendar.get(Calendar.YEAR)
+        val dateMonth: Int = calendar.get(Calendar.MONTH) + 1
+        val dateDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
+        curDate = "$dateYear-${if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}-${if (dateDay < 10) "0$dateDay" else "$dateDay"}"
+        return "${if (dateDay < 10) "0$dateDay" else "$dateDay"}.${if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}.$dateYear"
+    }
 }
