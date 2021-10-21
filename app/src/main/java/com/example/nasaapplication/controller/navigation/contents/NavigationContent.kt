@@ -1,8 +1,8 @@
-package com.example.nasaapplication.controller.navigation
+package com.example.nasaapplication.controller.navigation.contents
 
 import androidx.fragment.app.FragmentManager
 import com.example.nasaapplication.R
-import com.example.nasaapplication.ui.fragments.DayPhotoFragment
+import com.example.nasaapplication.ui.fragments.contents.DayPhotoFragment
 
 class NavigationContent(
     private val fragmentManager: FragmentManager

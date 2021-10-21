@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/navigation_to_archive"
+            android:icon="@drawable/ic_archive"
+            android:title="Перейти в архив" />
+        <item
+            android:id="@+id/navigation_to_send"
+            android:icon="@drawable/ic_send"
+            android:title="Перейти к отправке" />
+        <item
+            android:id="@+id/navigation_to_observe"
+            android:icon="@drawable/ic_telescope"
+            android:title="На экран 3" />
+    </group>
+</menu>

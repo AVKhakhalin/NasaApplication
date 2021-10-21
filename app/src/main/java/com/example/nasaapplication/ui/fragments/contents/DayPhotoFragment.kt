@@ -1,31 +1,36 @@
-package com.example.nasaapplication.ui.fragments
+package com.example.nasaapplication.ui.fragments.contents
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import coil.load
 import com.example.nasaapplication.R
+import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
+import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogsGetter
 import com.example.nasaapplication.controller.observers.viewmodels.PODData
 import com.example.nasaapplication.controller.observers.viewmodels.PODViewModel
 import com.example.nasaapplication.databinding.FragmentDayPhotoBinding
 import com.example.nasaapplication.ui.ConstantsUi
+import com.example.nasaapplication.ui.activities.MainActivity
+import com.example.nasaapplication.ui.fragments.dialogs.BottomNavigationDrawerDialogFragment
+import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
 class DayPhotoFragment: Fragment() {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
+    // NavigationDialogs
+    private var navigationDialogs: NavigationDialogs? = null
+    // ViewModel
     private val viewModel: PODViewModel by lazy {
         ViewModelProviders.of(this).get(PODViewModel::class.java)
     }
@@ -43,6 +48,12 @@ class DayPhotoFragment: Fragment() {
 
     companion object {
         fun newInstance() = DayPhotoFragment()
+        private var isMain = true
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        navigationDialogs = (context as MainActivity).getNavigationDialogs()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -128,11 +139,55 @@ class DayPhotoFragment: Fragment() {
                 })
             }
         }
+
+        // Установка BOTTOM MENU
+        setBottomAppBar(view)
     }
 
     private fun setBottomSheetBehavior(bottomSheet: ConstraintLayout) {
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+    //endregion
+
+    //region МЕТОДЫ ДЛЯ РАБОТЫ С BOTTOM MENU
+    private fun setBottomAppBar(view: View) {
+        val context = activity as MainActivity
+        context.setSupportActionBar(binding.bottomAppBar)
+        setHasOptionsMenu(true)
+        binding.bottomAppBarFab.setOnClickListener {
+            if (isMain) {
+                isMain = false
+                binding.bottomAppBar.navigationIcon = null
+                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+                binding.bottomAppBarFab.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_back_fab))
+                binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar_other_screen)
+            } else {
+                isMain = true
+                binding.bottomAppBar.navigationIcon =
+                    ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
+                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+                binding.bottomAppBarFab.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_plus_fab))
+                binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
+            }
+        }
+    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+//        inflater.inflate(R.menu.bottom_menu_bottom_bar, menu)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.app_bar_save -> toast("Сохранение")
+            R.id.app_bar_settings -> toast("Настройки")
+            R.id.app_bar_search -> toast("Поиск")
+            android.R.id.home -> {
+                navigationDialogs?.let {
+                    it.showBottomNavigationDrawerDialogFragment(requireActivity())
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
     //endregion
 }

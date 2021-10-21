@@ -11,4 +11,7 @@
     <string name="error_unknown">Неизвестная ошибка.</string>
     <string name="bottom_sheet_description_title_text" />
     <string name="bottom_sheet_description_text_text" />
+    <string name="app_bar_settings_title">Настройки</string>
+    <string name="app_bar_save_title">Сохранить</string>
+    <string name="app_bar_search_title">Поиск</string>
 </resources>

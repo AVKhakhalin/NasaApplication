@@ -1,15 +1,21 @@
 package com.example.nasaapplication.ui.activities
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.View
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.ConstantsController
-import com.example.nasaapplication.controller.navigation.NavigationContent
+import com.example.nasaapplication.controller.navigation.contents.NavigationContent
+import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
+import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogsGetter
 
-class MainActivity : AppCompatActivity() {
+class MainActivity: AppCompatActivity(), NavigationDialogsGetter {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     private val navigationContent: NavigationContent = NavigationContent(supportFragmentManager)
-    private val constantsController: ConstantsController = ConstantsController(this)
+    private val navigationDialogs: NavigationDialogs = NavigationDialogs()
+    private val constantsController: ConstantsController = ConstantsController()
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,5 +24,9 @@ class MainActivity : AppCompatActivity() {
 
         // Запуск фрагмента с картинкой дня
         navigationContent.showDayPhotoFragment(false)
+    }
+
+    override fun getNavigationDialogs(): NavigationDialogs {
+        return navigationDialogs
     }
 }
