@@ -18,15 +18,11 @@
 
              <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_wiki_field"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/CustomOutlinedBox"
                 android:layout_width="@dimen/input_wiki_field_width"
                 android:layout_height="wrap_content"
                 android:hint="@string/input_wiki_field_hint"
-                app:counterEnabled="true"
-                app:counterMaxLength="20"
                 app:endIconCheckable="true"
-                app:endIconDrawable="@drawable/ic_wikipedia"
-                app:endIconMode="custom"
                 app:helperText="@string/input_wiki_field_text"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -41,43 +37,35 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/button_before_yesterday_photo"
-                style="@style/Widget.MaterialComponents.Chip.Action"
+                style="@style/ChipTextAppearance.Base"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Позавчера"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/color_accent"
-                app:rippleColor="@color/color_primary"
+                android:text="@string/button_before_yesterday_photo_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/input_wiki_field" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/button_yesterday_photo"
-                style="@style/Widget.MaterialComponents.Chip.Action"
+                style="@style/ChipTextAppearance.Base"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Вчера"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/color_accent"
-                app:rippleColor="@color/color_primary"
+                android:text="@string/button_yesterday_photo_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/input_wiki_field" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/button_today_photo"
-                style="@style/Widget.MaterialComponents.Chip.Action"
+                style="@style/ChipTextAppearance.Base"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Сегодня"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/color_accent"
-                app:rippleColor="@color/color_primary"
+                android:text="@string/button_today_photo_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/input_wiki_field" />
 
             <TextView
                 android:id="@+id/fragment_day_photo_current_date_text_view"
+                style="@style/CustomTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/fragment_day_photo_current_date_text_view_text"
@@ -108,6 +96,7 @@
 
             <com.example.nasaapplication.ui.utils.LoadedImageView
                 android:id="@+id/p_o_d_image_view"
+                style=""
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/photo_of_the_day_stub"

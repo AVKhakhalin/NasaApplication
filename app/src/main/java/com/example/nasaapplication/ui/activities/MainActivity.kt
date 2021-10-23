@@ -20,6 +20,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Применение темы к приложению
+        setTheme(R.style.Theme_NasaApplication)
         setContentView(R.layout.activity_main)
 
         // Запуск фрагмента с картинкой дня
