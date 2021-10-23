@@ -22,6 +22,7 @@
                 android:layout_width="@dimen/input_wiki_field_width"
                 android:layout_height="wrap_content"
                 android:hint="@string/input_wiki_field_hint"
+                app:counterOverflowTextColor="?attr/colorSecondaryVariant"
                 app:endIconCheckable="true"
                 app:helperText="@string/input_wiki_field_text"
                 app:layout_constraintTop_toTopOf="parent"
@@ -37,38 +38,44 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/button_before_yesterday_photo"
-                style="@style/ChipTextAppearance.Base"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button_before_yesterday_photo_text"
+                android:textColor="?attr/colorOnPrimary"
+                app:chipBackgroundColor="?attr/colorSecondaryVariant"
+                app:rippleColor="?attr/colorPrimaryVariant"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/input_wiki_field" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/button_yesterday_photo"
-                style="@style/ChipTextAppearance.Base"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button_yesterday_photo_text"
+                android:textColor="?attr/colorOnPrimary"
+                app:chipBackgroundColor="?attr/colorSecondaryVariant"
+                app:rippleColor="?attr/colorPrimaryVariant"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/input_wiki_field" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/button_today_photo"
-                style="@style/ChipTextAppearance.Base"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button_today_photo_text"
+                android:textColor="?attr/colorOnPrimary"
+                app:chipBackgroundColor="?attr/colorSecondaryVariant"
+                app:rippleColor="?attr/colorPrimaryVariant"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/input_wiki_field" />
 
             <TextView
                 android:id="@+id/fragment_day_photo_current_date_text_view"
-                style="@style/CustomTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/fragment_day_photo_current_date_text_view_text"
+                android:textColor="?attr/colorOnSecondary"
                 android:textStyle="bold"
                 android:textSize="@dimen/fragment_day_photo_current_date_text_view_text_size"
                 app:layout_constraintStart_toStartOf="parent"
@@ -79,10 +86,10 @@
                 android:id="@+id/p_o_d_loading_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintBottom_toBottomOf="@id/p_o_d_image_view"
+                app:layout_constraintEnd_toEndOf="@id/p_o_d_image_view"
+                app:layout_constraintStart_toStartOf="@id/p_o_d_image_view"
+                app:layout_constraintTop_toTopOf="@id/p_o_d_image_view">
 
                 <ProgressBar
                     style="?android:attr/progressBarStyleLarge"
@@ -96,7 +103,6 @@
 
             <com.example.nasaapplication.ui.utils.LoadedImageView
                 android:id="@+id/p_o_d_image_view"
-                style=""
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/photo_of_the_day_stub"
@@ -114,7 +120,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:backgroundTint="@color/color_primary"
+        app:backgroundTint="?attr/colorPrimary"
         app:fabAlignmentMode="center"
         app:hideOnScroll="true"
         app:layout_scrollFlags="scroll|enterAlways"
@@ -124,10 +130,10 @@
         android:id="@+id/bottom_app_bar_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/color_accent"
+        android:backgroundTint="?attr/colorSecondaryVariant"
         app:layout_anchor="@id/bottom_app_bar"
         app:srcCompat="@drawable/ic_plus_fab"
-        app:tint="#FFFFFF" />
+        app:tint="?attr/colorOnPrimary" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -1,23 +1,31 @@
 package com.example.nasaapplication.ui.fragments.contents
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
+import com.example.nasaapplication.controller.observers.viewmodels.PODData
 import com.example.nasaapplication.databinding.FragmentSettingsBinding
+import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.chip.Chip
 
 class SettingsFragment: Fragment() {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
     private var navigationDialogs: NavigationDialogs? = null
     private var navigationContent: NavigationContent? = null
+    // Buttons (Chip)
+    private var buttonStyleChooseDay: Chip? = null
+    private var buttonStyleChooseNight: Chip? = null
     // Binding
     private var _binding: FragmentSettingsBinding? = null
     private val binding: FragmentSettingsBinding
@@ -28,7 +36,7 @@ class SettingsFragment: Fragment() {
 
     companion object {
         fun newInstance() = SettingsFragment()
-        private var isMain = false
+        private var isMain = true
     }
 
     override fun onAttach(context: Context) {
@@ -56,6 +64,34 @@ class SettingsFragment: Fragment() {
     //region МЕТОДЫ ДЛЯ РАБОТЫ С BOTTOM NAVIGATION MENU
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Установка слушателей на кнопки выбора тем
+        buttonStyleChooseDay = view.findViewById(R.id.button_style_day)
+        buttonStyleChooseDay?.let {
+            it.setOnClickListener {
+                val sharedPreferences: SharedPreferences =
+                    requireActivity().getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY,
+                        AppCompatActivity.MODE_PRIVATE
+                    )
+                var sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
+                sharedPreferencesEditor.putBoolean(ConstantsUi.SHARED_PREFERENCES_THEME_KEY, true)
+                sharedPreferencesEditor.apply()
+                requireActivity().recreate()
+            }
+        }
+        buttonStyleChooseNight = view.findViewById(R.id.button_style_night)
+        buttonStyleChooseNight?.let {
+            it.setOnClickListener {
+                val sharedPreferences: SharedPreferences =
+                    requireActivity().getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY,
+                        AppCompatActivity.MODE_PRIVATE
+                    )
+                var sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
+                sharedPreferencesEditor.putBoolean(ConstantsUi.SHARED_PREFERENCES_THEME_KEY, false)
+                sharedPreferencesEditor.apply()
+                requireActivity().recreate()
+            }
+        }
+
         // Установка BOTTOM NAVIGATION MENU
         setBottomAppBar(view)
     }
@@ -64,23 +100,39 @@ class SettingsFragment: Fragment() {
         val context = activity as MainActivity
         context.setSupportActionBar(binding.bottomAppBar)
         setHasOptionsMenu(true)
+        switchBottomAppBar(context)
         binding.bottomAppBarFab.setOnClickListener {
-            if (isMain) {
-                isMain = false
-                binding.bottomAppBar.navigationIcon = null
-                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-                binding.bottomAppBarFab.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_back_fab))
-                binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar_other_screen)
-            } else {
-                isMain = true
-                binding.bottomAppBar.navigationIcon =
-                    ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
-                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-                binding.bottomAppBarFab.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_plus_fab))
-                binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
-            }
+            switchBottomAppBar(context)
         }
     }
+
+    // Переключение режима нижней навигационной кнопки BottomAppBar
+    // с центрального на крайнее левое положение и обратно
+    private fun switchBottomAppBar(context: MainActivity) {
+        if (isMain) {
+            isMain = false
+            binding.bottomAppBar.navigationIcon = null
+            binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+            binding.bottomAppBarFab.setImageDrawable(
+                ContextCompat.getDrawable(
+                    context, R.drawable.ic_back_fab
+                )
+            )
+            binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar_other_screen)
+        } else {
+            isMain = true
+            binding.bottomAppBar.navigationIcon =
+                ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
+            binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+            binding.bottomAppBarFab.setImageDrawable(
+                ContextCompat.getDrawable(
+                    context, R.drawable.ic_plus_fab
+                )
+            )
+            binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
     }

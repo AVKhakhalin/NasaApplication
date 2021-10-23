@@ -21,10 +21,12 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/button_style_day"
-                style="@style/ChipTextAppearance.Base"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button_style_day_text"
+                android:textColor="?attr/colorOnPrimary"
+                app:chipBackgroundColor="?attr/colorSecondaryVariant"
+                app:rippleColor="?attr/colorPrimaryVariant"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/button_style_night"
                 app:layout_constraintStart_toStartOf="parent"
@@ -32,10 +34,12 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/button_style_night"
-                style="@style/ChipTextAppearance.Base"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button_style_night"
+                android:textColor="?attr/colorOnPrimary"
+                app:chipBackgroundColor="?attr/colorSecondaryVariant"
+                app:rippleColor="?attr/colorPrimaryVariant"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/button_style_day"
@@ -48,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:backgroundTint="@color/color_primary"
+        app:backgroundTint="?attr/colorPrimaryVariant"
         app:fabAlignmentMode="center"
         app:hideOnScroll="true"
         app:layout_scrollFlags="scroll|enterAlways"
@@ -58,10 +62,10 @@
         android:id="@+id/bottom_app_bar_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/color_accent"
+        android:backgroundTint="?attr/colorSecondaryVariant"
         app:layout_anchor="@id/bottom_app_bar"
         app:srcCompat="@drawable/ic_plus_fab"
-        app:tint="#FFFFFF" />
+        app:tint="?attr/colorOnPrimary" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

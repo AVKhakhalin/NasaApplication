@@ -26,7 +26,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import java.util.*
 
-
 class DayPhotoFragment: Fragment() {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
@@ -195,23 +194,39 @@ class DayPhotoFragment: Fragment() {
         val context = activity as MainActivity
         context.setSupportActionBar(binding.bottomAppBar)
         setHasOptionsMenu(true)
+
         binding.bottomAppBarFab.setOnClickListener {
-            if (isMain) {
-                isMain = false
-                binding.bottomAppBar.navigationIcon = null
-                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-                binding.bottomAppBarFab.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_back_fab))
-                binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar_other_screen)
-            } else {
-                isMain = true
-                binding.bottomAppBar.navigationIcon =
-                    ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
-                binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-                binding.bottomAppBarFab.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_plus_fab))
-                binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
-            }
+            switchBottomAppBar(context)
         }
     }
+
+    // Переключение режима нижней навигационной кнопки BottomAppBar
+    // с центрального на крайнее левое положение и обратно
+    private fun switchBottomAppBar(context: MainActivity) {
+        if (isMain) {
+            isMain = false
+            binding.bottomAppBar.navigationIcon = null
+            binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+            binding.bottomAppBarFab.setImageDrawable(
+                ContextCompat.getDrawable(
+                    context, R.drawable.ic_back_fab
+                )
+            )
+            binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar_other_screen)
+        } else {
+            isMain = true
+            binding.bottomAppBar.navigationIcon =
+                ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
+            binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+            binding.bottomAppBarFab.setImageDrawable(
+                ContextCompat.getDrawable(
+                    context, R.drawable.ic_plus_fab
+                )
+            )
+            binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 //        inflater.inflate(R.menu.bottom_menu_bottom_bar, menu)
@@ -240,8 +255,10 @@ class DayPhotoFragment: Fragment() {
         val dateYear: Int = calendar.get(Calendar.YEAR)
         val dateMonth: Int = calendar.get(Calendar.MONTH) + 1
         val dateDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
-        curDate = "$dateYear-${if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}-${if (dateDay < 10) "0$dateDay" else "$dateDay"}"
-        return "${if (dateDay < 10) "0$dateDay" else "$dateDay"}.${if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}.$dateYear"
+        curDate = "$dateYear-${if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}-${
+            if (dateDay < 10) "0$dateDay" else "$dateDay"}"
+        return "${if (dateDay < 10) "0$dateDay" else "$dateDay"}.${
+            if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}.$dateYear"
     }
 
     // Метод для отображения сообщения в виде Toast

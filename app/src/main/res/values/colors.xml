@@ -6,18 +6,35 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
 
+    <!-- Цвета темы DAY -->
     <!-- Цвета для нижней плавающей кнопки -->
-    <color name="color_primary">#008577</color>
-    <color name="color_primary_dark">#00574B</color>
-    <color name="color_accent">#D81B60</color>
-    <color name="color_gray">#66000000</color>
-
+    <color name="color_primary_day">#008577</color>
+    <color name="color_primary_dark_day">#00574B</color>
+    <color name="color_accent_day">#D81B60</color>
+    <color name="color_gray_day">#66000000</color>
+    <color name="white_day">#FFFFFFFF</color>
     <!-- Основные цвета окна -->
-    <color name="activity_background">#54EBF9</color>
-    <color name="bottom_sheet_line_color">#663b4351</color>
-    <color name="bottom_sheet_description_title_text_color">#000</color>
-    <color name="bottom_sheet_background_color">#B4F6FD</color>
+    <color name="activity_background_day">#54EBF9</color>
+    <color name="bottom_sheet_line_color_day">#663b4351</color>
+    <color name="bottom_sheet_description_title_text_color_day">#000</color>
+    <color name="bottom_sheet_background_color_day">#B4F6FD</color>
+    <color name="bottom_sheet_background_color_night_description_text_day">#262727</color>
+
+    <!-- Цвета темы DAY -->
+    <!-- Цвета для нижней плавающей кнопки -->
+    <color name="color_primary_night">#00665B</color>
+    <color name="color_primary_dark_night">#003730</color>
+    <color name="color_accent_night">#9E1346</color>
+    <color name="color_gray_night">#66000000</color>
+    <color name="white_night">#BDBDBD</color>
+    <!-- Основные цвета окна -->
+    <color name="activity_background_night">#3CA8B2</color>
+    <color name="bottom_sheet_line_color_night">#6614171C</color>
+    <color name="bottom_sheet_description_title_text_color_night">#000</color>
+    <color name="bottom_sheet_background_color_night">#4E6062</color>
+    <color name="bottom_sheet_background_color_night_description_text_night">#AAC6CA</color>
+
+
 
 </resources>
