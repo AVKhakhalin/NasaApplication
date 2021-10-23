@@ -2,16 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/navigation_to_archive"
+            android:id="@+id/action_navigation_to_archive"
             android:icon="@drawable/ic_archive"
-            android:title="Перейти в архив" />
+            android:title="@string/action_navigation_to_archive_text" />
         <item
-            android:id="@+id/navigation_to_send"
+            android:id="@+id/action_navigation_to_send"
             android:icon="@drawable/ic_send"
-            android:title="Перейти к отправке" />
+            android:title="@string/action_navigation_to_send_text" />
         <item
-            android:id="@+id/navigation_to_observe"
+            android:id="@+id/action_navigation_to_observe"
             android:icon="@drawable/ic_telescope"
-            android:title="На экран 3" />
+            android:title="@string/action_navigation_to_observe_text" />
     </group>
 </menu>

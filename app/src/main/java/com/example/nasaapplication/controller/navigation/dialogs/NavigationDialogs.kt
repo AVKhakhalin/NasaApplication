@@ -8,7 +8,8 @@ class NavigationDialogs {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     private var bottomNavigationDrawerDialogFragment: BottomNavigationDrawerDialogFragment? = null
     //endregion
-    // Отображение диалога с карточкой места (города)
+
+    // Отображение диалога с контекстным меню, появляющимся при нажатии на кнопку типа "Гамбургер"
     fun showBottomNavigationDrawerDialogFragment(fragmentActivity: FragmentActivity
     ) {
         bottomNavigationDrawerDialogFragment =

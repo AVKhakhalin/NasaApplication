@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import coil.load
 import com.example.nasaapplication.R
+import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.observers.viewmodels.PODData
 import com.example.nasaapplication.controller.observers.viewmodels.PODViewModel
@@ -28,9 +29,10 @@ import java.util.*
 
 class DayPhotoFragment: Fragment() {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
-    // NavigationDialogs
+    // Navigations
     private var navigationDialogs: NavigationDialogs? = null
-    // Chips
+    private var navigationContent: NavigationContent? = null
+    // Buttons (Chip)
     private var buttonChipYesterday: Chip? = null
     private var buttonChipToday: Chip? = null
     private var buttonChipBeforeYesterday: Chip? = null
@@ -60,7 +62,10 @@ class DayPhotoFragment: Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
         navigationDialogs = (context as MainActivity).getNavigationDialogs()
+        navigationContent = (context as MainActivity).getNavigationContent()
+        //endregion
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -105,13 +110,6 @@ class DayPhotoFragment: Fragment() {
         }
     }
 
-    private fun Fragment.toast(string: String?) {
-        Toast.makeText(context, string, Toast.LENGTH_SHORT).apply {
-            setGravity(Gravity.BOTTOM, 0, 250)
-            show()
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -147,7 +145,7 @@ class DayPhotoFragment: Fragment() {
             }
         }
 
-        // Установка BOTTOM MENU
+        // Установка BOTTOM NAVIGATION MENU
         setBottomAppBar(view)
 
         // Инициализация текстового блока для отображения текущей даты
@@ -192,7 +190,7 @@ class DayPhotoFragment: Fragment() {
     }
     //endregion
 
-    //region МЕТОДЫ ДЛЯ РАБОТЫ С BOTTOM MENU
+    //region МЕТОДЫ ДЛЯ РАБОТЫ С BOTTOM NAVIGATION MENU
     private fun setBottomAppBar(view: View) {
         val context = activity as MainActivity
         context.setSupportActionBar(binding.bottomAppBar)
@@ -221,7 +219,9 @@ class DayPhotoFragment: Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.app_bar_save -> toast("Сохранение")
-            R.id.app_bar_settings -> toast("Настройки")
+            R.id.app_bar_settings -> navigationContent?.let{
+                it.showSettingsFragment(false)
+            }
             R.id.app_bar_search -> toast("Поиск")
             android.R.id.home -> {
                 navigationDialogs?.let {
@@ -233,6 +233,7 @@ class DayPhotoFragment: Fragment() {
     }
     //endregion
 
+    // Метод для возвращения даты по запросу
     private fun getDate(deltaDayDate: Int): String {
         val calendar: Calendar = Calendar.getInstance(TimeZone.getDefault())
         calendar.add(Calendar.DATE, deltaDayDate)
@@ -241,5 +242,13 @@ class DayPhotoFragment: Fragment() {
         val dateDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
         curDate = "$dateYear-${if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}-${if (dateDay < 10) "0$dateDay" else "$dateDay"}"
         return "${if (dateDay < 10) "0$dateDay" else "$dateDay"}.${if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}.$dateYear"
+    }
+
+    // Метод для отображения сообщения в виде Toast
+    private fun Fragment.toast(string: String?) {
+        Toast.makeText(context, string, Toast.LENGTH_SHORT).apply {
+            setGravity(Gravity.BOTTOM, 0, 250)
+            show()
+        }
     }
 }

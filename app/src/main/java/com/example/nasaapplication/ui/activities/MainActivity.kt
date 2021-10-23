@@ -8,10 +8,11 @@ import android.view.View
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
+import com.example.nasaapplication.controller.navigation.contents.NavigationContentGetter
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogsGetter
 
-class MainActivity: AppCompatActivity(), NavigationDialogsGetter {
+class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationContentGetter {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     private val navigationContent: NavigationContent = NavigationContent(supportFragmentManager)
     private val navigationDialogs: NavigationDialogs = NavigationDialogs()
@@ -30,5 +31,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter {
 
     override fun getNavigationDialogs(): NavigationDialogs {
         return navigationDialogs
+    }
+
+    override fun getNavigationContent(): NavigationContent {
+        return navigationContent
     }
 }

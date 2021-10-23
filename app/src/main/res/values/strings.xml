@@ -18,4 +18,9 @@
     <string name="button_before_yesterday_photo_text">Позавчера</string>
     <string name="button_yesterday_photo_text">Вчера</string>
     <string name="button_today_photo_text">Сегодня</string>
+    <string name="button_style_day_text">Дневная тема</string>
+    <string name="button_style_night">Ночная тема</string>
+    <string name="action_navigation_to_observe_text">Перейти к картике дня</string>
+    <string name="action_navigation_to_archive_text">Перейти в архив</string>
+    <string name="action_navigation_to_send_text">Перейти к отправке</string>
 </resources>

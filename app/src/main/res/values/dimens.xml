@@ -16,4 +16,6 @@
     <dimen name="margin_start_margin_top">8dp</dimen>
     <dimen name="margin_top_margin_end">8dp</dimen>
     <dimen name="fragment_day_photo_current_date_text_view_text_size">15sp</dimen>
+    <dimen name="settings_fire_wall_layout_width">0dp</dimen>
+    <dimen name="settings_fire_wall_layout_height">0dp</dimen>
 </resources>
