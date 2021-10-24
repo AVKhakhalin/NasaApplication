@@ -43,6 +43,16 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         navigationContent.showDayPhotoFragment(false)
     }
 
+
+    //region СЕТТЕР И ГЕТТЕР ДЛЯ ПАРАМЕТРА ТЕМЫ ПРИЛОЖЕНИЯ
+    fun getIsThemeDay(): Boolean {
+        return isThemeDay
+    }
+    fun setIsThemeDay(isThemeDay: Boolean) {
+        this.isThemeDay = isThemeDay
+    }
+    //endregion
+
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
         val sharedPreferences: SharedPreferences =

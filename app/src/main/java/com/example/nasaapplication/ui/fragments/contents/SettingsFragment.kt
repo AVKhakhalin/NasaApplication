@@ -15,6 +15,7 @@ import com.example.nasaapplication.controller.observers.viewmodels.PODData
 import com.example.nasaapplication.databinding.FragmentSettingsBinding
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
+import com.example.nasaapplication.ui.utils.FireView
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.chip.Chip
 
@@ -68,6 +69,7 @@ class SettingsFragment: Fragment() {
         buttonStyleChooseDay = view.findViewById(R.id.button_style_day)
         buttonStyleChooseDay?.let {
             it.setOnClickListener {
+                (requireActivity() as MainActivity).setIsThemeDay(true)
                 val sharedPreferences: SharedPreferences =
                     requireActivity().getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY,
                         AppCompatActivity.MODE_PRIVATE
@@ -75,12 +77,15 @@ class SettingsFragment: Fragment() {
                 var sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
                 sharedPreferencesEditor.putBoolean(ConstantsUi.SHARED_PREFERENCES_THEME_KEY, true)
                 sharedPreferencesEditor.apply()
-                requireActivity().recreate()
+                // Перезапуск видео в классе FireView
+                binding.settingsFireWall.setIsClick(true)
+                binding.settingsFireWall.invalidate()
             }
         }
         buttonStyleChooseNight = view.findViewById(R.id.button_style_night)
         buttonStyleChooseNight?.let {
             it.setOnClickListener {
+                (requireActivity() as MainActivity).setIsThemeDay(false)
                 val sharedPreferences: SharedPreferences =
                     requireActivity().getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY,
                         AppCompatActivity.MODE_PRIVATE
@@ -88,7 +93,9 @@ class SettingsFragment: Fragment() {
                 var sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
                 sharedPreferencesEditor.putBoolean(ConstantsUi.SHARED_PREFERENCES_THEME_KEY, false)
                 sharedPreferencesEditor.apply()
-                requireActivity().recreate()
+                // Перезапуск видео в классе FireView
+                binding.settingsFireWall.setIsClick(true)
+                binding.settingsFireWall.invalidate()
             }
         }
 
