@@ -23,21 +23,26 @@
                 android:id="@+id/button_style_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/convergence"
                 android:text="@string/button_style_day_text"
+                android:textAllCaps="true"
                 android:textColor="?attr/colorOnPrimary"
                 app:chipBackgroundColor="?attr/colorSecondaryVariant"
-                app:rippleColor="?attr/colorPrimaryVariant"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/button_style_night"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.499"
+                app:rippleColor="?attr/colorPrimaryVariant" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/button_style_night"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button_style_night"
+                android:fontFamily="@font/convergence"
                 android:textColor="?attr/colorOnPrimary"
+                android:textAllCaps="true"
                 app:chipBackgroundColor="?attr/colorSecondaryVariant"
                 app:rippleColor="?attr/colorPrimaryVariant"
                 app:layout_constraintBottom_toBottomOf="parent"

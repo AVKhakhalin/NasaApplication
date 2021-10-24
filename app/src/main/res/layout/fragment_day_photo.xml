@@ -22,6 +22,7 @@
                 android:layout_width="@dimen/input_wiki_field_width"
                 android:layout_height="wrap_content"
                 android:hint="@string/input_wiki_field_hint"
+                 android:fontFamily="@font/convergence"
                 app:counterOverflowTextColor="?attr/colorSecondaryVariant"
                 app:endIconCheckable="true"
                 app:helperText="@string/input_wiki_field_text"
@@ -33,7 +34,8 @@
                     android:id="@+id/input_wiki_field_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:fontFamily="@font/aldrich"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.chip.Chip
@@ -42,6 +44,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/button_before_yesterday_photo_text"
                 android:textColor="?attr/colorOnPrimary"
+                android:fontFamily="@font/convergence"
+                android:textAllCaps="true"
                 app:chipBackgroundColor="?attr/colorSecondaryVariant"
                 app:rippleColor="?attr/colorPrimaryVariant"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,6 +57,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/button_yesterday_photo_text"
                 android:textColor="?attr/colorOnPrimary"
+                android:fontFamily="@font/convergence"
+                android:textAllCaps="true"
                 app:chipBackgroundColor="?attr/colorSecondaryVariant"
                 app:rippleColor="?attr/colorPrimaryVariant"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -65,6 +71,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/button_today_photo_text"
                 android:textColor="?attr/colorOnPrimary"
+                android:fontFamily="@font/convergence"
+                android:textAllCaps="true"
                 app:chipBackgroundColor="?attr/colorSecondaryVariant"
                 app:rippleColor="?attr/colorPrimaryVariant"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -76,6 +84,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/fragment_day_photo_current_date_text_view_text"
                 android:textColor="?attr/colorOnSecondary"
+                android:fontFamily="@font/aldrich"
                 android:textStyle="bold"
                 android:textSize="@dimen/fragment_day_photo_current_date_text_view_text_size"
                 app:layout_constraintStart_toStartOf="parent"

@@ -4,14 +4,17 @@
         <item
             android:id="@+id/action_navigation_to_archive"
             android:icon="@drawable/ic_archive"
-            android:title="@string/action_navigation_to_archive_text" />
+            android:title="@string/action_navigation_to_archive_text"
+            android:fontFamily="@font/convergence" />
         <item
             android:id="@+id/action_navigation_to_send"
             android:icon="@drawable/ic_send"
-            android:title="@string/action_navigation_to_send_text" />
+            android:title="@string/action_navigation_to_send_text"
+            android:fontFamily="@font/convergence" />
         <item
             android:id="@+id/action_navigation_to_observe"
             android:icon="@drawable/ic_telescope"
-            android:title="@string/action_navigation_to_observe_text" />
+            android:title="@string/action_navigation_to_observe_text"
+            android:fontFamily="@font/convergence" />
     </group>
 </menu>

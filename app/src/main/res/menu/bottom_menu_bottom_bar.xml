@@ -6,11 +6,13 @@
         android:id="@+id/app_bar_save"
         android:icon="@drawable/ic_save"
         android:title="@string/app_bar_save_title"
+        android:fontFamily="@font/convergence"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/app_bar_settings"
         android:icon="@drawable/ic_settings_menu"
         android:title="@string/app_bar_settings_title"
+        android:fontFamily="@font/convergence"
         app:showAsAction="ifRoom" />
 </menu>
