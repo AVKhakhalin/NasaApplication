@@ -1,6 +1,7 @@
 package com.example.nasaapplication.ui.activities
 
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -33,6 +34,11 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             if (isThemeDay) {
                 setTheme(R.style.Theme_NasaApplication_Day)
             } else {
+                setTheme(R.style.Theme_NasaApplication_Night)
+            }
+        } else {
+            // Применение тёмной темы при первом запуске приложения на девайсах на 10+ Android
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 setTheme(R.style.Theme_NasaApplication_Night)
             }
         }
