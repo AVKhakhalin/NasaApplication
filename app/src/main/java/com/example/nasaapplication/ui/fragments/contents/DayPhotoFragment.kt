@@ -144,6 +144,10 @@ class DayPhotoFragment: Fragment() {
             }
         }
 
+        // Установка текущей даты в заголовке над фотографией
+        binding.fragmentDayPhotoCurrentDateTextView.text =
+            "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(0)}"
+
         // Установка BOTTOM NAVIGATION MENU
         setBottomAppBar(view)
 
