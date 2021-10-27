@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
@@ -56,8 +57,10 @@ class SettingsFragment: ViewBindingFragment<FragmentSettingsBinding>(FragmentSet
         super.onViewCreated(view, savedInstanceState)
         // Установка слушателей на кнопки выбора тем
         buttonStyleChooseDay = view.findViewById(R.id.button_style_day)
+        buttonStyleChooseNight = view.findViewById(R.id.button_style_night)
         buttonStyleChooseDay?.let {
             it.setOnClickListener {
+                buttonStyleChooseNight?.let { it.visibility = View.INVISIBLE }
                 (requireActivity() as MainActivity).setIsThemeDay(true)
                 val sharedPreferences: SharedPreferences =
                     requireActivity().getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY,
@@ -71,9 +74,9 @@ class SettingsFragment: ViewBindingFragment<FragmentSettingsBinding>(FragmentSet
                 binding.settingsFireWall.invalidate()
             }
         }
-        buttonStyleChooseNight = view.findViewById(R.id.button_style_night)
         buttonStyleChooseNight?.let {
             it.setOnClickListener {
+                buttonStyleChooseDay?.let { it.visibility = View.INVISIBLE }
                 (requireActivity() as MainActivity).setIsThemeDay(false)
                 val sharedPreferences: SharedPreferences =
                     requireActivity().getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY,
