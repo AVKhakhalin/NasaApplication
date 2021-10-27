@@ -12,14 +12,14 @@ class NavigationContent(
     fun showDayPhotoFragment(useBackStack: Boolean) {
         // Открыть транзакцию
         fragmentManager?.let {
-            val fragmentTransaction = it.beginTransaction()
-            fragmentTransaction.replace(
-                R.id.activity_fragments_container, DayPhotoFragment.newInstance())
-            if (useBackStack) {
-                fragmentTransaction.addToBackStack(null)
-            }
-            // Закрыть транзакцию
-            fragmentTransaction.commit()
+//            val fragmentTransaction = it.beginTransaction()
+//            fragmentTransaction.replace(
+//                R.id.activity_fragments_container, DayPhotoFragment.newInstance())
+//            if (useBackStack) {
+//                fragmentTransaction.addToBackStack(null)
+//            }
+//            // Закрыть транзакцию
+//            fragmentTransaction.commit()
         }
     }
 
@@ -28,13 +28,13 @@ class NavigationContent(
         // Открыть транзакцию
         fragmentManager?.let {
             val fragmentTransaction = it.beginTransaction()
-            fragmentTransaction.replace(
-                R.id.activity_fragments_container, SettingsFragment.newInstance())
-            if (useBackStack) {
-                fragmentTransaction.addToBackStack(null)
-            }
-            // Закрыть транзакцию
-            fragmentTransaction.commit()
+//            fragmentTransaction.replace(
+//                R.id.activity_fragments_container, SettingsFragment.newInstance())
+//            if (useBackStack) {
+//                fragmentTransaction.addToBackStack(null)
+//            }
+//            // Закрыть транзакцию
+//            fragmentTransaction.commit()
         }
     }
 }

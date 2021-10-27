@@ -12,5 +12,7 @@ class ConstantsController(
         val ERROR_UNKNOWN: String = "Неизвестная ошибка."
         @JvmField
         val API_KEY: String = BuildConfig.NASA_API_KEY
+        @JvmField
+        val DAY_PHOTO_TEXT: String = "Фото дня"
     }
 }

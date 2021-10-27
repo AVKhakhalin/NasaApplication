@@ -6,11 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
 import com.example.nasaapplication.R
-import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.contents.NavigationContentGetter
+import com.example.nasaapplication.controller.navigation.contents.ViewPagerAdapter
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogsGetter
+import com.example.nasaapplication.databinding.ActivityMainBinding
 import com.example.nasaapplication.ui.ConstantsUi
 
 class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationContentGetter {
@@ -20,6 +21,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     private val navigationDialogs: NavigationDialogs = NavigationDialogs()
     // Установка темы приложения
     private var isThemeDay: Boolean = true
+    // Binding
+    lateinit var binding: ActivityMainBinding
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,10 +46,17 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             }
         }
 
-        setContentView(R.layout.activity_main)
+        // Подключение Binding
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+//        setContentView(R.layout.activity_main)
 
         // Запуск фрагмента с картинкой дня
-        navigationContent.showDayPhotoFragment(false)
+//        navigationContent.showDayPhotoFragment(false)
+
+        // Подключение ViewPagerAdapter для запуска фрагментов
+        binding.viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
 
 

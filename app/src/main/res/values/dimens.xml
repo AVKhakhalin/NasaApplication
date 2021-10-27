@@ -20,4 +20,5 @@
     <dimen name="settings_fire_wall_layout_height">0dp</dimen>
     <dimen name="navigation_view_margin_top">8dp</dimen>
     <dimen name="navigation_view_margin_end">8dp</dimen>
+    <dimen name="tab_layout_height">56dp</dimen>
 </resources>
