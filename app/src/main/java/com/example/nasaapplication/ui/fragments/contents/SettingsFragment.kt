@@ -16,10 +16,11 @@ import com.example.nasaapplication.databinding.FragmentSettingsBinding
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.FireView
+import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.chip.Chip
 
-class SettingsFragment: Fragment() {
+class SettingsFragment: ViewBindingFragment<FragmentSettingsBinding>(FragmentSettingsBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
     private var navigationDialogs: NavigationDialogs? = null
@@ -27,12 +28,6 @@ class SettingsFragment: Fragment() {
     // Buttons (Chip)
     private var buttonStyleChooseDay: Chip? = null
     private var buttonStyleChooseNight: Chip? = null
-    // Binding
-    private var _binding: FragmentSettingsBinding? = null
-    private val binding: FragmentSettingsBinding
-        get() {
-            return _binding!!
-        }
     //endregion
 
     companion object {
@@ -53,13 +48,7 @@ class SettingsFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     //region МЕТОДЫ ДЛЯ РАБОТЫ С BOTTOM NAVIGATION MENU

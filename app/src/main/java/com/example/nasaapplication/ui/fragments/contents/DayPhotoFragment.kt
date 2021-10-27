@@ -21,12 +21,13 @@ import com.example.nasaapplication.controller.observers.viewmodels.PODViewModel
 import com.example.nasaapplication.databinding.FragmentDayPhotoBinding
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
+import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import java.util.*
 
-class DayPhotoFragment: Fragment() {
+class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDayPhotoBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
     private var navigationDialogs: NavigationDialogs? = null
@@ -46,12 +47,6 @@ class DayPhotoFragment: Fragment() {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var bottomSheetDescriptionTitle: TextView
     private lateinit var bottomSheetDescriptionText: TextView
-    // Binding
-    private var _binding: FragmentDayPhotoBinding? = null
-    private val binding: FragmentDayPhotoBinding
-        get() {
-            return _binding!!
-        }
     //endregion
 
     companion object {
@@ -114,13 +109,7 @@ class DayPhotoFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentDayPhotoBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     //region МЕТОДЫ РАБОТЫ С BottomSheet
