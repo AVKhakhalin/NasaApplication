@@ -5,11 +5,10 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.ui.fragments.contents.DayPhotoFragment
-
-private const val SYSTEM = 0
+import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
 
 class ViewPagerAdapter(private val fragmentManager: FragmentManager):FragmentStatePagerAdapter(fragmentManager) {
-    private val fragments = arrayOf(DayPhotoFragment())
+    private val fragments = arrayOf(DayPhotoFragment(), SearchWikiFragment())
 
     override fun getCount(): Int {
         return fragments.size
@@ -17,15 +16,17 @@ class ViewPagerAdapter(private val fragmentManager: FragmentManager):FragmentSta
 
     override fun getItem(position: Int): Fragment {
         return when(position){
-            0-> fragments[SYSTEM]
-            else ->fragments[SYSTEM]
+            0 -> fragments[ConstantsController.DAY_PHOTO_FRAGMENT]
+            1 -> fragments[ConstantsController.SEARCH_WIKI_FRAGMENT]
+            else ->fragments[ConstantsController.DAY_PHOTO_FRAGMENT]
         }
     }
 
     override fun getPageTitle(position: Int): String {
         return when(position){
-            0 -> ConstantsController.DAY_PHOTO_TEXT
-            else -> ConstantsController.DAY_PHOTO_TEXT
+            0 -> ConstantsController.DAY_PHOTO_FRAGMENT_TITLE
+            1 -> ConstantsController.SEARCH_WIKI_FRAGMENT_TITLE
+            else -> ConstantsController.DAY_PHOTO_FRAGMENT_TITLE
         }
     }
 }

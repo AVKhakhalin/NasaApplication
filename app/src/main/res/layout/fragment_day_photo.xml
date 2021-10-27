@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorOnBackground">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -14,30 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingStart="@dimen/main_constraint_layout_padding_start"
-            android:paddingEnd="@dimen/main_constraint_layout_padding_end">
-
-             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_wiki_field"
-                style="@style/CustomOutlinedBox"
-                android:layout_width="@dimen/input_wiki_field_width"
-                android:layout_height="wrap_content"
-                android:hint="@string/input_wiki_field_hint"
-                android:fontFamily="@font/convergence"
-                 android:layout_marginTop="@dimen/tab_layout_height"
-                app:counterOverflowTextColor="?attr/colorSecondaryVariant"
-                app:endIconCheckable="true"
-                app:helperText="@string/input_wiki_field_text"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_wiki_field_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:fontFamily="@font/aldrich"/>
-            </com.google.android.material.textfield.TextInputLayout>
+            android:paddingEnd="@dimen/main_constraint_layout_padding_end"
+            android:layout_marginTop="@dimen/tab_layout_height">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/button_before_yesterday_photo"
@@ -50,7 +29,7 @@
                 app:chipBackgroundColor="?attr/colorSecondaryVariant"
                 app:rippleColor="?attr/colorPrimaryVariant"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/input_wiki_field" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/button_yesterday_photo"
@@ -64,7 +43,7 @@
                 app:rippleColor="?attr/colorPrimaryVariant"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/input_wiki_field" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/button_today_photo"
@@ -77,7 +56,7 @@
                 app:chipBackgroundColor="?attr/colorSecondaryVariant"
                 app:rippleColor="?attr/colorPrimaryVariant"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/input_wiki_field" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/fragment_day_photo_current_date_text_view"

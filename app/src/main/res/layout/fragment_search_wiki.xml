@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorOnBackground">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main_constraint_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/main_constraint_layout_padding_start"
+            android:paddingEnd="@dimen/main_constraint_layout_padding_end">
+
+             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_wiki_field"
+                style="@style/CustomOutlinedBox"
+                android:layout_width="@dimen/input_wiki_field_width"
+                android:layout_height="wrap_content"
+                android:hint="@string/input_wiki_field_hint"
+                android:fontFamily="@font/convergence"
+                 android:layout_marginTop="@dimen/tab_layout_height"
+                app:counterOverflowTextColor="?attr/colorSecondaryVariant"
+                app:endIconCheckable="true"
+                app:helperText="@string/input_wiki_field_text"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_wiki_field_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:fontFamily="@font/aldrich"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottom_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:backgroundTint="?attr/colorPrimary"
+        app:fabAlignmentMode="center"
+        app:hideOnScroll="true"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:navigationIcon="@drawable/ic_hamburger_menu_bottom_bar" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/bottom_app_bar_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/colorSecondaryVariant"
+        app:layout_anchor="@id/bottom_app_bar"
+        app:srcCompat="@drawable/ic_plus_fab"
+        app:tint="?attr/colorOnPrimary" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

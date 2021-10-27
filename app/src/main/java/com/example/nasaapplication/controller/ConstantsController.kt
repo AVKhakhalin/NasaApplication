@@ -12,7 +12,16 @@ class ConstantsController(
         val ERROR_UNKNOWN: String = "Неизвестная ошибка."
         @JvmField
         val API_KEY: String = BuildConfig.NASA_API_KEY
+
+        // Заголовки фрагментов
         @JvmField
-        val DAY_PHOTO_TEXT: String = "Фото дня"
+        val DAY_PHOTO_FRAGMENT_TITLE: String = "Фото дня"
+        @JvmField
+        val SEARCH_WIKI_FRAGMENT_TITLE: String = "Поиск"
+
+        // Индексы фрагментов
+        @JvmField
+        val DAY_PHOTO_FRAGMENT: Int = 0
+        val SEARCH_WIKI_FRAGMENT: Int = 1
     }
 }

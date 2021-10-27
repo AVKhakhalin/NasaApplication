@@ -19,6 +19,7 @@ import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialo
 import com.example.nasaapplication.controller.observers.viewmodels.PODData
 import com.example.nasaapplication.controller.observers.viewmodels.PODViewModel
 import com.example.nasaapplication.databinding.FragmentDayPhotoBinding
+import com.example.nasaapplication.databinding.FragmentSearchWikiBinding
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
@@ -27,17 +28,12 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import java.util.*
 
-class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDayPhotoBinding::inflate) {
+class SearchWikiFragment: ViewBindingFragment<FragmentSearchWikiBinding>(FragmentSearchWikiBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
     private var navigationDialogs: NavigationDialogs? = null
     private var navigationContent: NavigationContent? = null
-    // Buttons (Chip)
-    private var buttonChipYesterday: Chip? = null
-    private var buttonChipToday: Chip? = null
-    private var buttonChipBeforeYesterday: Chip? = null
     // TextView с датой
-    private var currentDateTextView: TextView? = null
     private var curDate: String = ""
     // ViewModel
     private val viewModel: PODViewModel by lazy {
@@ -45,12 +41,10 @@ class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDay
     }
     // BottomSheet
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private lateinit var bottomSheetDescriptionTitle: TextView
-    private lateinit var bottomSheetDescriptionText: TextView
     //endregion
 
     companion object {
-        fun newInstance() = DayPhotoFragment()
+        fun newInstance() = SearchWikiFragment()
         private var isMain = true
     }
 
@@ -60,48 +54,6 @@ class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDay
         navigationDialogs = (context as MainActivity).getNavigationDialogs()
         navigationContent = (context as MainActivity).getNavigationContent()
         //endregion
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel.getData(curDate)
-//            .observe(this@DayPhotoFragment, Observer<PODData> { renderData(it) })
-            .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
-    }
-
-    private fun renderData(data: PODData) {
-        when (data) {
-            is PODData.Success -> {
-                val serverResponseData = data.serverResponseData
-                val url = serverResponseData.url
-                if (url.isNullOrEmpty()) {
-                    //showError("Сообщение, что ссылка пустая")
-                    toast(ConstantsUi.ERROR_LINK_EMPTY)
-                } else {
-                    //showSuccess()
-                    binding.pODImageView.load(url) {
-                        lifecycle(this@DayPhotoFragment)
-                        error(R.drawable.ic_load_error_vector)
-//                        placeholder(R.drawable.ic_downloading)
-                    }
-                    // Показать описание фотографии дня
-                    bottomSheetDescriptionTitle.text = serverResponseData.title
-                    bottomSheetDescriptionText.text = serverResponseData.explanation
-
-                    binding.pODImageView.visibility = View.VISIBLE
-                    binding.pODLoadingLayout.visibility = View.INVISIBLE
-                }
-            }
-            is PODData.Loading -> {
-                //showLoading()
-                binding.pODLoadingLayout.visibility = View.VISIBLE
-                binding.pODImageView.visibility = View.INVISIBLE
-            }
-            is PODData.Error -> {
-                //showError(data.error.message)
-                toast(data.error.message)
-            }
-        }
     }
 
     override fun onCreateView(
@@ -115,51 +67,23 @@ class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDay
     //region МЕТОДЫ РАБОТЫ С BottomSheet
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setBottomSheetBehavior(view.findViewById(R.id.bottom_sheet_container))
-        bottomSheetDescriptionTitle = view.findViewById(R.id.bottom_sheet_description_title)
-        bottomSheetDescriptionText = view.findViewById(R.id.bottom_sheet_description_text)
 
-        // Установка текущей даты в заголовке над фотографией
-        binding.fragmentDayPhotoCurrentDateTextView.text =
-            "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(0)}"
+        binding.inputWikiField.setEndIconOnClickListener {
+            if ((binding.inputWikiFieldText.text != null) &&
+                (binding.inputWikiFieldText.text!!.length <=
+                        binding.inputWikiField.counterMaxLength)) {
+                startActivity(Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(
+                        "${ConstantsUi.WIKI_URL}${
+                            binding.inputWikiFieldText.text.toString()
+                        }"
+                    )
+                })
+            }
+        }
 
         // Установка BOTTOM NAVIGATION MENU
         setBottomAppBar(view)
-
-        // Инициализация текстового блока для отображения текущей даты
-        currentDateTextView = binding.fragmentDayPhotoCurrentDateTextView
-
-        // Инициализация и настройка Chip-кнопок
-        if (currentDateTextView != null) {
-            buttonChipToday = binding.buttonTodayPhoto
-            buttonChipToday?.let {
-                it.setOnClickListener {
-                    currentDateTextView!!.text =
-                        "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(0)}"
-                    viewModel.getData(curDate)
-                        .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
-
-                }
-            }
-            buttonChipYesterday = binding.buttonYesterdayPhoto
-            buttonChipYesterday?.let {
-                it.setOnClickListener {
-                    currentDateTextView!!.text =
-                        "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-1)}"
-                    viewModel.getData(curDate)
-                        .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
-                }
-            }
-            buttonChipBeforeYesterday = binding.buttonBeforeYesterdayPhoto
-            buttonChipBeforeYesterday?.let {
-                it.setOnClickListener {
-                    currentDateTextView!!.text =
-                        "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-2)}"
-                    viewModel.getData(curDate)
-                        .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
-                }
-            }
-        }
     }
 
     private fun setBottomSheetBehavior(bottomSheet: ConstraintLayout) {
@@ -226,19 +150,6 @@ class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDay
         return super.onOptionsItemSelected(item)
     }
     //endregion
-
-    // Метод для возвращения даты по запросу
-    private fun getDate(deltaDayDate: Int): String {
-        val calendar: Calendar = Calendar.getInstance(TimeZone.getDefault())
-        calendar.add(Calendar.DATE, deltaDayDate)
-        val dateYear: Int = calendar.get(Calendar.YEAR)
-        val dateMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val dateDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
-        curDate = "$dateYear-${if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}-${
-            if (dateDay < 10) "0$dateDay" else "$dateDay"}"
-        return "${if (dateDay < 10) "0$dateDay" else "$dateDay"}.${
-            if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}.$dateYear"
-    }
 
     // Метод для отображения сообщения в виде Toast
     private fun Fragment.toast(string: String?) {
