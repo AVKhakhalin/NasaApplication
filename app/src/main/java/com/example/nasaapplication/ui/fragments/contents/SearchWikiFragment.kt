@@ -2,11 +2,16 @@ package com.example.nasaapplication.ui.fragments.contents
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.*
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -26,7 +31,12 @@ import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.URL
 import java.util.*
+import java.util.stream.Collectors
+import javax.net.ssl.HttpsURLConnection
 
 class SearchWikiFragment: ViewBindingFragment<FragmentSearchWikiBinding>(FragmentSearchWikiBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
@@ -68,22 +78,45 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchWikiBinding>(Fragmen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Установка прозрачного фона для элемента Webview
+        binding.webViewContainer.setBackgroundColor(Color.TRANSPARENT)
+        // Установка слушателя при нажатии на кнопку поиска в "Википедии"
         binding.inputWikiField.setEndIconOnClickListener {
             if ((binding.inputWikiFieldText.text != null) &&
                 (binding.inputWikiFieldText.text!!.length <=
                         binding.inputWikiField.counterMaxLength)) {
-                startActivity(Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse(
-                        "${ConstantsUi.WIKI_URL}${
-                            binding.inputWikiFieldText.text.toString()
-                        }"
-                    )
-                })
+                    showUrlInWiki("${ConstantsUi.WIKI_URL}${
+                                binding.inputWikiFieldText.text.toString()}")
             }
         }
 
         // Установка BOTTOM NAVIGATION MENU
         setBottomAppBar(view)
+    }
+
+    fun showUrlInWiki(urlString:String){
+        val url = URL(urlString)
+        Thread{
+            val urlConnection = url.openConnection() as HttpsURLConnection
+            urlConnection.requestMethod = ConstantsUi.SHOWURLINWIKI_METHOD_NAME
+            urlConnection.readTimeout = ConstantsUi.SHOWURLINWIKI_READ_TIME_OUT
+            val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
+            val result = getLines(reader)
+            val handler = Handler(Looper.getMainLooper())
+            handler.post {
+                binding.webViewContainer.loadDataWithBaseURL(
+                    null,result,
+                    ConstantsUi.SHOWURLINWIKI_TEXT_CHARSER,
+                    ConstantsUi.SHOWURLINWIKI_ENCODING,
+                    null)
+            }
+            urlConnection.disconnect()
+        }.start()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N) // TODO: Доработать, заменить на метод, независящий от версии
+    private fun getLines(reader: BufferedReader): String {
+        return reader.lines().collect(Collectors.joining("\n"))
     }
 
     private fun setBottomSheetBehavior(bottomSheet: ConstraintLayout) {

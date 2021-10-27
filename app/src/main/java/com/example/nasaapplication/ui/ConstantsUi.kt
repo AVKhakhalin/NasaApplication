@@ -1,10 +1,15 @@
 package com.example.nasaapplication.ui
 
+import android.os.Handler
+import android.os.Looper
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
 // Класс с константами для Ui
 class ConstantsUi {
     companion object {
-        @JvmField
-        val WIKI_URL: String = "https://en.wikipedia.org/wiki/"
+        @JvmField // TODO: Доработать изменение языка запроса в зависимости от языковых настроек пользователя
+        val WIKI_URL: String = "https://ru.wikipedia.org/wiki/"
         @JvmField
         val DAY_PHOTO_TEXT: String ="\"Фотография дня на \""
         @JvmField
@@ -15,5 +20,15 @@ class ConstantsUi {
         // Сообщения об ошибках
         @JvmField
         val ERROR_LINK_EMPTY: String = "Ссылка пуста"
+
+        // Константы для метода ShowUrlInWiki
+        @JvmField
+        val SHOWURLINWIKI_METHOD_NAME: String = "GET"
+        @JvmField
+        val SHOWURLINWIKI_READ_TIME_OUT: Int = 10000
+        @JvmField
+        val SHOWURLINWIKI_TEXT_CHARSER: String = "text/html; charset=utf-8"
+        @JvmField
+        val SHOWURLINWIKI_ENCODING: String = "utf-8"
     }
 }

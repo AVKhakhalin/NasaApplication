@@ -6,42 +6,59 @@
     android:layout_height="match_parent"
     android:background="?attr/colorOnBackground">
 
-    <androidx.core.widget.NestedScrollView
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="56dp"
+        android:paddingStart="@dimen/main_constraint_layout_padding_start"
+        android:paddingEnd="@dimen/main_constraint_layout_padding_end">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/main_constraint_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingStart="@dimen/main_constraint_layout_padding_start"
-            android:paddingEnd="@dimen/main_constraint_layout_padding_end">
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_wiki_field"
+            style="@style/CustomOutlinedBox"
+            android:layout_width="@dimen/input_wiki_field_width"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/tab_layout_height"
+            android:fontFamily="@font/convergence"
+            android:hint="@string/input_wiki_field_hint"
+            app:counterOverflowTextColor="?attr/colorSecondaryVariant"
+            app:endIconCheckable="true"
+            app:helperText="@string/input_wiki_field_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_weight="1">
 
-             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_wiki_field"
-                style="@style/CustomOutlinedBox"
-                android:layout_width="@dimen/input_wiki_field_width"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_wiki_field_text"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/input_wiki_field_hint"
-                android:fontFamily="@font/convergence"
-                 android:layout_marginTop="@dimen/tab_layout_height"
-                app:counterOverflowTextColor="?attr/colorSecondaryVariant"
-                app:endIconCheckable="true"
-                app:helperText="@string/input_wiki_field_text"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                android:fontFamily="@font/aldrich"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_wiki_field_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:fontFamily="@font/aldrich"/>
-            </com.google.android.material.textfield.TextInputLayout>
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorOnBackground"
+            android:scrollbars="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/input_wiki_field"
+            tools:ignore="WebViewLayout">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+            <WebView
+                android:id="@+id/web_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="?attr/colorOnBackground"
+                android:backgroundTintMode="screen"/>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_app_bar"
@@ -59,7 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="?attr/colorSecondaryVariant"
-        app:layout_anchor="@id/bottom_app_bar"
+        app:layout_anchor="@+id/bottom_app_bar"
         app:srcCompat="@drawable/ic_plus_fab"
         app:tint="?attr/colorOnPrimary" />
 
