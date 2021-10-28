@@ -3,22 +3,17 @@ package com.example.nasaapplication.ui.fragments.contents
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.*
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.isInvisible
-import androidx.fragment.app.Fragment
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
-import com.example.nasaapplication.controller.observers.viewmodels.PODData
 import com.example.nasaapplication.databinding.FragmentSettingsBinding
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
-import com.example.nasaapplication.ui.utils.FireView
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
-import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.chip.Chip
 
 class SettingsFragment: ViewBindingFragment<FragmentSettingsBinding>(FragmentSettingsBinding::inflate) {
@@ -74,6 +69,7 @@ class SettingsFragment: ViewBindingFragment<FragmentSettingsBinding>(FragmentSet
                 binding.settingsFireWall.invalidate()
             }
         }
+
         buttonStyleChooseNight?.let {
             it.setOnClickListener {
                 buttonStyleChooseDay?.let { it.visibility = View.INVISIBLE }
@@ -89,74 +85,6 @@ class SettingsFragment: ViewBindingFragment<FragmentSettingsBinding>(FragmentSet
                 binding.settingsFireWall.setIsClick(true)
                 binding.settingsFireWall.invalidate()
             }
-        }
-
-        // Установка BOTTOM NAVIGATION MENU
-        setBottomAppBar(view)
-    }
-
-    private fun setBottomAppBar(view: View) {
-        val context = activity as MainActivity
-        context.setSupportActionBar(binding.bottomNavigationMenu.bottomAppBar)
-        setHasOptionsMenu(true)
-
-        switchBottomAppBar(context)
-        binding.bottomNavigationMenu.bottomAppBarFab.setOnClickListener {
-            switchBottomAppBar(context)
-        }
-    }
-
-    // Переключение режима нижней навигационной кнопки BottomAppBar
-    // с центрального на крайнее левое положение и обратно
-    private fun switchBottomAppBar(context: MainActivity) {
-        if (isMain) {
-            isMain = false
-            binding.bottomNavigationMenu.bottomAppBar.navigationIcon = null
-            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-            binding.bottomNavigationMenu.bottomAppBarFab.setImageDrawable(
-                ContextCompat.getDrawable(
-                    context, R.drawable.ic_back_fab
-                )
-            )
-            binding.bottomNavigationMenu.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar_other_screen)
-        } else {
-            isMain = true
-            binding.bottomNavigationMenu.bottomAppBar.navigationIcon =
-                ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
-            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-            binding.bottomNavigationMenu.bottomAppBarFab.setImageDrawable(
-                ContextCompat.getDrawable(
-                    context, R.drawable.ic_plus_fab
-                )
-            )
-            binding.bottomNavigationMenu.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
-        }
-    }
-
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        super.onCreateOptionsMenu(menu, inflater)
-//    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.app_bar_save -> toast("Сохранение")
-            R.id.app_bar_settings -> toast("Настройки")
-            R.id.app_bar_search -> toast("Поиск")
-//            android.R.id.home -> {
-//                navigationDialogs?.let {
-//                    it.showBottomNavigationDrawerDialogFragment(requireActivity())
-//                }
-//            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-    //endregion
-
-    // Метод для отображения сообщения в виде Toast
-    private fun Fragment.toast(string: String?) {
-        Toast.makeText(context, string, Toast.LENGTH_SHORT).apply {
-            setGravity(Gravity.BOTTOM, 0, 250)
-            show()
         }
     }
 }

@@ -53,14 +53,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="?attr/colorOnBackground"
-                android:backgroundTintMode="screen"/>
+                android:backgroundTintMode="screen" />
         </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <include
-        android:id="@+id/bottom_navigation_menu"
-        layout="@layout/bottom_navigation_menu_layout" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

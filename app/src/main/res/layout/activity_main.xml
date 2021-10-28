@@ -25,4 +25,8 @@
         android:layout_height="match_parent"
         android:visibility="visible"/>
 
+    <include
+        android:id="@+id/bottom_navigation_menu"
+        layout="@layout/bottom_navigation_menu_layout" />
+
 </FrameLayout>
