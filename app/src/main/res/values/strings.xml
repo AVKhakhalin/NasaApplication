@@ -9,6 +9,8 @@
     <string name="error">Ошибка</string>
     <string name="error_need_api_key">Вам нужен API-ключ.</string>
     <string name="error_unknown">Неизвестная ошибка.</string>
+    <string name="error_wiki_empty_request">\u003cBr>\u003cBr>Информацию найти не удалось.\u003cBr>\u003cBr>Попробуйте переформулировать ваш запрос.</string>
+
     <string name="bottom_sheet_description_title_text" />
     <string name="bottom_sheet_description_text_text" />
     <string name="app_bar_settings_title">Настройки</string>

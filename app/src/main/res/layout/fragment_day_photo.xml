@@ -102,27 +102,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <include layout="@layout/bottom_sheet_layout" />
+    <include
+        layout="@layout/bottom_sheet_layout" />
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:backgroundTint="?attr/colorPrimary"
-        app:fabAlignmentMode="center"
-        app:hideOnScroll="true"
-        app:layout_scrollFlags="scroll|enterAlways"
-        app:navigationIcon="@drawable/ic_hamburger_menu_bottom_bar" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/bottom_app_bar_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="?attr/colorSecondaryVariant"
-        app:layout_anchor="@+id/bottom_app_bar"
-        app:srcCompat="@drawable/ic_plus_fab"
-        app:tint="?attr/colorOnPrimary" />
+    <include
+        android:id="@+id/bottom_navigation_menu"
+        layout="@layout/bottom_navigation_menu_layout" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

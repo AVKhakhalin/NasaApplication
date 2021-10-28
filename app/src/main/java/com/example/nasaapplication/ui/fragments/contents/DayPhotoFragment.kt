@@ -1,10 +1,10 @@
 package com.example.nasaapplication.ui.fragments.contents
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
 import coil.load
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
@@ -25,6 +26,7 @@ import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
+import com.google.android.material.tabs.TabLayout
 import java.util.*
 
 class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDayPhotoBinding::inflate) {
@@ -171,10 +173,10 @@ class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDay
     //region МЕТОДЫ ДЛЯ РАБОТЫ С BOTTOM NAVIGATION MENU
     private fun setBottomAppBar(view: View) {
         val context = activity as MainActivity
-        context.setSupportActionBar(binding.bottomAppBar)
+        context.setSupportActionBar(binding.bottomNavigationMenu.bottomAppBar)
         setHasOptionsMenu(true)
 
-        binding.bottomAppBarFab.setOnClickListener {
+        binding.bottomNavigationMenu.bottomAppBarFab.setOnClickListener {
             switchBottomAppBar(context)
         }
     }
@@ -184,25 +186,25 @@ class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDay
     private fun switchBottomAppBar(context: MainActivity) {
         if (isMain) {
             isMain = false
-            binding.bottomAppBar.navigationIcon = null
-            binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-            binding.bottomAppBarFab.setImageDrawable(
+            binding.bottomNavigationMenu.bottomAppBar.navigationIcon = null
+            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+            binding.bottomNavigationMenu.bottomAppBarFab.setImageDrawable(
                 ContextCompat.getDrawable(
                     context, R.drawable.ic_back_fab
                 )
             )
-            binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar_other_screen)
+            binding.bottomNavigationMenu.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar_other_screen)
         } else {
             isMain = true
-            binding.bottomAppBar.navigationIcon =
+            binding.bottomNavigationMenu.bottomAppBar.navigationIcon =
                 ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
-            binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-            binding.bottomAppBarFab.setImageDrawable(
+            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+            binding.bottomNavigationMenu.bottomAppBarFab.setImageDrawable(
                 ContextCompat.getDrawable(
                     context, R.drawable.ic_plus_fab
                 )
             )
-            binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
+            binding.bottomNavigationMenu.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
         }
     }
 
@@ -214,10 +216,17 @@ class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDay
         when (item.itemId) {
             R.id.app_bar_save -> toast("Сохранение")
             R.id.app_bar_settings -> navigationContent?.let{
+                requireActivity().findViewById<ViewPager>(R.id.view_pager).visibility =
+                    View.INVISIBLE
+                requireActivity().findViewById<TabLayout>(R.id.tab_layout).visibility =
+                    View.INVISIBLE
+                requireActivity().findViewById<FrameLayout>(R.id.activity_fragments_container)
+                    .visibility = View.VISIBLE
                 it.showSettingsFragment(false)
             }
             R.id.app_bar_search -> toast("Поиск")
             android.R.id.home -> {
+                toast("DayPhotoFragment Бургер кнопка")
                 navigationDialogs?.let {
                     it.showBottomNavigationDrawerDialogFragment(requireActivity())
                 }

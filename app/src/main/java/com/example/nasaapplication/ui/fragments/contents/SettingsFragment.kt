@@ -97,10 +97,11 @@ class SettingsFragment: ViewBindingFragment<FragmentSettingsBinding>(FragmentSet
 
     private fun setBottomAppBar(view: View) {
         val context = activity as MainActivity
-        context.setSupportActionBar(binding.bottomAppBar)
+        context.setSupportActionBar(binding.bottomNavigationMenu.bottomAppBar)
         setHasOptionsMenu(true)
+
         switchBottomAppBar(context)
-        binding.bottomAppBarFab.setOnClickListener {
+        binding.bottomNavigationMenu.bottomAppBarFab.setOnClickListener {
             switchBottomAppBar(context)
         }
     }
@@ -110,41 +111,42 @@ class SettingsFragment: ViewBindingFragment<FragmentSettingsBinding>(FragmentSet
     private fun switchBottomAppBar(context: MainActivity) {
         if (isMain) {
             isMain = false
-            binding.bottomAppBar.navigationIcon = null
-            binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-            binding.bottomAppBarFab.setImageDrawable(
+            binding.bottomNavigationMenu.bottomAppBar.navigationIcon = null
+            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+            binding.bottomNavigationMenu.bottomAppBarFab.setImageDrawable(
                 ContextCompat.getDrawable(
                     context, R.drawable.ic_back_fab
                 )
             )
-            binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar_other_screen)
+            binding.bottomNavigationMenu.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar_other_screen)
         } else {
             isMain = true
-            binding.bottomAppBar.navigationIcon =
+            binding.bottomNavigationMenu.bottomAppBar.navigationIcon =
                 ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
-            binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-            binding.bottomAppBarFab.setImageDrawable(
+            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+            binding.bottomNavigationMenu.bottomAppBarFab.setImageDrawable(
                 ContextCompat.getDrawable(
                     context, R.drawable.ic_plus_fab
                 )
             )
-            binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
+            binding.bottomNavigationMenu.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        super.onCreateOptionsMenu(menu, inflater)
+//    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.app_bar_save -> toast("Сохранение")
             R.id.app_bar_settings -> toast("Настройки")
             R.id.app_bar_search -> toast("Поиск")
-            android.R.id.home -> {
-                navigationDialogs?.let {
-                    it.showBottomNavigationDrawerDialogFragment(requireActivity())
-                }
-            }
+//            android.R.id.home -> {
+//                navigationDialogs?.let {
+//                    it.showBottomNavigationDrawerDialogFragment(requireActivity())
+//                }
+//            }
         }
         return super.onOptionsItemSelected(item)
     }

@@ -11,6 +11,8 @@ class ConstantsUi {
         @JvmField // TODO: Доработать изменение языка запроса в зависимости от языковых настроек пользователя
         val WIKI_URL: String = "https://ru.wikipedia.org/wiki/"
         @JvmField
+        val WIKI_ERROR_URL: String = "https://ru.m.wikipedia.org/wiki/wiki"
+        @JvmField
         val DAY_PHOTO_TEXT: String ="\"Фотография дня на \""
         @JvmField
         val SHARED_PREFERENCES_KEY: String = "Shared Preferences"

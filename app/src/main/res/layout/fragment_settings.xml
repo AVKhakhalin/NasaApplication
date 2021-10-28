@@ -5,72 +5,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/main_constraint_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <com.example.nasaapplication.ui.utils.FireView
-                android:id="@+id/settings_fire_wall"
-                android:layout_width="@dimen/settings_fire_wall_layout_width"
-                android:layout_height="@dimen/settings_fire_wall_layout_height"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/button_style_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/convergence"
-                android:text="@string/button_style_day_text"
-                android:textAllCaps="true"
-                android:textColor="?attr/colorOnPrimary"
-                app:chipBackgroundColor="?attr/colorSecondaryVariant"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/button_style_night"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.499"
-                app:rippleColor="?attr/colorPrimaryVariant" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/button_style_night"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/button_style_night"
-                android:fontFamily="@font/convergence"
-                android:textColor="?attr/colorOnPrimary"
-                android:textAllCaps="true"
-                app:chipBackgroundColor="?attr/colorSecondaryVariant"
-                app:rippleColor="?attr/colorPrimaryVariant"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/button_style_day"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_app_bar"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:backgroundTint="?attr/colorPrimaryVariant"
-        app:fabAlignmentMode="center"
-        app:hideOnScroll="true"
-        app:layout_scrollFlags="scroll|enterAlways"
-        app:navigationIcon="@drawable/ic_hamburger_menu_bottom_bar" />
+        android:layout_height="match_parent">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/bottom_app_bar_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="?attr/colorSecondaryVariant"
-        app:layout_anchor="@id/bottom_app_bar"
-        app:srcCompat="@drawable/ic_plus_fab"
-        app:tint="?attr/colorOnPrimary" />
+        <com.example.nasaapplication.ui.utils.FireView
+            android:id="@+id/settings_fire_wall"
+            android:layout_width="@dimen/settings_fire_wall_layout_width"
+            android:layout_height="@dimen/settings_fire_wall_layout_height"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/button_style_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/convergence"
+            android:text="@string/button_style_day_text"
+            android:textAllCaps="true"
+            android:textColor="?attr/colorOnPrimary"
+            app:chipBackgroundColor="?attr/colorSecondaryVariant"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_style_night"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.499"
+            app:rippleColor="?attr/colorPrimaryVariant" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/button_style_night"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/convergence"
+            android:text="@string/button_style_night"
+            android:textAllCaps="true"
+            android:textColor="?attr/colorOnPrimary"
+            app:chipBackgroundColor="?attr/colorSecondaryVariant"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/button_style_day"
+            app:layout_constraintTop_toTopOf="parent"
+            app:rippleColor="?attr/colorPrimaryVariant" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/bottom_navigation_menu"
+        layout="@layout/bottom_navigation_menu_layout" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

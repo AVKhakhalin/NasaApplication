@@ -1,40 +1,36 @@
 package com.example.nasaapplication.ui.fragments.contents
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.*
-import android.widget.TextView
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import coil.load
+import androidx.viewpager.widget.ViewPager
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
-import com.example.nasaapplication.controller.observers.viewmodels.PODData
 import com.example.nasaapplication.controller.observers.viewmodels.PODViewModel
-import com.example.nasaapplication.databinding.FragmentDayPhotoBinding
 import com.example.nasaapplication.databinding.FragmentSearchWikiBinding
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.chip.Chip
+import com.google.android.material.tabs.TabLayout
 import java.io.BufferedReader
+import java.io.FileNotFoundException
 import java.io.InputStreamReader
+import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
 import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
@@ -43,8 +39,6 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchWikiBinding>(Fragmen
     // Navigations
     private var navigationDialogs: NavigationDialogs? = null
     private var navigationContent: NavigationContent? = null
-    // TextView с датой
-    private var curDate: String = ""
     // ViewModel
     private val viewModel: PODViewModel by lazy {
         ViewModelProviders.of(this).get(PODViewModel::class.java)
@@ -100,15 +94,33 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchWikiBinding>(Fragmen
             val urlConnection = url.openConnection() as HttpsURLConnection
             urlConnection.requestMethod = ConstantsUi.SHOWURLINWIKI_METHOD_NAME
             urlConnection.readTimeout = ConstantsUi.SHOWURLINWIKI_READ_TIME_OUT
-            val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
-            val result = getLines(reader)
-            val handler = Handler(Looper.getMainLooper())
-            handler.post {
-                binding.webViewContainer.loadDataWithBaseURL(
-                    null,result,
-                    ConstantsUi.SHOWURLINWIKI_TEXT_CHARSER,
-                    ConstantsUi.SHOWURLINWIKI_ENCODING,
-                    null)
+            var reader: BufferedReader? = null
+            try {
+                reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
+            } catch (exception: FileNotFoundException) {
+                urlConnection.disconnect()
+            }
+            if (reader != null) {
+                val result = getLines(reader)
+                val handler = Handler(Looper.getMainLooper())
+                handler.post {
+                    binding.webViewContainer.loadDataWithBaseURL(
+                        null,
+                        result,
+                        ConstantsUi.SHOWURLINWIKI_TEXT_CHARSER,
+                        ConstantsUi.SHOWURLINWIKI_ENCODING,
+                        null)
+                }
+            } else {
+                val handler = Handler(Looper.getMainLooper())
+                handler.post {
+                    binding.webViewContainer.loadDataWithBaseURL(
+                        null,
+                        resources.getString(R.string.error_wiki_empty_request),
+                        ConstantsUi.SHOWURLINWIKI_TEXT_CHARSER,
+                        ConstantsUi.SHOWURLINWIKI_ENCODING,
+                        null)
+                }
             }
             urlConnection.disconnect()
         }.start()
@@ -119,19 +131,19 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchWikiBinding>(Fragmen
         return reader.lines().collect(Collectors.joining("\n"))
     }
 
-    private fun setBottomSheetBehavior(bottomSheet: ConstraintLayout) {
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-    }
+//    private fun setBottomSheetBehavior(bottomSheet: ConstraintLayout) {
+//        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+//        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+//    }
     //endregion
 
     //region МЕТОДЫ ДЛЯ РАБОТЫ С BOTTOM NAVIGATION MENU
     private fun setBottomAppBar(view: View) {
         val context = activity as MainActivity
-        context.setSupportActionBar(binding.bottomAppBar)
+        context.setSupportActionBar(binding.bottomNavigationMenu.bottomAppBar)
         setHasOptionsMenu(true)
 
-        binding.bottomAppBarFab.setOnClickListener {
+        binding.bottomNavigationMenu.bottomAppBarFab.setOnClickListener {
             switchBottomAppBar(context)
         }
     }
@@ -141,25 +153,25 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchWikiBinding>(Fragmen
     private fun switchBottomAppBar(context: MainActivity) {
         if (isMain) {
             isMain = false
-            binding.bottomAppBar.navigationIcon = null
-            binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-            binding.bottomAppBarFab.setImageDrawable(
+            binding.bottomNavigationMenu.bottomAppBar.navigationIcon = null
+            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+            binding.bottomNavigationMenu.bottomAppBarFab.setImageDrawable(
                 ContextCompat.getDrawable(
                     context, R.drawable.ic_back_fab
                 )
             )
-            binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar_other_screen)
+            binding.bottomNavigationMenu.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar_other_screen)
         } else {
             isMain = true
-            binding.bottomAppBar.navigationIcon =
+            binding.bottomNavigationMenu.bottomAppBar.navigationIcon =
                 ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
-            binding.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-            binding.bottomAppBarFab.setImageDrawable(
+            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+            binding.bottomNavigationMenu.bottomAppBarFab.setImageDrawable(
                 ContextCompat.getDrawable(
                     context, R.drawable.ic_plus_fab
                 )
             )
-            binding.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
+            binding.bottomNavigationMenu.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
         }
     }
 
@@ -171,10 +183,17 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchWikiBinding>(Fragmen
         when (item.itemId) {
             R.id.app_bar_save -> toast("Сохранение")
             R.id.app_bar_settings -> navigationContent?.let{
+                requireActivity().findViewById<ViewPager>(R.id.view_pager).visibility =
+                    View.INVISIBLE
+                requireActivity().findViewById<TabLayout>(R.id.tab_layout).visibility =
+                    View.INVISIBLE
+                requireActivity().findViewById<FrameLayout>(R.id.activity_fragments_container)
+                    .visibility = View.VISIBLE
                 it.showSettingsFragment(false)
             }
             R.id.app_bar_search -> toast("Поиск")
             android.R.id.home -> {
+                toast("SearchWikiFragment Бургер кнопка")
                 navigationDialogs?.let {
                     it.showBottomNavigationDrawerDialogFragment(requireActivity())
                 }
