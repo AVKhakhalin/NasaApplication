@@ -27,4 +27,5 @@
     <string name="action_bottom_bar_navigation_to_archive_title">Перейти в архив</string>
     <string name="action_bottom_bar_navigation_to_send_title">Перейти к отправке</string>
     <string name="action_bottom_bar_add_to_favorite_title">Добавить в любимое</string>
+    <string name="tablayout_photo_of_day_icon_text">Поиск</string>
 </resources>

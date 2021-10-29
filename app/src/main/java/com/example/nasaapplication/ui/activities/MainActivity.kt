@@ -1,19 +1,16 @@
 package com.example.nasaapplication.ui.activities
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.example.nasaapplication.R
+import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.contents.NavigationContentGetter
 import com.example.nasaapplication.controller.navigation.contents.ViewPagerAdapter
@@ -21,7 +18,6 @@ import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialo
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogsGetter
 import com.example.nasaapplication.databinding.ActivityMainBinding
 import com.example.nasaapplication.ui.ConstantsUi
-import com.example.nasaapplication.ui.fragments.contents.SettingsFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.tabs.TabLayout
 
@@ -62,9 +58,15 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         // Подключение Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-        // Подключение ViewPagerAdapter для запуска фрагментов
+        // Подключение ViewPagerAdapter и TabLayout для запуска фрагментов
         binding.viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
+
+        // Настройка TabLayout (установка на него картинок)
+        binding.tabLayout.getTabAt(ConstantsController.DAY_PHOTO_FRAGMENT_INDEX)?.customView =
+            layoutInflater.inflate(R.layout.tablayout_photo_of_day, null)
+        binding.tabLayout.getTabAt(ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX)?.customView =
+            layoutInflater.inflate(R.layout.tablayout_search_in_wiki, null)
 
         // Установка настроек видимости элементов макета MainActivity
         binding.viewPager.visibility = View.VISIBLE

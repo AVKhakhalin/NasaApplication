@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.viewpager.widget.ViewPager
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
@@ -15,8 +14,7 @@ import com.example.nasaapplication.ui.activities.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
 
-class BottomNavigationDrawerDialogFragment(
-): BottomSheetDialogFragment() {
+class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigators
     private var navigationContent: NavigationContent? = null

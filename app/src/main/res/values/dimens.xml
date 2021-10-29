@@ -20,4 +20,6 @@
     <dimen name="settings_fire_wall_layout_height">0dp</dimen>
     <dimen name="navigation_view_margin_top">8dp</dimen>
     <dimen name="navigation_view_margin_end">8dp</dimen>
+    <dimen name="tablayout_photo_of_day_icon_drawable_padding">10dp</dimen>
+    <dimen name="tablayout_photo_of_day_icon_text_size">20sp</dimen>
 </resources>

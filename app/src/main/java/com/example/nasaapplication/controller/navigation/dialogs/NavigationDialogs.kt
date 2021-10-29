@@ -7,8 +7,13 @@ import com.example.nasaapplication.ui.fragments.dialogs.BottomNavigationDrawerDi
 
 class NavigationDialogs {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
-    private var bottomNavigationDrawerDialogFragment: BottomNavigationDrawerDialogFragment? = null
+    private lateinit var bottomNavigationDrawerDialogFragment: BottomNavigationDrawerDialogFragment
     //endregion
+
+    // Метод получения bottomNavigationDrawerDialogFragment
+    fun getBottomNavigationDrawerDialogFragment(): BottomNavigationDrawerDialogFragment {
+        return bottomNavigationDrawerDialogFragment
+    }
 
     // Отображение диалога с контекстным меню, появляющимся при нажатии на кнопку типа "Гамбургер"
     fun showBottomNavigationDrawerDialogFragment(

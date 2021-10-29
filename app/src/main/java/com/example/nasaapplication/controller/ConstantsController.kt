@@ -21,7 +21,7 @@ class ConstantsController(
 
         // Индексы фрагментов
         @JvmField
-        val DAY_PHOTO_FRAGMENT: Int = 0
-        val SEARCH_WIKI_FRAGMENT: Int = 1
+        val DAY_PHOTO_FRAGMENT_INDEX: Int = 0
+        val SEARCH_WIKI_FRAGMENT_INDEX: Int = 1
     }
 }

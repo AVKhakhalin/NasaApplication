@@ -16,7 +16,7 @@ import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.observers.viewmodels.PODViewModel
-import com.example.nasaapplication.databinding.FragmentSearchWikiBinding
+import com.example.nasaapplication.databinding.FragmentSearchInWikiBinding
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
@@ -28,7 +28,8 @@ import java.net.URL
 import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
-class SearchWikiFragment: ViewBindingFragment<FragmentSearchWikiBinding>(FragmentSearchWikiBinding::inflate) {
+class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
+    FragmentSearchInWikiBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
     private lateinit var navigationDialogs: NavigationDialogs

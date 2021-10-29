@@ -31,16 +31,18 @@ class FireView @JvmOverloads constructor(
     private val deltaTime: Long = 50
     private var countDownCounter: Int = 0
     private val numberFiltredBlackColorPoints: Int = 10
+    // MainActivity
+    private var mainActivity: MainActivity = (context as MainActivity)
     //endregion
 
     // Метод для установки признака нажатия на кнопку установок
     fun setIsClick(isClick: Boolean) {
         this.isClick = isClick
-        if ((isDayTheme) && (!(context as MainActivity).getIsThemeDay())) {
+        if ((isDayTheme) && (!mainActivity.getIsThemeDay())) {
             // Фосстановление чёрного цвета на остыввших языках пламени
             initFirePalette()
         }
-        isDayTheme = (context as MainActivity).getIsThemeDay()
+        isDayTheme = mainActivity.getIsThemeDay()
     }
 
     // Метод для первичной инициализации размеров
@@ -51,7 +53,7 @@ class FireView @JvmOverloads constructor(
         super.onSizeChanged(w, h, oldw, oldh)
 
         // Установка текущей темы приложения
-        isDayTheme = (context as MainActivity).getIsThemeDay()
+        isDayTheme = mainActivity.getIsThemeDay()
         if (isDayTheme) {
             // Фильтрация чёрного цвета на осшивших языках пламени
             repeat(numberFiltredBlackColorPoints) {
@@ -92,9 +94,12 @@ class FireView @JvmOverloads constructor(
                             firePalette[countDownCounter++] = -0xf8f8f9
                         }
                     } else {
-                        // Перезапуск активити
                         initSettings()
-                        (context as MainActivity).recreate()
+                        // Закрытие всех открытых диалоговых окон
+                        mainActivity.getNavigationDialogs()
+                            .getBottomNavigationDrawerDialogFragment().dismiss()
+                        // Перезапуск активити
+                        mainActivity.recreate()
                     }
                 }
             }
