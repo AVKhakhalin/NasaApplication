@@ -10,7 +10,7 @@
         android:id="@+id/main_constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="56dp"
+        android:layout_marginBottom="?actionBarSize"
         android:paddingStart="@dimen/main_constraint_layout_padding_start"
         android:paddingEnd="@dimen/main_constraint_layout_padding_end">
 
@@ -19,7 +19,7 @@
             style="@style/CustomOutlinedBox"
             android:layout_width="@dimen/input_wiki_field_width"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/tab_layout_height"
+            android:layout_marginTop="?actionBarSize"
             android:fontFamily="@font/convergence"
             android:hint="@string/input_wiki_field_hint"
             app:counterOverflowTextColor="?attr/colorSecondaryVariant"

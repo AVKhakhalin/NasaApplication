@@ -19,23 +19,25 @@ import com.google.android.material.chip.Chip
 class SettingsFragment: ViewBindingFragment<FragmentSettingsBinding>(FragmentSettingsBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
-    private var navigationDialogs: NavigationDialogs? = null
-    private var navigationContent: NavigationContent? = null
+    private lateinit var navigationDialogs: NavigationDialogs
+    private lateinit var navigationContent: NavigationContent
     // Buttons (Chip)
-    private var buttonStyleChooseDay: Chip? = null
-    private var buttonStyleChooseNight: Chip? = null
+    private lateinit var buttonStyleChooseDay: Chip
+    private lateinit var buttonStyleChooseNight: Chip
+    // MainActivity
+    private lateinit var mainActivity: MainActivity
     //endregion
 
     companion object {
         fun newInstance() = SettingsFragment()
-        private var isMain = true
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        mainActivity = (context as MainActivity)
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
-        navigationDialogs = (context as MainActivity).getNavigationDialogs()
-        navigationContent = (context as MainActivity).getNavigationContent()
+        navigationDialogs = mainActivity.getNavigationDialogs()
+        navigationContent = mainActivity.getNavigationContent()
         //endregion
     }
 

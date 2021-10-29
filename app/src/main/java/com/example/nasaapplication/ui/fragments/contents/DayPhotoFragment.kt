@@ -26,14 +26,14 @@ import java.util.*
 class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDayPhotoBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
-    private var navigationDialogs: NavigationDialogs? = null
-    private var navigationContent: NavigationContent? = null
+    private lateinit var navigationDialogs: NavigationDialogs
+    private lateinit var navigationContent: NavigationContent
     // Buttons (Chip)
-    private var buttonChipYesterday: Chip? = null
-    private var buttonChipToday: Chip? = null
-    private var buttonChipBeforeYesterday: Chip? = null
+    private lateinit var buttonChipYesterday: Chip
+    private lateinit var buttonChipToday: Chip
+    private lateinit var buttonChipBeforeYesterday: Chip
     // TextView с датой
-    private var currentDateTextView: TextView? = null
+    private lateinit var currentDateTextView: TextView
     private var curDate: String = ""
     // ViewModel
     private val viewModel: PODViewModel by lazy {
@@ -43,18 +43,20 @@ class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDay
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var bottomSheetDescriptionTitle: TextView
     private lateinit var bottomSheetDescriptionText: TextView
+    // MainActivity
+    private lateinit var mainActivity: MainActivity
     //endregion
 
     companion object {
         fun newInstance() = DayPhotoFragment()
-        private var isMain = true
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        mainActivity = (context as MainActivity)
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
-        navigationDialogs = (context as MainActivity).getNavigationDialogs()
-        navigationContent = (context as MainActivity).getNavigationContent()
+        navigationDialogs = mainActivity.getNavigationDialogs()
+        navigationContent = mainActivity.getNavigationContent()
         //endregion
     }
 

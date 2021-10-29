@@ -122,40 +122,36 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         if (isMain) {
             isMain = false
             binding.bottomNavigationMenu.bottomAppBar.navigationIcon = null
-            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode =
+                BottomAppBar.FAB_ALIGNMENT_MODE_END
             binding.bottomNavigationMenu.bottomAppBarFab.setImageDrawable(
-                ContextCompat.getDrawable(
-                    context, R.drawable.ic_back_fab
-                )
+                ContextCompat.getDrawable(context, R.drawable.ic_back_fab)
             )
-            binding.bottomNavigationMenu.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar_other_screen)
+            binding.bottomNavigationMenu.bottomAppBar.replaceMenu(
+                R.menu.bottom_menu_bottom_bar_other_screen)
         } else {
             isMain = true
             binding.bottomNavigationMenu.bottomAppBar.navigationIcon =
                 ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
-            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode =
+                BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
             binding.bottomNavigationMenu.bottomAppBarFab.setImageDrawable(
-                ContextCompat.getDrawable(
-                    context, R.drawable.ic_plus_fab
-                )
+                ContextCompat.getDrawable(context, R.drawable.ic_plus_fab)
             )
             binding.bottomNavigationMenu.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.bottom_menu_navigation, menu)
+        // Отобразить справа внизу стартового меню
+        menuInflater.inflate(R.menu.bottom_menu_bottom_bar, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_bottom_bar_navigation_to_send -> toast("Перейти к отправке")
-            R.id.action_bottom_bar_navigation_to_archive -> toast("Перейти в архив")
-            R.id.action_bottom_bar_navigation_to_observe -> toast("Перейти к картинке дня")
-            R.id.action_bottom_bar_save -> toast("Сохранение")
-            R.id.action_bottom_bar_search -> toast("Поиск")
             R.id.action_bottom_bar_settings -> navigationContent?.let{
+                // Отобразить фрагмент с настройками приложения
                 this.findViewById<ViewPager>(R.id.view_pager).visibility =
                     View.INVISIBLE
                 this.findViewById<TabLayout>(R.id.tab_layout).visibility =
@@ -165,8 +161,10 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 it.showSettingsFragment(false)
             }
             android.R.id.home -> {
+                // Отображение списка основных содержательных разделов приложения
                 navigationDialogs?.let {
-                    it.showBottomNavigationDrawerDialogFragment(this)
+                    it.showBottomNavigationDrawerDialogFragment(
+                        this)
                 }
             }
         }
@@ -174,11 +172,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     }
     //endregion
 
-    // Метод для отображения сообщения в виде Toast
-    private fun MainActivity.toast(string: String?) {
-        Toast.makeText(this, string, Toast.LENGTH_SHORT).apply {
-            setGravity(Gravity.BOTTOM, 0, 250)
-            show()
-        }
+    // Метод получения ViewPager
+    fun getViewPager(): ViewPager {
+        return binding.viewPager
     }
 }

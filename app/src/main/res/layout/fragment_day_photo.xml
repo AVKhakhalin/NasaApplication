@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:paddingStart="@dimen/main_constraint_layout_padding_start"
             android:paddingEnd="@dimen/main_constraint_layout_padding_end"
-            android:layout_marginTop="@dimen/tab_layout_height">
+            android:layout_marginTop="?actionBarSize">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/button_before_yesterday_photo"

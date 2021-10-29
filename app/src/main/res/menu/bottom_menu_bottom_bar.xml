@@ -2,17 +2,38 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
+<!--    <item
+        android:id="@+id/action_bottom_bar_add_to_favorite"
+        android:icon="@drawable/ic_favourite"
+        android:title="@string/action_bottom_bar_add_to_favorite_title"
+        android:fontFamily="@font/convergence"
+        app:showAsAction="always" /> -->
+
+<!--    <item
+        android:id="@+id/action_bottom_bar_navigation_to_send"
+        android:icon="@drawable/ic_send"
+        android:title="@string/action_bottom_bar_navigation_to_send_title"
+        android:fontFamily="@font/convergence"
+        app:showAsAction="always" /> -->
+
+<!--    <item
         android:id="@+id/action_bottom_bar_save"
         android:icon="@drawable/ic_save"
-        android:title="@string/app_bar_save_title"
+        android:title="@string/action_bottom_bar_save_title"
         android:fontFamily="@font/convergence"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" /> -->
 
     <item
         android:id="@+id/action_bottom_bar_settings"
         android:icon="@drawable/ic_settings_menu"
-        android:title="@string/app_bar_settings_title"
+        android:title="@string/action_bottom_bar_settings_title"
         android:fontFamily="@font/convergence"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
+
+<!--    <item
+        android:id="@+id/action_bottom_bar_navigation_to_archive"
+        android:icon="@drawable/ic_archive"
+        android:title="@string/action_bottom_bar_navigation_to_archive_title"
+        android:fontFamily="@font/convergence"
+        app:showAsAction="always" /> -->
 </menu>

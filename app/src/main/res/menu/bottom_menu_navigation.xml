@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <group android:checkableBehavior="none">
+    <group
+        android:checkableBehavior="none"
+        android:color="?attr/colorSecondary">
         <item
-            android:id="@+id/action_bottom_bar_navigation_to_observe"
+            android:id="@+id/action_bottom_bar_photo_of_day"
             android:icon="@drawable/ic_telescope"
-            android:title="@string/action_navigation_to_observe_text"
+            android:title="@string/action_bottom_bar_photo_of_day_title"
             android:fontFamily="@font/convergence"
             app:showAsAction="always" />
+
         <item
-            android:id="@+id/action_bottom_bar_navigation_to_archive"
-            android:icon="@drawable/ic_archive"
-            android:title="@string/action_navigation_to_archive_text"
-            android:fontFamily="@font/convergence"
-            app:showAsAction="always" />
-        <item
-            android:id="@+id/action_bottom_bar_navigation_to_send"
-            android:icon="@drawable/ic_send"
-            android:title="@string/action_navigation_to_send_text"
+            android:id="@+id/action_bottom_bar_search_to_wiki"
+            android:icon="@drawable/ic_search"
+            android:title="@string/action_bottom_bar_search_to_wiki_title"
             android:fontFamily="@font/convergence"
             app:showAsAction="always" />
     </group>

@@ -2,6 +2,7 @@ package com.example.nasaapplication.controller.navigation.dialogs
 
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
+import androidx.viewpager.widget.ViewPager
 import com.example.nasaapplication.ui.fragments.dialogs.BottomNavigationDrawerDialogFragment
 
 class NavigationDialogs {
@@ -10,11 +11,12 @@ class NavigationDialogs {
     //endregion
 
     // Отображение диалога с контекстным меню, появляющимся при нажатии на кнопку типа "Гамбургер"
-    fun showBottomNavigationDrawerDialogFragment(fragmentActivity: FragmentActivity
+    fun showBottomNavigationDrawerDialogFragment(
+        fragmentActivity: FragmentActivity
     ) {
         bottomNavigationDrawerDialogFragment =
-            BottomNavigationDrawerDialogFragment()
-        bottomNavigationDrawerDialogFragment?.let{
+            BottomNavigationDrawerDialogFragment.newInstance()
+        bottomNavigationDrawerDialogFragment?.let {
             it.show(fragmentActivity.supportFragmentManager, "")
         }
     }

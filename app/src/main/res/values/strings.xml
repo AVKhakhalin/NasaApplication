@@ -13,16 +13,18 @@
 
     <string name="bottom_sheet_description_title_text" />
     <string name="bottom_sheet_description_text_text" />
-    <string name="app_bar_settings_title">Настройки</string>
-    <string name="app_bar_save_title">Сохранить</string>
-    <string name="app_bar_search_title">Поиск</string>
+    <string name="action_bottom_bar_settings_title">Настройки</string>
+    <string name="action_bottom_bar_save_title">Сохранить</string>
+    <string name="action_bottom_bar_search_title">Поиск</string>
     <string name="fragment_day_photo_current_date_text_view_text">\"Фотография дня\" от 21.10.2021</string>
     <string name="button_before_yesterday_photo_text">Позавчера</string>
     <string name="button_yesterday_photo_text">Вчера</string>
     <string name="button_today_photo_text">Сегодня</string>
     <string name="button_style_day_text">Дневная тема</string>
     <string name="button_style_night">Ночная тема</string>
-    <string name="action_navigation_to_observe_text">Перейти к картике дня</string>
-    <string name="action_navigation_to_archive_text">Перейти в архив</string>
-    <string name="action_navigation_to_send_text">Перейти к отправке</string>
+    <string name="action_bottom_bar_photo_of_day_title">Фотография дня</string>
+    <string name="action_bottom_bar_search_to_wiki_title">Поиск в википедии</string>
+    <string name="action_bottom_bar_navigation_to_archive_title">Перейти в архив</string>
+    <string name="action_bottom_bar_navigation_to_send_title">Перейти к отправке</string>
+    <string name="action_bottom_bar_add_to_favorite_title">Добавить в любимое</string>
 </resources>
