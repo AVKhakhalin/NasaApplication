@@ -12,6 +12,8 @@
         android:drawablePadding="@dimen/tablayout_photo_of_day_icon_drawable_padding"
         android:gravity="center_vertical"
         android:text="@string/tablayout_photo_of_day_icon_text"
+        android:fontFamily="@font/aldrich"
+        android:textStyle="bold"
         android:textColor="?attr/colorPrimaryVariant"
         android:textSize="@dimen/tablayout_photo_of_day_icon_text_size"/>
 </FrameLayout>

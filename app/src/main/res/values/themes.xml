@@ -30,9 +30,7 @@
     <!-- Переопределение стиля текстового поля для поиска в Википедии -->
     <style name="CustomOutlinedBox" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="counterEnabled">true</item>
-        <item name="counterMaxLength">20</item>
         <item name="endIconMode">custom</item>
-        <item name="endIconDrawable">@drawable/ic_wikipedia</item>
     </style>
 
     <!-- NIGHT THEME -->

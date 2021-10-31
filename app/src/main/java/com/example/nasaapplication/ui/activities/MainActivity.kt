@@ -67,6 +67,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             layoutInflater.inflate(R.layout.tablayout_photo_of_day, null)
         binding.tabLayout.getTabAt(ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX)?.customView =
             layoutInflater.inflate(R.layout.tablayout_search_in_wiki, null)
+        binding.tabLayout.getTabAt(
+            ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)?.customView =
+            layoutInflater.inflate(R.layout.tablayout_search_in_nasa_archive, null)
 
         // Установка настроек видимости элементов макета MainActivity
         binding.viewPager.visibility = View.VISIBLE

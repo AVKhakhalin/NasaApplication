@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorOnBackground">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_constraint_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?actionBarSize"
+        android:layout_marginBottom="?actionBarSize"
+        android:paddingStart="@dimen/main_constraint_layout_padding_start"
+        android:paddingEnd="@dimen/main_constraint_layout_padding_end">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_nasa_field"
+            style="@style/CustomOutlinedBox"
+            android:layout_width="@dimen/input_nasa_field_width"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/convergence"
+            android:hint="@string/input_nasa_field_hint"
+            app:counterMaxLength="30"
+            app:counterOverflowTextColor="?attr/colorSecondaryVariant"
+            app:endIconCheckable="true"
+            app:endIconDrawable="@drawable/ic_nasa_logo"
+            app:endIconTint="@android:color/transparent"
+            app:endIconTintMode="screen"
+            app:helperText="@string/input_nasa_field_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_weight="1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_nasa_field_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/aldrich"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/input_nasa_field">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/main_constraint_layout_padding_start"
+                android:paddingEnd="@dimen/main_constraint_layout_padding_end"
+                android:layout_marginBottom="?actionBarSize"
+                android:paddingBottom="?actionBarSize" >
+
+                <TextView
+                    android:id="@+id/search_in_nasa_archive_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/aldrich"
+                    android:text="@string/search_in_nasa_archive_title_text_view"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="@dimen/search_in_nasa_archive_title_text_view_text_size"
+                    android:textStyle="bold"
+                    android:paddingTop="@dimen/search_in_nasa_archive_title_text_view_padding_top"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <FrameLayout
+                    android:id="@+id/search_in_nasa_archive_loading_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleLarge"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:indeterminateDrawable="@drawable/progress_bar_spinner"
+                        android:indeterminateOnly="true" />
+                </FrameLayout>
+
+                <com.example.nasaapplication.ui.utils.LoadedImageView
+                    android:id="@+id/search_in_nasa_archive_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/search_in_nasa_archive_image_view_description"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/search_in_nasa_archive_title_text_view" />
+
+                <TextView
+                    android:id="@+id/search_in_nasa_archive_description_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/convergence"
+                    android:text="@string/search_in_nasa_archive_description_text_view_text"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="@dimen/search_in_nasa_archive_description_text_view_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/search_in_nasa_archive_image_view" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

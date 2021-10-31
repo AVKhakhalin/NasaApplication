@@ -96,8 +96,12 @@ class FireView @JvmOverloads constructor(
                     } else {
                         initSettings()
                         // Закрытие всех открытых диалоговых окон
-                        mainActivity.getNavigationDialogs()
-                            .getBottomNavigationDrawerDialogFragment().dismiss()
+                        if (mainActivity.getNavigationDialogs()
+                                .getBottomNavigationDrawerDialogFragment() != null) {
+                            mainActivity.getNavigationDialogs()
+                                .getBottomNavigationDrawerDialogFragment()!!.dismiss()
+                        }
+
                         // Перезапуск активити
                         mainActivity.recreate()
                     }

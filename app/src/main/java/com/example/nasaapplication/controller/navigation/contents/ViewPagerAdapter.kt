@@ -5,10 +5,15 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.ui.fragments.contents.DayPhotoFragment
+import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragment
 import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
 
 class ViewPagerAdapter(private val fragmentManager: FragmentManager):FragmentStatePagerAdapter(fragmentManager) {
-    private val fragments = arrayOf(DayPhotoFragment(), SearchWikiFragment())
+    private val fragments = arrayOf(
+        DayPhotoFragment(),
+        SearchWikiFragment(),
+        SearchNASAArchiveFragment()
+    )
 
     override fun getCount(): Int {
         return fragments.size
@@ -20,6 +25,8 @@ class ViewPagerAdapter(private val fragmentManager: FragmentManager):FragmentSta
                 fragments[ConstantsController.DAY_PHOTO_FRAGMENT_INDEX]
             ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX ->
                 fragments[ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX]
+            ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX ->
+                fragments[ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
             else -> fragments[ConstantsController.DAY_PHOTO_FRAGMENT_INDEX]
         }
     }

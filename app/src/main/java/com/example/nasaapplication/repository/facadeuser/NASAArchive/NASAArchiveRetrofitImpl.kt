@@ -1,4 +1,4 @@
-package com.example.nasaapplication.repository.facadeuser.POD
+package com.example.nasaapplication.repository.facadeuser.NASAArchive
 
 import com.example.nasaapplication.repository.ConstantsRepository
 import com.google.gson.GsonBuilder
@@ -9,14 +9,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
-class PODRetrofitImpl {
-    fun getRetrofitImpl(): PODAPI {
-        val podRetrofit = Retrofit.Builder()
-            .baseUrl(ConstantsRepository.POD_BASE_URL)
+class NASAArchiveRetrofitImpl {
+    fun getRetrofitImpl(): NASAArchiveAPI {
+        val nasaArchiveRetrofit = Retrofit.Builder()
+            .baseUrl(ConstantsRepository.NASA_ARCHIVE_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
-            .client(createOkHttpClient(PODInterceptor()))
+            .client(createOkHttpClient(NASAArchiveInterceptor()))
             .build()
-        return podRetrofit.create(PODAPI::class.java)
+        return nasaArchiveRetrofit.create(NASAArchiveAPI::class.java)
     }
 
     private fun createOkHttpClient(interceptor: Interceptor): OkHttpClient {
@@ -26,7 +26,7 @@ class PODRetrofitImpl {
         return httpClient.build()
     }
 
-    inner class PODInterceptor: Interceptor {
+    inner class NASAArchiveInterceptor: Interceptor {
         @Throws(IOException::class)
         override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
             return chain.proceed(chain.request())

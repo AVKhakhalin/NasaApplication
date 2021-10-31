@@ -1,4 +1,4 @@
-package com.example.nasaapplication.controller.observers.viewmodels
+package com.example.nasaapplication.controller.observers.viewmodels.POD
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

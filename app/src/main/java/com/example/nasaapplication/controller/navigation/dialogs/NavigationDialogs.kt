@@ -7,11 +7,11 @@ import com.example.nasaapplication.ui.fragments.dialogs.BottomNavigationDrawerDi
 
 class NavigationDialogs {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
-    private lateinit var bottomNavigationDrawerDialogFragment: BottomNavigationDrawerDialogFragment
+    private var bottomNavigationDrawerDialogFragment: BottomNavigationDrawerDialogFragment? = null
     //endregion
 
     // Метод получения bottomNavigationDrawerDialogFragment
-    fun getBottomNavigationDrawerDialogFragment(): BottomNavigationDrawerDialogFragment {
+    fun getBottomNavigationDrawerDialogFragment(): BottomNavigationDrawerDialogFragment? {
         return bottomNavigationDrawerDialogFragment
     }
 

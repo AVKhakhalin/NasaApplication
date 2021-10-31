@@ -1,4 +1,4 @@
-package com.example.nasaapplication.controller.observers.viewmodels
+package com.example.nasaapplication.controller.observers.viewmodels.POD
 
 import com.example.nasaapplication.repository.facadeuser.POD.PODServerResponseData
 

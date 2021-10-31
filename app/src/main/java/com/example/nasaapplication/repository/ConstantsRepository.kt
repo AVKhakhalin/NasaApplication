@@ -5,5 +5,7 @@ class ConstantsRepository {
     companion object {
         @JvmField
         val POD_BASE_URL: String = "https://api.nasa.gov/"
+        @JvmField
+        val NASA_ARCHIVE_BASE_URL: String = "https://images-api.nasa.gov/"
     }
 }

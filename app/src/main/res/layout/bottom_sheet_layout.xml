@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:layout_marginTop="?actionBarSize"
-    app:behavior_hideable="true"
+    app:behavior_hideable="false"
     app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
     android:visibility="visible"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">

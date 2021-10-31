@@ -13,8 +13,8 @@ import coil.load
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
-import com.example.nasaapplication.controller.observers.viewmodels.PODData
-import com.example.nasaapplication.controller.observers.viewmodels.PODViewModel
+import com.example.nasaapplication.controller.observers.viewmodels.POD.PODData
+import com.example.nasaapplication.controller.observers.viewmodels.POD.PODViewModel
 import com.example.nasaapplication.databinding.FragmentDayPhotoBinding
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
