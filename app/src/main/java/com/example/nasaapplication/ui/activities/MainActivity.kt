@@ -1,16 +1,12 @@
 package com.example.nasaapplication.ui.activities
 
-import android.content.Context
-import android.content.DialogInterface
 import android.content.SharedPreferences
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.AttributeSet
+import android.os.*
 import android.view.*
-import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import com.example.nasaapplication.R
@@ -23,9 +19,8 @@ import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialo
 import com.example.nasaapplication.databinding.ActivityMainBinding
 import com.example.nasaapplication.ui.ConstantsUi
 import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.tabs.TabLayout
 import java.lang.Thread.sleep
+
 
 class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationContentGetter {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
@@ -93,6 +88,35 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             } else {
                 binding.fabButtonsGroup.visibility = View.VISIBLE
                 isFABButtonsGroupView = !isFABButtonsGroupView
+
+                val constraintLayout = findViewById<ConstraintLayout>(R.id.fab_buttons_container)
+                val constraintSet = ConstraintSet()
+                constraintSet.clone(constraintLayout)
+                constraintSet.constrainCircle(R.id.fab_button_day_photo, R.id.bottom_fab_maket, 0, 285f)
+                constraintSet.constrainCircle(R.id.fab_button_search_in_wiki, R.id.bottom_fab_maket, 0, 330f)
+                constraintSet.constrainCircle(R.id.fab_button_search_in_nasa_archive, R.id.bottom_fab_maket, 0, 20f)
+                constraintSet.constrainCircle(R.id.fab_button_settings, R.id.bottom_fab_maket, 0, 73f)
+                constraintSet.applyTo(constraintLayout)
+
+                Thread {
+                    val numberFrames: Int = 30
+                    val deltaTime: Long = 8L
+                    val deltaRadius: Int = 8
+                    val handler = Handler(Looper.getMainLooper())
+                    repeat(numberFrames) {
+                        sleep(deltaTime)
+                        handler.post {
+                            val constraintLayout = findViewById<ConstraintLayout>(R.id.fab_buttons_container)
+                            val constraintSet = ConstraintSet()
+                            constraintSet.clone(constraintLayout)
+                            constraintSet.constrainCircle(R.id.fab_button_day_photo, R.id.bottom_fab_maket, deltaRadius * it, 285f)
+                            constraintSet.constrainCircle(R.id.fab_button_search_in_wiki, R.id.bottom_fab_maket, deltaRadius * it, 330f)
+                            constraintSet.constrainCircle(R.id.fab_button_search_in_nasa_archive, R.id.bottom_fab_maket, deltaRadius * it, 20f)
+                            constraintSet.constrainCircle(R.id.fab_button_settings, R.id.bottom_fab_maket, deltaRadius * it, 73f)
+                            constraintSet.applyTo(constraintLayout)
+                        }
+                    }
+                }.start()
             }
             true
         }
