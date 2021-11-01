@@ -47,4 +47,5 @@
     <dimen name="fab_button_settings_height">50dp</dimen>
     <dimen name="fab_button_search_in_nasa_archive_width">50dp</dimen>
     <dimen name="fab_button_search_in_nasa_archive_height">50dp</dimen>
+    <dimen name="collapsing_toolbar_layout_height">400dp</dimen>
 </resources>

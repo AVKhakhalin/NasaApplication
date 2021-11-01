@@ -100,6 +100,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         binding.fabButtonsContainer.getViewById(R.id.fab_button_day_photo).setOnClickListener {
             binding.fabButtonsGroup.visibility = View.INVISIBLE
             hideAndShowFragmentsContainersAndDismissDialogs()
+            isFABButtonsGroupView = false
             binding.viewPager.currentItem = 0
         }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в Википедии
@@ -107,18 +108,21 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             .setOnClickListener {
             binding.fabButtonsGroup.visibility = View.INVISIBLE
             hideAndShowFragmentsContainersAndDismissDialogs()
+            isFABButtonsGroupView = false
             binding.viewPager.currentItem = 1
         }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в архиве NASA
         binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_nasa_archive)
             .setOnClickListener {
             binding.fabButtonsGroup.visibility = View.INVISIBLE
-                hideAndShowFragmentsContainersAndDismissDialogs()
+            hideAndShowFragmentsContainersAndDismissDialogs()
+            isFABButtonsGroupView = false
             binding.viewPager.currentItem = 2
         }
         // Установка слушателя на нажатие кнопки вызова настроек приложения
         binding.fabButtonsContainer.getViewById(R.id.fab_button_settings).setOnClickListener {
             binding.fabButtonsGroup.visibility = View.INVISIBLE
+            isFABButtonsGroupView = false
             showSettingsFragment()
         }
         //endregion

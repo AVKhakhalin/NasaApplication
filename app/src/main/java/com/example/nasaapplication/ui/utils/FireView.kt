@@ -39,7 +39,7 @@ class FireView @JvmOverloads constructor(
     fun setIsClick(isClick: Boolean) {
         this.isClick = isClick
         if ((isDayTheme) && (!mainActivity.getIsThemeDay())) {
-            // Фосстановление чёрного цвета на остыввших языках пламени
+            // Восстановление чёрного цвета на остывших языках пламени
             initFirePalette()
         }
         isDayTheme = mainActivity.getIsThemeDay()
@@ -55,7 +55,7 @@ class FireView @JvmOverloads constructor(
         // Установка текущей темы приложения
         isDayTheme = mainActivity.getIsThemeDay()
         if (isDayTheme) {
-            // Фильтрация чёрного цвета на осшивших языках пламени
+            // Фильтрация чёрного цвета на остывших языках пламени
             repeat(numberFiltredBlackColorPoints) {
                 firePalette[it] = -0x0
             }

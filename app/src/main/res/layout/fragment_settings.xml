@@ -5,15 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/collapsing_toolbar_layout_height"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimaryVariant" />
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:layout_behavior="com.example.nasaapplication.ui.utils.SettingsAppBarBehavior" >
 
         <com.example.nasaapplication.ui.utils.FireView
             android:id="@+id/settings_fire_wall"
             android:layout_width="@dimen/settings_fire_wall_layout_width"
             android:layout_height="@dimen/settings_fire_wall_layout_height"
+            app:layout_constraintVertical_weight="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +76,6 @@
             app:layout_constraintStart_toEndOf="@id/button_style_day"
             app:layout_constraintTop_toTopOf="parent"
             app:rippleColor="?attr/colorPrimaryVariant" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
