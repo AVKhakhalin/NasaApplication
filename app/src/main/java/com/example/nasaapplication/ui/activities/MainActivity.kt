@@ -38,24 +38,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Применение темы к приложению
-        // Считывание системных настроек
-        if (savedInstanceState != null) {
-            val sharedPreferences: SharedPreferences =
-                getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY, MODE_PRIVATE)
-            isThemeDay = sharedPreferences.getBoolean(
-                ConstantsUi.SHARED_PREFERENCES_THEME_KEY, true)
-            if (isThemeDay) {
-                setTheme(R.style.Theme_NasaApplication_Day)
-            } else {
-                setTheme(R.style.Theme_NasaApplication_Night)
-            }
-        } else {
-            // Применение тёмной темы при первом запуске приложения на девайсах на 10+ Android
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                setTheme(R.style.Theme_NasaApplication_Night)
-            }
-        }
+        // Считывание системных настроек, применение темы к приложению
+        readSettingsAndSetupApplication(savedInstanceState)
 
         // Подключение Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -76,84 +60,11 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         // Установка настроек видимости элементов макета MainActivity
         hideAndShowFragmentsContainersAndDismissDialogs()
 
-        //region МЕТОДЫ ДЛЯ НАСТРОЙКИ КНОПОК BOTTOM NAVIGATION MENU
-        // Установка Bottom Navigation Menu
-        setBottomAppBar()
-        // Установка слушателя на длительное нажатие на нижнюю кнопку FAB
-        binding.fabButtonsGroup.visibility = View.INVISIBLE
-        binding.bottomNavigationMenu.bottomAppBarFab.setOnLongClickListener {
-            if (isFABButtonsGroupView) {
-                binding.fabButtonsGroup.visibility = View.INVISIBLE
-                isFABButtonsGroupView = !isFABButtonsGroupView
-            } else {
-                binding.fabButtonsGroup.visibility = View.VISIBLE
-                isFABButtonsGroupView = !isFABButtonsGroupView
-
-                val constraintLayout = findViewById<ConstraintLayout>(R.id.fab_buttons_container)
-                val constraintSet = ConstraintSet()
-                constraintSet.clone(constraintLayout)
-                constraintSet.constrainCircle(R.id.fab_button_day_photo, R.id.bottom_fab_maket, 0, 285f)
-                constraintSet.constrainCircle(R.id.fab_button_search_in_wiki, R.id.bottom_fab_maket, 0, 330f)
-                constraintSet.constrainCircle(R.id.fab_button_search_in_nasa_archive, R.id.bottom_fab_maket, 0, 20f)
-                constraintSet.constrainCircle(R.id.fab_button_settings, R.id.bottom_fab_maket, 0, 73f)
-                constraintSet.applyTo(constraintLayout)
-
-                Thread {
-                    val numberFrames: Int = 30
-                    val deltaTime: Long = 8L
-                    val deltaRadius: Int = 8
-                    val handler = Handler(Looper.getMainLooper())
-                    repeat(numberFrames) {
-                        sleep(deltaTime)
-                        handler.post {
-                            val constraintLayout = findViewById<ConstraintLayout>(R.id.fab_buttons_container)
-                            val constraintSet = ConstraintSet()
-                            constraintSet.clone(constraintLayout)
-                            constraintSet.constrainCircle(R.id.fab_button_day_photo, R.id.bottom_fab_maket, deltaRadius * it, 285f)
-                            constraintSet.constrainCircle(R.id.fab_button_search_in_wiki, R.id.bottom_fab_maket, deltaRadius * it, 330f)
-                            constraintSet.constrainCircle(R.id.fab_button_search_in_nasa_archive, R.id.bottom_fab_maket, deltaRadius * it, 20f)
-                            constraintSet.constrainCircle(R.id.fab_button_settings, R.id.bottom_fab_maket, deltaRadius * it, 73f)
-                            constraintSet.applyTo(constraintLayout)
-                        }
-                    }
-                }.start()
-            }
-            true
-        }
-        // Установка слушателя на нажатие кнопки вызова фрагмента с картинкой дня
-        binding.fabButtonsContainer.getViewById(R.id.fab_button_day_photo).setOnClickListener {
-            binding.fabButtonsGroup.visibility = View.INVISIBLE
-            hideAndShowFragmentsContainersAndDismissDialogs()
-            isFABButtonsGroupView = false
-            binding.viewPager.currentItem = 0
-        }
-        // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в Википедии
-        binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_wiki)
-            .setOnClickListener {
-            binding.fabButtonsGroup.visibility = View.INVISIBLE
-            hideAndShowFragmentsContainersAndDismissDialogs()
-            isFABButtonsGroupView = false
-            binding.viewPager.currentItem = 1
-        }
-        // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в архиве NASA
-        binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_nasa_archive)
-            .setOnClickListener {
-            binding.fabButtonsGroup.visibility = View.INVISIBLE
-            hideAndShowFragmentsContainersAndDismissDialogs()
-            isFABButtonsGroupView = false
-            binding.viewPager.currentItem = 2
-        }
-        // Установка слушателя на нажатие кнопки вызова настроек приложения
-        binding.fabButtonsContainer.getViewById(R.id.fab_button_settings).setOnClickListener {
-            binding.fabButtonsGroup.visibility = View.INVISIBLE
-            isFABButtonsGroupView = false
-            showSettingsFragment()
-        }
-        //endregion
+        // Методы работы с Bottom Navigation Menu
+        setBottmNavigationMenu()
 
         // Отображение содержимого макета
         setContentView(binding.root)
-
     }
 
     // Скрытие контейнера для фрамгента с установками приложения
@@ -204,11 +115,16 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             switchBottomAppBar(this)
         }
     }
-
     // Переключение режима нижней навигационной кнопки BottomAppBar
     // с центрального на крайнее левое положение и обратно
     private fun switchBottomAppBar(context: MainActivity) {
         if (isMain) {
+            // Изменение нижего меню, выходящего из FAB
+            if (isFABButtonsGroupView) {
+                binding.fabButtonsGroup.visibility = View.INVISIBLE
+                isFABButtonsGroupView = !isFABButtonsGroupView
+            }
+            // Изменение нижней кнопки FAB
             isMain = false
             binding.bottomNavigationMenu.bottomAppBar.navigationIcon = null
             binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode =
@@ -219,6 +135,12 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             binding.bottomNavigationMenu.bottomAppBar.replaceMenu(
                 R.menu.bottom_menu_bottom_bar_other_screen)
         } else {
+            // Изменение нижего меню, выходящего из FAB
+            if (isFABButtonsGroupView) {
+                binding.fabButtonsGroup.visibility = View.INVISIBLE
+                isFABButtonsGroupView = !isFABButtonsGroupView
+            }
+            // Изменение нижней кнопки FAB
             isMain = true
             binding.bottomNavigationMenu.bottomAppBar.navigationIcon =
                 ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
@@ -230,13 +152,11 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             binding.bottomNavigationMenu.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
         }
     }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Отобразить справа внизу стартового меню
         menuInflater.inflate(R.menu.bottom_menu_bottom_bar, menu)
         return true
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_bottom_bar_settings ->
@@ -268,5 +188,217 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Метод получения ViewPager
     fun getViewPager(): ViewPager {
         return binding.viewPager
+    }
+
+    //region МЕТОДЫ ДЛЯ НАСТРОЙКИ КНОПОК BOTTOM NAVIGATION MENU
+    private fun setBottmNavigationMenu() {
+        // Установка Bottom Navigation Menu
+        setBottomAppBar()
+        // Установка слушателя на длительное нажатие на нижнюю кнопку FAB
+        binding.fabButtonsGroup.visibility = View.INVISIBLE
+        binding.bottomNavigationMenu.bottomAppBarFab.setOnLongClickListener {
+            if (isFABButtonsGroupView) {
+                binding.fabButtonsGroup.visibility = View.INVISIBLE
+                isFABButtonsGroupView = !isFABButtonsGroupView
+            } else {
+                // Анимация появления кнопок меню из нижней кнопки FAB
+                if (isMain) {
+                    val constraintLayout =
+                        findViewById<ConstraintLayout>(R.id.fab_buttons_container)
+                    val constraintSet = ConstraintSet()
+                    constraintSet.clone(constraintLayout)
+                    constraintSet.constrainCircle(
+                        R.id.fab_button_day_photo,
+                        R.id.bottom_fab_maket,
+                        0,
+                        285f
+                    )
+                    constraintSet.constrainCircle(
+                        R.id.fab_button_search_in_wiki,
+                        R.id.bottom_fab_maket,
+                        0,
+                        330f
+                    )
+                    constraintSet.constrainCircle(
+                        R.id.fab_button_search_in_nasa_archive,
+                        R.id.bottom_fab_maket,
+                        0,
+                        20f
+                    )
+                    constraintSet.constrainCircle(
+                        R.id.fab_button_settings,
+                        R.id.bottom_fab_maket,
+                        0,
+                        73f
+                    )
+                    constraintSet.applyTo(constraintLayout)
+                    binding.fabButtonsGroup.visibility = View.VISIBLE
+                    isFABButtonsGroupView = !isFABButtonsGroupView
+                    Thread {
+                        val numberFrames: Int = 30
+                        val deltaTime: Long = 8L
+                        val deltaRadius: Int = 8
+                        val handler = Handler(Looper.getMainLooper())
+                        repeat(numberFrames) {
+                            sleep(deltaTime)
+                            handler.post {
+                                val constraintLayout =
+                                    findViewById<ConstraintLayout>(R.id.fab_buttons_container)
+                                val constraintSet = ConstraintSet()
+                                constraintSet.clone(constraintLayout)
+                                constraintSet.constrainCircle(
+                                    R.id.fab_button_day_photo,
+                                    R.id.bottom_fab_maket,
+                                    deltaRadius * it,
+                                    285f
+                                )
+                                constraintSet.constrainCircle(
+                                    R.id.fab_button_search_in_wiki,
+                                    R.id.bottom_fab_maket,
+                                    deltaRadius * it,
+                                    330f
+                                )
+                                constraintSet.constrainCircle(
+                                    R.id.fab_button_search_in_nasa_archive,
+                                    R.id.bottom_fab_maket,
+                                    deltaRadius * it,
+                                    20f
+                                )
+                                constraintSet.constrainCircle(
+                                    R.id.fab_button_settings,
+                                    R.id.bottom_fab_maket,
+                                    deltaRadius * it,
+                                    73f
+                                )
+                                constraintSet.applyTo(constraintLayout)
+                            }
+                        }
+                    }.start()
+                } else {
+                    val constraintLayout =
+                        findViewById<ConstraintLayout>(R.id.fab_buttons_container)
+                    val constraintSet = ConstraintSet()
+                    constraintSet.clone(constraintLayout)
+                    constraintSet.constrainCircle(
+                        R.id.fab_button_day_photo,
+                        R.id.bottom_fab_maket_right,
+                        0,
+                        285f
+                    )
+                    constraintSet.constrainCircle(
+                        R.id.fab_button_search_in_wiki,
+                        R.id.bottom_fab_maket_right,
+                        0,
+                        310f
+                    )
+                    constraintSet.constrainCircle(
+                        R.id.fab_button_search_in_nasa_archive,
+                        R.id.bottom_fab_maket_right,
+                        0,
+                        345f
+                    )
+                    constraintSet.constrainCircle(
+                        R.id.fab_button_settings,
+                        R.id.bottom_fab_maket_right,
+                        0,
+                        20f
+                    )
+                    constraintSet.applyTo(constraintLayout)
+                    binding.fabButtonsGroup.visibility = View.VISIBLE
+                    isFABButtonsGroupView = !isFABButtonsGroupView
+                    Thread {
+                        val numberFrames: Int = 30
+                        val deltaTime: Long = 8L
+                        val deltaRadius: Int = 9
+                        val handler = Handler(Looper.getMainLooper())
+                        repeat(numberFrames) {
+                            sleep(deltaTime)
+                            handler.post {
+                                val constraintLayout =
+                                    findViewById<ConstraintLayout>(R.id.fab_buttons_container)
+                                val constraintSet = ConstraintSet()
+                                constraintSet.clone(constraintLayout)
+                                constraintSet.constrainCircle(
+                                    R.id.fab_button_day_photo,
+                                    R.id.bottom_fab_maket_right,
+                                    deltaRadius * it,
+                                    285f
+                                )
+                                constraintSet.constrainCircle(
+                                    R.id.fab_button_search_in_wiki,
+                                    R.id.bottom_fab_maket_right,
+                                    deltaRadius * it,
+                                    310f
+                                )
+                                constraintSet.constrainCircle(
+                                    R.id.fab_button_search_in_nasa_archive,
+                                    R.id.bottom_fab_maket_right,
+                                    deltaRadius * it,
+                                    345f
+                                )
+                                constraintSet.constrainCircle(
+                                    R.id.fab_button_settings,
+                                    R.id.bottom_fab_maket_right,
+                                    deltaRadius * it,
+                                    20f
+                                )
+                                constraintSet.applyTo(constraintLayout)
+                            }
+                        }
+                    }.start()
+                }
+            }
+            true
+        }
+        // Установка слушателя на нажатие кнопки вызова фрагмента с картинкой дня
+        binding.fabButtonsContainer.getViewById(R.id.fab_button_day_photo).setOnClickListener {
+            binding.fabButtonsGroup.visibility = View.INVISIBLE
+            hideAndShowFragmentsContainersAndDismissDialogs()
+            isFABButtonsGroupView = false
+            binding.viewPager.currentItem = 0
+        }
+        // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в Википедии
+        binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_wiki)
+            .setOnClickListener {
+                binding.fabButtonsGroup.visibility = View.INVISIBLE
+                hideAndShowFragmentsContainersAndDismissDialogs()
+                isFABButtonsGroupView = false
+                binding.viewPager.currentItem = 1
+            }
+        // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в архиве NASA
+        binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_nasa_archive)
+            .setOnClickListener {
+                binding.fabButtonsGroup.visibility = View.INVISIBLE
+                hideAndShowFragmentsContainersAndDismissDialogs()
+                isFABButtonsGroupView = false
+                binding.viewPager.currentItem = 2
+            }
+        // Установка слушателя на нажатие кнопки вызова настроек приложения
+        binding.fabButtonsContainer.getViewById(R.id.fab_button_settings).setOnClickListener {
+            binding.fabButtonsGroup.visibility = View.INVISIBLE
+            isFABButtonsGroupView = false
+            showSettingsFragment()
+        }
+    }
+    //endregion
+
+    // Считывание системных настроек, применение темы к приложению
+    private fun readSettingsAndSetupApplication(savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) {
+            val sharedPreferences: SharedPreferences =
+                getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY, MODE_PRIVATE)
+            isThemeDay = sharedPreferences.getBoolean(
+                ConstantsUi.SHARED_PREFERENCES_THEME_KEY, true)
+            if (isThemeDay) {
+                setTheme(R.style.Theme_NasaApplication_Day)
+            } else {
+                setTheme(R.style.Theme_NasaApplication_Night)
+            }
+        } else {
+            // Применение тёмной темы при первом запуске приложения на девайсах на 10+ Android
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                setTheme(R.style.Theme_NasaApplication_Night)
+            }
+        }
     }
 }

@@ -12,7 +12,8 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="?actionBarSize"
         android:paddingStart="@dimen/main_constraint_layout_padding_start"
-        android:paddingEnd="@dimen/main_constraint_layout_padding_end">
+        android:paddingEnd="@dimen/main_constraint_layout_padding_end"
+        android:paddingBottom="?actionBarSize">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_wiki_field"
@@ -23,9 +24,9 @@
             android:fontFamily="@font/convergence"
             android:hint="@string/input_wiki_field_hint"
             app:counterMaxLength="20"
-            app:endIconDrawable="@drawable/ic_wikipedia"
             app:counterOverflowTextColor="?attr/colorSecondaryVariant"
             app:endIconCheckable="true"
+            app:endIconDrawable="@drawable/ic_wikipedia"
             app:helperText="@string/input_wiki_field_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +57,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="?attr/colorOnBackground"
-                android:backgroundTintMode="screen" />
+                android:backgroundTintMode="screen"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
