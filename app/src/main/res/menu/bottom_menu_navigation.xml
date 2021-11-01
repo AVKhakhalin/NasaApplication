@@ -17,5 +17,12 @@
             android:title="@string/action_bottom_bar_search_to_wiki_title"
             android:fontFamily="@font/convergence"
             app:showAsAction="always" />
+
+        <item
+            android:id="@+id/action_bottom_bar_search_to_nasa_archive"
+            android:icon="@drawable/ic_archive"
+            android:title="@string/action_bottom_bar_search_to_nasa_archive_title"
+            android:fontFamily="@font/convergence"
+            app:showAsAction="always" />
     </group>
 </menu>

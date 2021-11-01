@@ -10,8 +10,13 @@ import com.example.nasaapplication.ui.fragments.contents.SettingsFragment
 class NavigationContent(
     private val fragmentManager: FragmentManager
 ) {
+    //region ЗАДАНИЕ ПЕРЕМЕННЫХ
+    private var settingsFragment: SettingsFragment? = null
+    //endregion
+
     // Отображение фрагмента с настройками приложения
     fun showSettingsFragment(useBackStack: Boolean) {
+        settingsFragment = SettingsFragment.newInstance()
         // Открыть транзакцию
         fragmentManager?.let {
             val fragmentTransaction = it.beginTransaction()

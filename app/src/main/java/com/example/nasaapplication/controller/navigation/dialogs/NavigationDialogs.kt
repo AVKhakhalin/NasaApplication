@@ -15,6 +15,11 @@ class NavigationDialogs {
         return bottomNavigationDrawerDialogFragment
     }
 
+    // Метод закрытия всех открытых диалоговых фрагментов
+    fun closeDialogs() {
+        bottomNavigationDrawerDialogFragment?.let { it.dismiss() }
+    }
+
     // Отображение диалога с контекстным меню, появляющимся при нажатии на кнопку типа "Гамбургер"
     fun showBottomNavigationDrawerDialogFragment(
         fragmentActivity: FragmentActivity

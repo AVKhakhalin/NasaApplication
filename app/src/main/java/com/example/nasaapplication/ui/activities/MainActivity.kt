@@ -1,12 +1,16 @@
 package com.example.nasaapplication.ui.activities
 
+import android.content.Context
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import com.example.nasaapplication.R
@@ -19,7 +23,9 @@ import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialo
 import com.example.nasaapplication.databinding.ActivityMainBinding
 import com.example.nasaapplication.ui.ConstantsUi
 import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
+import java.lang.Thread.sleep
 
 class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationContentGetter {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
@@ -32,6 +38,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     lateinit var binding: ActivityMainBinding
     // Bottom navigation menu
     private var isMain = false
+    private var isFABButtonsGroupView = false
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,15 +79,63 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             layoutInflater.inflate(R.layout.tablayout_search_in_nasa_archive, null)
 
         // Установка настроек видимости элементов макета MainActivity
-        binding.viewPager.visibility = View.VISIBLE
-        binding.tabLayout.visibility = View.VISIBLE
-        binding.activityFragmentsContainer.visibility = View.INVISIBLE
+        hideAndShowFragmentsContainersAndDismissDialogs()
 
+        //region МЕТОДЫ ДЛЯ НАСТРОЙКИ КНОПОК BOTTOM NAVIGATION MENU
         // Установка Bottom Navigation Menu
         setBottomAppBar()
+        // Установка слушателя на длительное нажатие на нижнюю кнопку FAB
+        binding.fabButtonsGroup.visibility = View.INVISIBLE
+        binding.bottomNavigationMenu.bottomAppBarFab.setOnLongClickListener {
+            if (isFABButtonsGroupView) {
+                binding.fabButtonsGroup.visibility = View.INVISIBLE
+                isFABButtonsGroupView = !isFABButtonsGroupView
+            } else {
+                binding.fabButtonsGroup.visibility = View.VISIBLE
+                isFABButtonsGroupView = !isFABButtonsGroupView
+            }
+            true
+        }
+        // Установка слушателя на нажатие кнопки вызова фрагмента с картинкой дня
+        binding.fabButtonsContainer.getViewById(R.id.fab_button_day_photo).setOnClickListener {
+            binding.fabButtonsGroup.visibility = View.INVISIBLE
+            hideAndShowFragmentsContainersAndDismissDialogs()
+            binding.viewPager.currentItem = 0
+        }
+        // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в Википедии
+        binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_wiki)
+            .setOnClickListener {
+            binding.fabButtonsGroup.visibility = View.INVISIBLE
+            hideAndShowFragmentsContainersAndDismissDialogs()
+            binding.viewPager.currentItem = 1
+        }
+        // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в архиве NASA
+        binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_nasa_archive)
+            .setOnClickListener {
+            binding.fabButtonsGroup.visibility = View.INVISIBLE
+                hideAndShowFragmentsContainersAndDismissDialogs()
+            binding.viewPager.currentItem = 2
+        }
+        // Установка слушателя на нажатие кнопки вызова настроек приложения
+        binding.fabButtonsContainer.getViewById(R.id.fab_button_settings).setOnClickListener {
+            binding.fabButtonsGroup.visibility = View.INVISIBLE
+            showSettingsFragment()
+        }
+        //endregion
 
         // Отображение содержимого макета
         setContentView(binding.root)
+
+    }
+
+    // Скрытие контейнера для фрамгента с установками приложения
+    // и отображение элементов viewPager и tabLayout,
+    // а также закрытие всех открытых диалоговых фрагментов
+    private fun hideAndShowFragmentsContainersAndDismissDialogs() {
+        binding.viewPager.visibility = View.VISIBLE
+        binding.tabLayout.visibility = View.VISIBLE
+        binding.activityFragmentsContainer.visibility = View.INVISIBLE
+        navigationDialogs.closeDialogs()
     }
 
     //region СЕТТЕР И ГЕТТЕР ДЛЯ ПАРАМЕТРА ТЕМЫ ПРИЛОЖЕНИЯ
@@ -102,13 +157,14 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         sharedPreferencesEditor.apply()
     }
 
+    //region МЕТОДЫ ПОЛУЧЕНИЯ НАВИГАЦИИ
     override fun getNavigationDialogs(): NavigationDialogs {
         return navigationDialogs
     }
-
     override fun getNavigationContent(): NavigationContent {
         return navigationContent
     }
+    //endregion
 
     //region УСТАНОВКА BOTTOM NAVIGATION MENU
     private fun setBottomAppBar() {
@@ -155,16 +211,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_bottom_bar_settings -> navigationContent?.let{
-                // Отобразить фрагмент с настройками приложения
-                this.findViewById<ViewPager>(R.id.view_pager).visibility =
-                    View.INVISIBLE
-                this.findViewById<TabLayout>(R.id.tab_layout).visibility =
-                    View.INVISIBLE
-                this.findViewById<FrameLayout>(R.id.activity_fragments_container)
-                    .visibility = View.VISIBLE
-                it.showSettingsFragment(false)
-            }
+            R.id.action_bottom_bar_settings ->
+                // Отображение фрагмента с настройками приложения
+                showSettingsFragment()
             android.R.id.home -> {
                 // Отображение списка основных содержательных разделов приложения
                 navigationDialogs?.let {
@@ -176,6 +225,17 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         return super.onOptionsItemSelected(item)
     }
     //endregion
+
+    // Метод отображения фрагмента с настройками приложения
+    fun showSettingsFragment() {
+        navigationContent?.let{
+            // Отобразить фрагмент с настройками приложения
+            binding.viewPager.visibility = View.INVISIBLE
+            binding.tabLayout.visibility = View.INVISIBLE
+            binding.activityFragmentsContainer.visibility = View.VISIBLE
+            it.showSettingsFragment(false)
+        }
+    }
 
     // Метод получения ViewPager
     fun getViewPager(): ViewPager {

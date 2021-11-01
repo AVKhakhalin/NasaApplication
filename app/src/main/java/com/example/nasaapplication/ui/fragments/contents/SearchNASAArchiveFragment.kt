@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import coil.load
 import com.example.nasaapplication.R
+import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.observers.viewmodels.NASAArchive.NASAArchiveData
@@ -81,12 +82,15 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     }
 
     private fun renderData(data: NASAArchiveData) {
+        // TODO: Доработать вывод списка полученных данных
+        //  и предложение пользователю на выбор, что просмотреть
         when (data) {
             is NASAArchiveData.Success -> {
                 val serverResponseData = data.serverResponseData
-                if (serverResponseData.collection != null) {
-                    //toast("${serverResponseData.collection.items.get(0).data.get(0).description}")
-                val url = serverResponseData.collection.items.get(0).links.get(0).href
+                if ((serverResponseData.collection != null)
+                    && (serverResponseData.collection.items.isNotEmpty())
+                    && (serverResponseData.collection.items[0].links.isNotEmpty())) {
+                    val url = serverResponseData.collection.items[0].links[0].href
                     if (url.isNullOrEmpty()) {
                         //showError("Сообщение, что ссылка пустая")
                         toast(ConstantsUi.ERROR_LINK_EMPTY)
@@ -98,13 +102,17 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                         }
                         // Показать описание фотографии по запрошенному событию
                         binding.searchInNasaArchiveTitleTextView.text =
-                            serverResponseData.collection.items.get(0).data.get(0).title
+                            serverResponseData.collection.items[0].data[0].title
                         binding.searchInNasaArchiveDescriptionTextView.text =
-                            serverResponseData.collection.items.get(0).data.get(0).description
+                            serverResponseData.collection.items[0].data[0].description
 
-                        binding.searchInNasaArchiveImageView.visibility = View.VISIBLE
+                        binding.fragmentSearchInNasaArchiveGroupElements.visibility = View.VISIBLE
                         binding.searchInNasaArchiveLoadingLayout.visibility = View.INVISIBLE
                     }
+                } else {
+                    binding.searchInNasaArchiveLoadingLayout.visibility = View.INVISIBLE
+                    binding.searchInNasaArchiveTitleTextView.text =
+                        ConstantsController.ERROR_EMPTY_DOWNLOAD_DATES
                 }
             }
             is NASAArchiveData.Loading -> {
@@ -131,14 +139,17 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     private fun sendRequestToNASAArchive(request: String) {
         val twoSpaces: String = "  "
         val oneSpace: String = " "
+        val replaceSpaceSymbol: String = "%"
         var finalRequest: String = request
         while (finalRequest.indexOf(twoSpaces) >= 0) {
             finalRequest = finalRequest.replace(twoSpaces, oneSpace)
         }
         finalRequest = finalRequest.trimStart()
         finalRequest = finalRequest.trimEnd()
-        finalRequest = finalRequest.replace(oneSpace, "%")
-        viewModel.getData(finalRequest)
-            .observe(viewLifecycleOwner, Observer<NASAArchiveData> { renderData(it) })
+        finalRequest = finalRequest.replace(oneSpace, replaceSpaceSymbol)
+        if (finalRequest.isNotEmpty()) {
+            viewModel.getData(finalRequest)
+                .observe(viewLifecycleOwner, Observer<NASAArchiveData> { renderData(it) })
+        }
     }
 }

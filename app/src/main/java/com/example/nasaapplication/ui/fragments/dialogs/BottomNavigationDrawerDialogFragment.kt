@@ -24,6 +24,8 @@ class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
         get() = _binding!!
     // ViewPager
     var viewPager: ViewPager? = null
+    // MainActivity
+    lateinit var mainActivity: MainActivity
     //endregion
 
     companion object {
@@ -41,11 +43,12 @@ class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        mainActivity = (context as MainActivity)
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
-        navigationContent = (context as MainActivity).getNavigationContent()
+        navigationContent = mainActivity.getNavigationContent()
         //endregion
         // Получение ViewPager
-        viewPager = (context as MainActivity).getViewPager()
+        viewPager = mainActivity.getViewPager()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,29 +58,30 @@ class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
             when(it.itemId) {
                 R.id.action_bottom_bar_photo_of_day -> {
                     viewPager?.let { it.currentItem = 0 }
-                    // Установка настроек видимости элементов макета
-                    requireActivity().findViewById<ViewPager>(R.id.view_pager).visibility =
-                        View.VISIBLE
-                    requireActivity().findViewById<TabLayout>(R.id.tab_layout).visibility =
-                        View.VISIBLE
-                    requireActivity().findViewById<FrameLayout>(R.id.activity_fragments_container)
-                        .visibility = View.INVISIBLE
-                    dismiss()
+                    hideShowDismissElements()
                 }
                 R.id.action_bottom_bar_search_to_wiki -> {
                     viewPager?.let { it.currentItem = 1 }
-                    // Установка настроек видимости элементов макета
-                    requireActivity().findViewById<ViewPager>(R.id.view_pager).visibility =
-                        View.VISIBLE
-                    requireActivity().findViewById<TabLayout>(R.id.tab_layout).visibility =
-                        View.VISIBLE
-                    requireActivity().findViewById<FrameLayout>(R.id.activity_fragments_container)
-                        .visibility = View.INVISIBLE
-                    dismiss()
+                    hideShowDismissElements()
+                }
+                R.id.action_bottom_bar_search_to_nasa_archive -> {
+                    viewPager?.let { it.currentItem = 2 }
+                    hideShowDismissElements()
                 }
             }
             true
         }
+    }
+
+    fun hideShowDismissElements() {
+        // Установка настроек видимости элементов макета
+        requireActivity().findViewById<ViewPager>(R.id.view_pager).visibility =
+            View.VISIBLE
+        requireActivity().findViewById<TabLayout>(R.id.tab_layout).visibility =
+            View.VISIBLE
+        requireActivity().findViewById<FrameLayout>(R.id.activity_fragments_container)
+            .visibility = View.INVISIBLE
+        dismiss()
     }
 
     override fun onDestroy() {

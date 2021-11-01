@@ -11,6 +11,9 @@ class ConstantsController(
         @JvmField
         val ERROR_UNKNOWN: String = "Неизвестная ошибка."
         @JvmField
+        val ERROR_EMPTY_DOWNLOAD_DATES: String = "По Вашему запросу ничего не найдено."
+
+        @JvmField
         val API_KEY: String = BuildConfig.NASA_API_KEY
 
         // Индексы фрагментов

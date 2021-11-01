@@ -26,9 +26,12 @@
     <string name="button_style_night">Ночная тема</string>
     <string name="action_bottom_bar_photo_of_day_title">Фотография дня</string>
     <string name="tablayout_photo_of_day_icon_text">Фото дня</string>
-    <string name="tablayout_search_in_wiki_icon_title">Фотография дня</string>
     <string name="tablayout_search_in_wiki_icon_text">Поиск</string>
-    <string name="action_bottom_bar_search_to_wiki_title">Поиск в википедии</string>
+
+    <string name="tablayout_search_in_wiki_icon_title">Фотография дня</string>
+    <string name="action_bottom_bar_search_to_wiki_title">Поиск в Википедии</string>
+    <string name="action_bottom_bar_search_to_nasa_archive_title">Поиск в архиве NASA</string>
+
     <string name="action_bottom_bar_navigation_to_archive_title">Перейти в архив</string>
     <string name="action_bottom_bar_navigation_to_send_title">Перейти к отправке</string>
     <string name="action_bottom_bar_add_to_favorite_title">Добавить в любимое</string>
@@ -36,6 +39,4 @@
     <string name="search_in_nasa_archive_image_view_description" />
     <string name="search_in_nasa_archive_title_text_view" />
     <string name="search_in_nasa_archive_description_text_view_text" />
-
-
 </resources>

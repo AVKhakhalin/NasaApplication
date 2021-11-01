@@ -57,6 +57,19 @@
                 android:layout_marginBottom="?actionBarSize"
                 android:paddingBottom="?actionBarSize" >
 
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/fragment_search_in_nasa_archive_group_elements"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    app:constraint_referenced_ids=
+                        "search_in_nasa_archive_title_text_view,
+                        search_in_nasa_archive_image_view,
+                        search_in_nasa_archive_description_text_view"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
                 <TextView
                     android:id="@+id/search_in_nasa_archive_title_text_view"
                     android:layout_width="wrap_content"
@@ -92,16 +105,17 @@
 
                 <com.example.nasaapplication.ui.utils.LoadedImageView
                     android:id="@+id/search_in_nasa_archive_image_view"
-                    android:layout_width="match_parent"
+                    android:layout_width="@dimen/search_in_nasa_archive_image_view_zero_width"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/search_in_nasa_archive_image_view_description"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/search_in_nasa_archive_title_text_view" />
+                    app:layout_constraintTop_toBottomOf="@id/search_in_nasa_archive_title_text_view"
+                    app:layout_constraintWidth_percent="1"/>
 
                 <TextView
                     android:id="@+id/search_in_nasa_archive_description_text_view"
-                    android:layout_width="match_parent"
+                    android:layout_width="@dimen/search_in_nasa_archive_description_text_view_zero_width"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/convergence"
                     android:text="@string/search_in_nasa_archive_description_text_view_text"
@@ -109,7 +123,8 @@
                     android:textSize="@dimen/search_in_nasa_archive_description_text_view_text_size"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/search_in_nasa_archive_image_view" />
+                    app:layout_constraintTop_toBottomOf="@id/search_in_nasa_archive_image_view"
+                    app:layout_constraintWidth_percent="1"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>

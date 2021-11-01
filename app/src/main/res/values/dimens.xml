@@ -30,4 +30,21 @@
     <dimen name="search_in_nasa_archive_title_text_view_text_size">15sp</dimen>
     <dimen name="search_in_nasa_archive_description_text_view_text_size">15sp</dimen>
     <dimen name="search_in_nasa_archive_title_text_view_padding_top">10dp</dimen>
+    <dimen name="nested_scroll_view_zero_width">0dp</dimen>
+    <dimen name="search_in_nasa_archive_image_view_zero_width">0dp</dimen>
+    <dimen name="search_in_nasa_archive_description_text_view_zero_width">0dp</dimen>
+    <dimen name="p_o_d_image_view_zero_width">0dp</dimen>
+    <dimen name="fragment_day_photo_current_date_text_view_margin_top">5dp</dimen>
+    <dimen name="p_o_d_image_view_margin_top">5dp</dimen>
+    <dimen name="bottom_fab_maket_width">5dp</dimen>
+    <dimen name="bottom_fab_maket_height">5dp</dimen>
+    <dimen name="fab_buttons_radius">90dp</dimen>
+    <dimen name="fab_button_day_photo_width">50dp</dimen>
+    <dimen name="fab_button_day_photo_height">50dp</dimen>
+    <dimen name="fab_button_search_in_wiki_width">50dp</dimen>
+    <dimen name="fab_button_search_in_wiki_height">50dp</dimen>
+    <dimen name="fab_button_settings_width">50dp</dimen>
+    <dimen name="fab_button_settings_height">50dp</dimen>
+    <dimen name="fab_button_search_in_nasa_archive_width">50dp</dimen>
+    <dimen name="fab_button_search_in_nasa_archive_height">50dp</dimen>
 </resources>

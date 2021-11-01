@@ -13,7 +13,7 @@ class ConstantsUi {
         @JvmField
         val WIKI_ERROR_URL: String = "https://ru.m.wikipedia.org/wiki/wiki"
         @JvmField
-        val DAY_PHOTO_TEXT: String ="\"Фотография дня на \""
+        val DAY_PHOTO_TEXT: String ="\"Фотография дня\" от "
         @JvmField
         val SHARED_PREFERENCES_KEY: String = "Shared Preferences"
         @JvmField
