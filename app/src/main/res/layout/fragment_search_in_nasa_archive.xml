@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?actionBarSize"
         android:layout_marginBottom="?actionBarSize"
+        android:paddingBottom="?actionBarSize"
         android:paddingStart="@dimen/main_constraint_layout_padding_start"
         android:paddingEnd="@dimen/main_constraint_layout_padding_end">
 
@@ -52,10 +53,10 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="?actionBarSize"
                 android:paddingStart="@dimen/main_constraint_layout_padding_start"
                 android:paddingEnd="@dimen/main_constraint_layout_padding_end"
-                android:layout_marginBottom="?actionBarSize"
-                android:paddingBottom="?actionBarSize" >
+                android:paddingBottom="?actionBarSize">
 
                 <androidx.constraintlayout.widget.Group
                     android:id="@+id/fragment_search_in_nasa_archive_group_elements"
@@ -66,21 +67,21 @@
                         "search_in_nasa_archive_title_text_view,
                         search_in_nasa_archive_image_view,
                         search_in_nasa_archive_description_text_view"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/search_in_nasa_archive_title_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/aldrich"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/search_in_nasa_archive_title_text_view_padding_top"
                     android:text="@string/search_in_nasa_archive_title_text_view"
                     android:textColor="?attr/colorOnSecondary"
                     android:textSize="@dimen/search_in_nasa_archive_title_text_view_text_size"
                     android:textStyle="bold"
-                    android:paddingTop="@dimen/search_in_nasa_archive_title_text_view_padding_top"
-                    android:gravity="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -111,7 +112,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/search_in_nasa_archive_title_text_view"
-                    app:layout_constraintWidth_percent="1"/>
+                    app:layout_constraintWidth_percent="1" />
 
                 <TextView
                     android:id="@+id/search_in_nasa_archive_description_text_view"
@@ -124,10 +125,70 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/search_in_nasa_archive_image_view"
-                    app:layout_constraintWidth_percent="1"/>
+                    app:layout_constraintWidth_percent="1" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/start_padding_container_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/main_constraint_layout_padding_start" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/bottom_padding_container_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="?actionBarSize"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/nasa_archive_entity_list_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="@id/start_padding_container_guideline"
+            app:layout_constraintTop_toBottomOf="@id/input_nasa_field"
+            app:layout_constraintVertical_bias="0">
+
+            <TextView
+                android:id="@+id/nasa_archive_entity_list_container_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorSecondary"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/nasa_archive_entity_list_container_title_padding"
+                android:text="@string/nasa_archive_entity_list_container_title_text"
+                android:textColor="?attr/color"
+                android:textSize="@dimen/nasa_archive_entity_list_container_title_text_size"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/nasa_archive_entity_list_container_touchable_border"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragment_search_in_nasa_archive_recycler_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toStartOf="@id/nasa_archive_entity_list_container_touchable_border"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nasa_archive_entity_list_container_title" />
+
+            <FrameLayout
+                android:id="@+id/nasa_archive_entity_list_container_touchable_border"
+                android:layout_width="@dimen/main_constraint_layout_padding_start"
+                android:layout_height="match_parent"
+                android:background="?attr/colorSecondaryVariant"
+                android:scaleY="100"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_min="?actionBarSize"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

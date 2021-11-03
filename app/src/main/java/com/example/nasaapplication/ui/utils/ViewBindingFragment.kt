@@ -14,7 +14,7 @@ abstract class ViewBindingFragment<T : ViewBinding>(
 ) : Fragment() {
     private var _binding: T? = null
 
-    protected val binding: T
+    val binding: T
         get() = _binding!!
 
     override fun onCreateView(

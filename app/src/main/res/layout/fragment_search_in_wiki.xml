@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="?actionBarSize"
+        android:paddingBottom="?actionBarSize"
         android:paddingStart="@dimen/main_constraint_layout_padding_start"
-        android:paddingEnd="@dimen/main_constraint_layout_padding_end"
-        android:paddingBottom="?actionBarSize">
+        android:paddingEnd="@dimen/main_constraint_layout_padding_end" >
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_wiki_field"

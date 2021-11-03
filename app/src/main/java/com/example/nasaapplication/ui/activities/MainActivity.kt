@@ -3,7 +3,6 @@ package com.example.nasaapplication.ui.activities
 import android.content.SharedPreferences
 import android.os.*
 import android.view.*
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet

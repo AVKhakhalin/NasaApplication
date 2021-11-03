@@ -50,4 +50,11 @@
     <dimen name="collapsing_toolbar_layout_height">400dp</dimen>
     <dimen name="bottom_fab_maket_right_width">5dp</dimen>
     <dimen name="bottom_fab_maket_right_height">5dp</dimen>
+    <dimen name="fragment_search_in_nasa_archive_recycler_item_text_view_padding">10dp</dimen>
+    <dimen name="fragment_search_in_nasa_archive_recycler_item_text_view_text_size">18sp</dimen>
+    <dimen name="fragment_search_in_nasa_archive_recycler_item_view_height">1dp</dimen>
+    <dimen name="fragment_search_in_nasa_archive_recycler_item_view_margin_end">20dp</dimen>
+    <dimen name="nasa_archive_entity_list_container_title_text_size">18sp</dimen>
+    <dimen name="nasa_archive_entity_list_container_title_padding">7dp</dimen>
+    <dimen name="nasa_archive_entity_list_container_title_width">0dp</dimen>
 </resources>
