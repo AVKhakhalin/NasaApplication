@@ -57,7 +57,7 @@
             app:layout_constraintHeight_percent="0.5"
             app:chipBackgroundColor="?attr/colorSecondaryVariant"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.499"
             app:rippleColor="?attr/colorPrimaryVariant" />
@@ -71,7 +71,7 @@
             android:textAllCaps="true"
             android:textColor="?attr/colorOnPrimary"
             app:chipBackgroundColor="?attr/colorSecondaryVariant"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:rippleColor="?attr/colorPrimaryVariant" />

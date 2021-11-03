@@ -14,6 +14,11 @@ class NavigationContent(
     private var settingsFragment: SettingsFragment? = null
     //endregion
 
+    // Получение settingsFragment
+    fun getSettingsFragment(): SettingsFragment? {
+        return settingsFragment
+    }
+
     // Отображение фрагмента с настройками приложения
     fun showSettingsFragment(useBackStack: Boolean) {
         settingsFragment = SettingsFragment.newInstance()

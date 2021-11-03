@@ -52,6 +52,10 @@ class SettingsFragment: ViewBindingFragment<FragmentSettingsBinding>(FragmentSet
     //region МЕТОДЫ ДЛЯ РАБОТЫ С BOTTOM NAVIGATION MENU
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Изменение вида Bottom Navigation Menu
+        mainActivity.setSsMain(true)
+        mainActivity.switchBottomAppBar(mainActivity)
+
         // Установка слушателей на кнопки выбора тем
         buttonStyleChooseDay = view.findViewById(R.id.button_style_day)
         buttonStyleChooseNight = view.findViewById(R.id.button_style_night)

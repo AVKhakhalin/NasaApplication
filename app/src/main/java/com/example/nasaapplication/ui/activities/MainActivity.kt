@@ -31,8 +31,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Binding
     lateinit var binding: ActivityMainBinding
     // Bottom navigation menu
-    private var isMain = false
-    private var isFABButtonsGroupView = false
+    private var isMain: Boolean = false
+    private var isFABButtonsGroupView: Boolean = false
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,12 +111,16 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
 
         switchBottomAppBar(this)
         binding.bottomNavigationMenu.bottomAppBarFab.setOnClickListener {
-            switchBottomAppBar(this)
+            if (navigationContent.getSettingsFragment() != null) {
+                recreate()
+            } else {
+                switchBottomAppBar(this)
+            }
         }
     }
     // Переключение режима нижней навигационной кнопки BottomAppBar
     // с центрального на крайнее левое положение и обратно
-    private fun switchBottomAppBar(context: MainActivity) {
+    fun switchBottomAppBar(context: MainActivity) {
         if (isMain) {
             // Изменение нижего меню, выходящего из FAB
             if (isFABButtonsGroupView) {
@@ -400,4 +404,17 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             }
         }
     }
+
+    // Установка значения переменной isMain
+    fun setSsMain(isMain: Boolean) {
+        this.isMain = isMain
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Установка начального значения isMain
+        isMain = false
+        setBottomAppBar()
+    }
+
 }
