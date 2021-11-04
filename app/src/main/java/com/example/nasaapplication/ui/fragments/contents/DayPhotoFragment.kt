@@ -2,7 +2,12 @@ package com.example.nasaapplication.ui.fragments.contents
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.ChangeBounds
+import android.transition.ChangeImageTransform
+import android.transition.TransitionManager
+import android.transition.TransitionSet
 import android.view.*
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -45,6 +50,8 @@ class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDay
     private lateinit var bottomSheetDescriptionText: TextView
     // MainActivity
     private lateinit var mainActivity: MainActivity
+    // Анимация изменения размеров картики
+    private var typeChangeImage: Int = 0
     //endregion
 
     companion object {
@@ -81,12 +88,16 @@ class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDay
                         lifecycle(this@DayPhotoFragment)
                         error(R.drawable.ic_load_error_vector)
                     }
+
                     // Показать описание фотографии дня
                     bottomSheetDescriptionTitle.text = serverResponseData.title
                     bottomSheetDescriptionText.text = serverResponseData.explanation
 
                     binding.pODImageView.visibility = View.VISIBLE
                     binding.pODLoadingLayout.visibility = View.INVISIBLE
+
+                    // Сброс типа анимации для изменения размера фотографии
+                    typeChangeImage = 0
                 }
             }
             is PODData.Loading -> {
@@ -153,6 +164,26 @@ class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDay
                         .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
                 }
             }
+        }
+
+        // Установка слушателя на картинку для изменения её размеров по желанию пользователя
+        binding.pODImageView.setOnClickListener {
+            val set = TransitionSet()
+                .addTransition(ChangeBounds())
+                .addTransition(ChangeImageTransform())
+            TransitionManager.beginDelayedTransition(binding.mainConstraintLayout,set)
+            when(typeChangeImage++) {
+                0 -> binding.pODImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                1 -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_XY
+                2 -> binding.pODImageView.scaleType = ImageView.ScaleType.MATRIX
+                3 -> binding.pODImageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                4 -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_END
+                5 -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_START
+                6 -> binding.pODImageView.scaleType = ImageView.ScaleType.CENTER
+                7 -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+                else -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+            }
+            if (typeChangeImage > 7) typeChangeImage = 0
         }
     }
 

@@ -2,8 +2,13 @@ package com.example.nasaapplication.ui.fragments.contents
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.ChangeBounds
+import android.transition.ChangeImageTransform
+import android.transition.TransitionManager
+import android.transition.TransitionSet
 import android.view.Gravity
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -45,6 +50,8 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     private var entitiesLinks: MutableList<String> = mutableListOf()
     private var entitiesTexts: MutableList<String> = mutableListOf()
     private var isRecyclerViewWindowHide: Boolean = true
+    // Анимация изменения размеров картики
+    private var typeChangeImage: Int = 0
     //endregion
 
     companion object {
@@ -121,6 +128,26 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
         binding.nasaArchiveEntityListContainerTouchableBorder.setOnClickListener {
             showRecyclerViewWindowWithResults()
         }
+
+        // Установка слушателя на картинку для изменения её размеров по желанию пользователя
+        binding.searchInNasaArchiveImageView.setOnClickListener {
+            val set = TransitionSet()
+                .addTransition(ChangeBounds())
+                .addTransition(ChangeImageTransform())
+            TransitionManager.beginDelayedTransition(binding.searchInNasaArchiveResultContainer,set)
+            when(typeChangeImage++) {
+                0 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                1 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.FIT_XY
+                2 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.MATRIX
+                3 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                4 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.FIT_END
+                5 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.FIT_START
+                6 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.CENTER
+                7 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+                else -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+            }
+            if (typeChangeImage > 7) typeChangeImage = 0
+        }
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -158,7 +185,8 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                         // Обновление списка найденных элементов в Recycler View
                         isRecyclerViewWindowHide = true
                         updateRecycleViewList(serverResponseData.collection.items)
-
+                        // Сброс типа анимации для изменения размера фотографии
+                        typeChangeImage = 0
                     }
                 } else {
                     // Скрытие неиспользуемых полей
