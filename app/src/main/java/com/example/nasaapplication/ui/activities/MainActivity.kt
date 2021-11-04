@@ -2,6 +2,8 @@ package com.example.nasaapplication.ui.activities
 
 import android.content.SharedPreferences
 import android.os.*
+import android.transition.Slide
+import android.transition.TransitionManager
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +21,8 @@ import com.example.nasaapplication.databinding.ActivityMainBinding
 import com.example.nasaapplication.ui.ConstantsUi
 import com.google.android.material.bottomappbar.BottomAppBar
 import java.lang.Thread.sleep
+import kotlin.math.round
+import kotlin.math.sqrt
 
 
 class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationContentGetter {
@@ -238,10 +242,20 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     binding.fabButtonsGroup.visibility = View.VISIBLE
                     isFABButtonsGroupView = !isFABButtonsGroupView
                     Thread {
+                        // Исходные параметры
                         val numberFrames: Int = 30
                         val deltaTime: Long = 8L
                         val deltaRadius: Int = 8
                         val handler = Handler(Looper.getMainLooper())
+
+                        // Создание релаксации при прохождении через конечную точку
+                        val a: Double = 1.0
+                        val k: Double = 0.33
+                        val y: Double = (numberFrames * deltaRadius).toDouble()
+                        val maxX: Double = sqrt(y / a)
+                        val minX: Double = -k * maxX
+                        val deltaX: Double = (maxX - minX) / numberFrames
+
                         repeat(numberFrames) {
                             sleep(deltaTime)
                             handler.post {
@@ -252,25 +266,29 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                                 constraintSet.constrainCircle(
                                     R.id.fab_button_day_photo,
                                     R.id.bottom_fab_maket,
-                                    deltaRadius * it,
+                                    round(y - a * (maxX - deltaX * it) *
+                                            (maxX - deltaX * it)).toInt(),
                                     285f
                                 )
                                 constraintSet.constrainCircle(
                                     R.id.fab_button_search_in_wiki,
                                     R.id.bottom_fab_maket,
-                                    deltaRadius * it,
+                                    round(y - a * (maxX - deltaX * it) *
+                                            (maxX - deltaX * it)).toInt(),
                                     330f
                                 )
                                 constraintSet.constrainCircle(
                                     R.id.fab_button_search_in_nasa_archive,
                                     R.id.bottom_fab_maket,
-                                    deltaRadius * it,
+                                    round(y - a * (maxX - deltaX * it) *
+                                            (maxX - deltaX * it)).toInt(),
                                     20f
                                 )
                                 constraintSet.constrainCircle(
                                     R.id.fab_button_settings,
                                     R.id.bottom_fab_maket,
-                                    deltaRadius * it,
+                                    round(y - a * (maxX - deltaX * it) *
+                                            (maxX - deltaX * it)).toInt(),
                                     73f
                                 )
                                 constraintSet.applyTo(constraintLayout)
@@ -310,10 +328,20 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     binding.fabButtonsGroup.visibility = View.VISIBLE
                     isFABButtonsGroupView = !isFABButtonsGroupView
                     Thread {
+                        // Исходные данные
                         val numberFrames: Int = 30
                         val deltaTime: Long = 8L
                         val deltaRadius: Int = 9
                         val handler = Handler(Looper.getMainLooper())
+
+                        // Создание релаксации при прохождении через конечную точку
+                        val a: Double = 1.0
+                        val k: Double = 0.33
+                        val y: Double = (numberFrames * deltaRadius).toDouble()
+                        val maxX: Double = sqrt(y / a)
+                        val minX: Double = -k * maxX
+                        val deltaX: Double = (maxX - minX) / numberFrames
+
                         repeat(numberFrames) {
                             sleep(deltaTime)
                             handler.post {
@@ -324,25 +352,29 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                                 constraintSet.constrainCircle(
                                     R.id.fab_button_day_photo,
                                     R.id.bottom_fab_maket_right,
-                                    deltaRadius * it,
+                                    round(y - a * (maxX - deltaX * it) *
+                                            (maxX - deltaX * it)).toInt(),
                                     285f
                                 )
                                 constraintSet.constrainCircle(
                                     R.id.fab_button_search_in_wiki,
                                     R.id.bottom_fab_maket_right,
-                                    deltaRadius * it,
+                                    round(y - a * (maxX - deltaX * it) *
+                                            (maxX - deltaX * it)).toInt(),
                                     310f
                                 )
                                 constraintSet.constrainCircle(
                                     R.id.fab_button_search_in_nasa_archive,
                                     R.id.bottom_fab_maket_right,
-                                    deltaRadius * it,
+                                    round(y - a * (maxX - deltaX * it) *
+                                            (maxX - deltaX * it)).toInt(),
                                     345f
                                 )
                                 constraintSet.constrainCircle(
                                     R.id.fab_button_settings,
                                     R.id.bottom_fab_maket_right,
-                                    deltaRadius * it,
+                                    round(y - a * (maxX - deltaX * it) *
+                                            (maxX - deltaX * it)).toInt(),
                                     20f
                                 )
                                 constraintSet.applyTo(constraintLayout)
@@ -359,6 +391,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             hideAndShowFragmentsContainersAndDismissDialogs()
             isFABButtonsGroupView = false
             binding.viewPager.currentItem = 0
+            // Проба анимации кнопки
+//            TransitionManager.beginDelayedTransition(binding.fabButtonsContainer, Slide(Gravity.END))
+//            binding.fabButtonDayPhoto.visibility = View.GONE
         }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в Википедии
         binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_wiki)

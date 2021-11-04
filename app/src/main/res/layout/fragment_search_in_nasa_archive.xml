@@ -164,6 +164,7 @@
                 android:textColor="?attr/color"
                 android:textSize="@dimen/nasa_archive_entity_list_container_title_text_size"
                 android:textStyle="bold"
+                android:elevation="@dimen/nasa_archive_entity_list_container_title_elevation"
                 app:layout_constraintEnd_toStartOf="@id/nasa_archive_entity_list_container_touchable_border"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -188,6 +189,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_min="?actionBarSize"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

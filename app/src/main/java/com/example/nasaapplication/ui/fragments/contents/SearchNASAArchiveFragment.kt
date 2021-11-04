@@ -153,13 +153,23 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                         //showError("Сообщение, что ссылка пустая")
                         toast(ConstantsUi.ERROR_LINK_EMPTY)
                     } else {
+                        // Удаление сообщения об отсутствии найденной информации по запросу
+                        binding.searchInNasaArchiveTitleTextView.text = ""
                         // Обновление списка найденных элементов в Recycler View
+                        isRecyclerViewWindowHide = true
                         updateRecycleViewList(serverResponseData.collection.items)
+
                     }
                 } else {
+                    // Скрытие неиспользуемых полей
                     binding.searchInNasaArchiveLoadingLayout.visibility = View.INVISIBLE
+                    binding.searchInNasaArchiveImageView.visibility = View.INVISIBLE
+                    binding.searchInNasaArchiveDescriptionTextView.visibility = View.INVISIBLE
+                    binding.nasaArchiveEntityListContainer.visibility = View.INVISIBLE
+                    // Отображение информации об отсутствии найденной информации по запросу
                     binding.searchInNasaArchiveTitleTextView.text =
                         ConstantsController.ERROR_EMPTY_DOWNLOAD_DATES
+                    binding.searchInNasaArchiveTitleTextView.visibility = View.VISIBLE
                 }
             }
             is NASAArchiveData.Loading -> {

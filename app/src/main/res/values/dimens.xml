@@ -57,4 +57,5 @@
     <dimen name="nasa_archive_entity_list_container_title_text_size">18sp</dimen>
     <dimen name="nasa_archive_entity_list_container_title_padding">7dp</dimen>
     <dimen name="nasa_archive_entity_list_container_title_width">0dp</dimen>
+    <dimen name="nasa_archive_entity_list_container_title_elevation">20dp</dimen>
 </resources>
