@@ -2,6 +2,7 @@ package com.example.nasaapplication.ui.activities
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.content.SharedPreferences
 import android.os.*
 import android.view.Menu
@@ -141,6 +142,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         setHideShowBackgroundAnimation(transparientValue, durationAnimation, true)
         // Отображение навигационного меню View Pager
         binding.tabLayout.visibility = View.VISIBLE
+        // Анимация вращения картинки на нижней кнопке FAB
+        ObjectAnimator.ofFloat(binding.bottomNavigationMenu.bottomAppBarFab,
+            "rotation", 0f, -360f).start()
 
         if (isMain) {
             // Изменение нижего меню, выходящего из FAB
