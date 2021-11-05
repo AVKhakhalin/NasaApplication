@@ -1,5 +1,7 @@
 package com.example.nasaapplication.ui.fragments.contents
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +18,13 @@ class SearchNASAArchiveFragmentAdapter(
     private var isRecyclerViewWindowHide: Boolean,
     private val searchNASAArchiveFragment: SearchNASAArchiveFragment
 ):  RecyclerView.Adapter<SearchNASAArchiveFragmentAdapter.SearchNASAArchiveFragmentViewHolder>() {
+
+    //region ЗАДАНИЕ ПЕРЕМЕННЫХ
+    // Анимация появления результирующих данных
+    private val durationAnimation: Long = 800
+    private val transparientValue: Float = 0f
+    private val notTransparientValue: Float = 1f
+    //endregion
 
     //region МЕТОДЫ ДЛЯ РАБОТЫ АДАПТЕРА
     class SearchNASAArchiveFragmentViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -49,17 +58,55 @@ class SearchNASAArchiveFragmentAdapter(
         holder.newNASAArchiveEntityTextViewContainer?.let {
             it.setOnClickListener {
                 if (!searchNASAArchiveFragment.getIsBlockingOtherFABButtons()) {
-                    // Загрузить найденную картинку
+                    // Анимированное появление найденной картинки по запросу в архиве NASA
+                    searchNASAArchiveFragment.binding.searchInNasaArchiveImageView.alpha =
+                        transparientValue
                     searchNASAArchiveFragment.binding.searchInNasaArchiveImageView
                         .load(entitiesLinks[position]) {
                             lifecycle(searchNASAArchiveFragment)
                             error(R.drawable.ic_load_error_vector)
+                            // Анимация появления картинки
+                            searchNASAArchiveFragment.binding.searchInNasaArchiveImageView.animate()
+                                .alpha(notTransparientValue)
+                                .setDuration(durationAnimation)
+                                .setListener(object: AnimatorListenerAdapter() {
+                                    override fun onAnimationEnd(animation: Animator) {
+                                        searchNASAArchiveFragment.binding
+                                            .searchInNasaArchiveImageView.isClickable = true
+                                    }
+                                })
                         }
-                    // Показать описание фотографии по запрошенному событию
+
+                    // Анимационный показ заголовка и описания фотографии по запрошенному событию
+                    searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView.alpha =
+                        transparientValue
                     searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView.text =
                         newNASAArchiveEntityList[position]
+                    searchNASAArchiveFragment.binding.searchInNasaArchiveDescriptionTextView.alpha =
+                        transparientValue
                     searchNASAArchiveFragment.binding.searchInNasaArchiveDescriptionTextView.text =
                         entitiesTexts[position]
+                    // Анимация появления заголовка картинки
+                    searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView.animate()
+                        .alpha(notTransparientValue)
+                        .setDuration(durationAnimation)
+                        .setListener(object: AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView
+                                    .isClickable = true
+                            }
+                        })
+                    // Анимация появления описания картинки
+                    searchNASAArchiveFragment.binding.searchInNasaArchiveDescriptionTextView
+                        .animate()
+                        .alpha(notTransparientValue)
+                        .setDuration(durationAnimation)
+                        .setListener(object: AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                searchNASAArchiveFragment.binding
+                                    .searchInNasaArchiveDescriptionTextView.isClickable = true
+                            }
+                        })
 
                     // Отобразить элементы View для вывода полученной информации
                     searchNASAArchiveFragment.binding.fragmentSearchInNasaArchiveGroupElements

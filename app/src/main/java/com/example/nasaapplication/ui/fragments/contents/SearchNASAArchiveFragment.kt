@@ -1,5 +1,7 @@
 package com.example.nasaapplication.ui.fragments.contents
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.os.Bundle
 import android.transition.ChangeBounds
@@ -21,7 +23,7 @@ import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.observers.viewmodels.NASAArchive.NASAArchiveData
-import com.example.nasaapplication.controller.observers.viewmodels.NASAArchive.NASAArchiveViewModel
+import com.example.nasaapplication.controller.observers.viewmodels.NASAArchive.NASAArchiveDataViewModel
 import com.example.nasaapplication.databinding.FragmentSearchInNasaArchiveBinding
 import com.example.nasaapplication.repository.facadeuser.NASAArchive.NASAArchiveServerResponseItems
 import com.example.nasaapplication.ui.ConstantsUi
@@ -36,8 +38,8 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     private lateinit var navigationDialogs: NavigationDialogs
     private lateinit var navigationContent: NavigationContent
     // ViewModel
-    private val viewModel: NASAArchiveViewModel by lazy {
-        ViewModelProviders.of(this).get(NASAArchiveViewModel::class.java)
+    private val dataViewModel: NASAArchiveDataViewModel by lazy {
+        ViewModelProviders.of(this).get(NASAArchiveDataViewModel::class.java)
     }
     // BottomSheet
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
@@ -51,6 +53,10 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     private var isRecyclerViewWindowHide: Boolean = true
     // Анимация изменения размеров картики
     private var typeChangeImage: Int = 0
+    // Анимация появления результирующих данных
+    private val durationAnimation: Long = 800
+    private val transparientValue: Float = 0f
+    private val notTransparientValue: Float = 1f
     //endregion
 
     companion object {
@@ -108,9 +114,7 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                 if ((binding.inputNasaFieldText.text != null) &&
                 (binding.inputNasaFieldText.text!!.length <=
                         binding.inputNasaField.counterMaxLength)) {
-                    sendRequestToNASAArchive(
-                        "${binding.inputNasaFieldText.text.toString()}"
-                    )
+                    sendRequestToNASAArchive("${binding.inputNasaFieldText.text.toString()}")
                 }
             }
         }
@@ -144,15 +148,18 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                 when (typeChangeImage++) {
                     0 -> binding.searchInNasaArchiveImageView.scaleType =
                         ImageView.ScaleType.CENTER_CROP
-                    1 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.FIT_XY
-                    2 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.MATRIX
+                    1 -> binding.searchInNasaArchiveImageView.scaleType =
+                        ImageView.ScaleType.FIT_XY
+                    2 -> binding.searchInNasaArchiveImageView.scaleType =
+                        ImageView.ScaleType.MATRIX
                     3 -> binding.searchInNasaArchiveImageView.scaleType =
                         ImageView.ScaleType.CENTER_INSIDE
                     4 -> binding.searchInNasaArchiveImageView.scaleType =
                         ImageView.ScaleType.FIT_END
                     5 -> binding.searchInNasaArchiveImageView.scaleType =
                         ImageView.ScaleType.FIT_START
-                    6 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.CENTER
+                    6 -> binding.searchInNasaArchiveImageView.scaleType =
+                        ImageView.ScaleType.CENTER
                     7 -> binding.searchInNasaArchiveImageView.scaleType =
                         ImageView.ScaleType.FIT_CENTER
                     else -> binding.searchInNasaArchiveImageView.scaleType =
@@ -179,6 +186,16 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
         }
         constraintLayout.layoutParams = timeLayoutParams
         binding.fragmentSearchInNasaArchiveRecyclerView.visibility = View.VISIBLE
+        // Анимация появления списка с результатам поиска в архиве NASA
+        binding.nasaArchiveEntityListContainer.alpha = transparientValue
+        binding.nasaArchiveEntityListContainer.animate()
+            .alpha(notTransparientValue)
+            .setDuration(durationAnimation)
+            .setListener(object: AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    binding.nasaArchiveEntityListContainer.isClickable = true
+                }
+            })
     }
 
     private fun renderData(data: NASAArchiveData) {
@@ -246,7 +263,7 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
         finalRequest = finalRequest.trimEnd()
         finalRequest = finalRequest.replace(oneSpace, replaceSpaceSymbol)
         if (finalRequest.isNotEmpty()) {
-            viewModel.getData(finalRequest)
+            dataViewModel.getData(finalRequest)
                 .observe(viewLifecycleOwner, Observer<NASAArchiveData> { renderData(it) })
         }
     }

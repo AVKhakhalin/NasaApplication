@@ -11,7 +11,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.net.URLEncoder
 
-class NASAArchiveViewModel (
+class NASAArchiveDataViewModel (
     private val liveDataForViewToObserve: MutableLiveData<NASAArchiveData> = MutableLiveData(),
     private val retrofitImpl: NASAArchiveRetrofitImpl = NASAArchiveRetrofitImpl()
 ): ViewModel() {
@@ -44,7 +44,8 @@ class NASAArchiveViewModel (
                 }
             }
 
-            override fun onFailure(call: Call<NASAArchiveServerResponseWelcome>, throwable: Throwable) {
+            override fun onFailure(call: Call<NASAArchiveServerResponseWelcome>,
+                                   throwable: Throwable) {
                 liveDataForViewToObserve.value = NASAArchiveData.Error(throwable)
             }
         })

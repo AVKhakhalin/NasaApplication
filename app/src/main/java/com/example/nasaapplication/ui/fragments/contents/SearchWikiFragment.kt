@@ -1,5 +1,7 @@
 package com.example.nasaapplication.ui.fragments.contents
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
@@ -9,6 +11,9 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProviders
@@ -28,6 +33,7 @@ import java.net.URL
 import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
+
 class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     FragmentSearchInWikiBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
@@ -42,6 +48,10 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     // MainActivity
     private lateinit var mainActivity: MainActivity
+    // Анимация появления результирующих данных
+    private val durationAnimation: Long = 1000
+    private val transparientValue: Float = 0f
+    private val notTransparientValue: Float = 1f
     //endregion
 
     companion object {
@@ -83,10 +93,18 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
                 }
             }
         }
+        // Установка слушателя на завершение загрузки результирующих данных в Web View
+        binding.webViewContainer.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView, url: String) {
+                // Анимация появления Web View с результатами поиска
+                animatedShowWebView()
+            }
+        }
     }
 
     fun showUrlInWiki(urlString:String){
         val url = URL(urlString)
+        binding.webViewContainer.alpha = transparientValue
         Thread{
             val urlConnection = url.openConnection() as HttpsURLConnection
             urlConnection.requestMethod = ConstantsUi.SHOWURLINWIKI_METHOD_NAME
@@ -126,5 +144,17 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     @RequiresApi(Build.VERSION_CODES.N) // TODO: Доработать, заменить на метод, независящий от версии
     private fun getLines(reader: BufferedReader): String {
         return reader.lines().collect(Collectors.joining("\n"))
+    }
+
+    private fun animatedShowWebView() {
+        // Анимация появления Web View с результатами поиска
+        binding.webViewContainer.animate()
+            .alpha(notTransparientValue)
+            .setDuration(durationAnimation)
+            .setListener(object: AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    binding.webViewContainer.isClickable = true
+                }
+            })
     }
 }

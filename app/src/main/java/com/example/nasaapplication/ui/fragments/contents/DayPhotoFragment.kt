@@ -1,5 +1,7 @@
 package com.example.nasaapplication.ui.fragments.contents
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.os.Bundle
 import android.transition.ChangeBounds
@@ -53,6 +55,10 @@ class DayPhotoFragment:
     private lateinit var mainActivity: MainActivity
     // Анимация изменения размеров картики
     private var typeChangeImage: Int = 0
+    // Анимация появления результирующих данных
+    private val durationAnimation: Long = 800
+    private val transparientValue: Float = 0f
+    private val notTransparientValue: Float = 1f
     //endregion
 
     companion object {
@@ -85,17 +91,45 @@ class DayPhotoFragment:
                     toast(ConstantsUi.ERROR_LINK_EMPTY)
                 } else {
                     //showSuccess()
+                    binding.pODImageView.alpha = transparientValue
                     binding.pODImageView.load(url) {
                         lifecycle(this@DayPhotoFragment)
                         error(R.drawable.ic_load_error_vector)
                     }
-
-                    // Показать описание фотографии дня
-                    bottomSheetDescriptionTitle.text = serverResponseData.title
-                    bottomSheetDescriptionText.text = serverResponseData.explanation
-
+                    // Анимированное появление картинки дня
                     binding.pODImageView.visibility = View.VISIBLE
-                    binding.pODLoadingLayout.visibility = View.INVISIBLE
+                    binding.pODImageView.animate()
+                        .alpha(notTransparientValue)
+                        .setDuration(durationAnimation)
+                        .setListener(object: AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                binding.pODImageView.isClickable = true
+                            }
+                        })
+
+                    // Анимированное появление заголовка фотографии дня
+                    bottomSheetDescriptionTitle.alpha = transparientValue
+                    bottomSheetDescriptionTitle.text = serverResponseData.title
+                    bottomSheetDescriptionTitle.animate()
+                        .alpha(notTransparientValue)
+                        .setDuration(durationAnimation)
+                        .setListener(object: AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                bottomSheetDescriptionTitle.isClickable = true
+                            }
+                        })
+
+                    // Анимированное появление
+                    bottomSheetDescriptionText.alpha = transparientValue
+                    bottomSheetDescriptionText.text = serverResponseData.explanation
+                    bottomSheetDescriptionText.animate()
+                        .alpha(notTransparientValue)
+                        .setDuration(durationAnimation)
+                        .setListener(object: AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                bottomSheetDescriptionText.isClickable = true
+                            }
+                        })
 
                     // Сброс типа анимации для изменения размера фотографии
                     typeChangeImage = 0

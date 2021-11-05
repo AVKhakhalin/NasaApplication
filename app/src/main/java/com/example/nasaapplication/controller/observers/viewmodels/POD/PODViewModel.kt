@@ -31,7 +31,8 @@ class PODViewModel (
         if (ConstantsController.API_KEY.isBlank()) {
             PODData.Error(Throwable(ConstantsController.ERROR_NO_API_KEY))
         } else {
-            retrofitImpl.getRetrofitImpl().getPictureOfTheDay(getCurDate(), ConstantsController.API_KEY).enqueue(object:
+            retrofitImpl.getRetrofitImpl().getPictureOfTheDay(getCurDate(),
+                ConstantsController.API_KEY).enqueue(object:
                 Callback<PODServerResponseData> {
                 override fun onResponse(
                     call: Call<PODServerResponseData>,
@@ -66,7 +67,8 @@ class PODViewModel (
             val dateYear: Int = calendar.get(Calendar.YEAR)
             val dateMonth: Int = calendar.get(Calendar.MONTH) + 1
             val dateDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
-            return "$dateYear-${if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}-${if (dateDay < 10) "0$dateDay" else "$dateDay"}"
+            return "$dateYear-${if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}-${
+                if (dateDay < 10) "0$dateDay" else "$dateDay"}"
         } else {
             return curDate
         }
