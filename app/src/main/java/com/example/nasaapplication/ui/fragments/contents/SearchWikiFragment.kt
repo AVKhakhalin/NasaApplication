@@ -73,11 +73,14 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
         binding.webViewContainer.setBackgroundColor(Color.TRANSPARENT)
         // Установка слушателя при нажатии на кнопку поиска в "Википедии"
         binding.inputWikiField.setEndIconOnClickListener {
-            if ((binding.inputWikiFieldText.text != null) &&
+            if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                if ((binding.inputWikiFieldText.text != null) &&
                 (binding.inputWikiFieldText.text!!.length <=
                         binding.inputWikiField.counterMaxLength)) {
-                    showUrlInWiki("${ConstantsUi.WIKI_URL}${
-                                binding.inputWikiFieldText.text.toString()}")
+                    showUrlInWiki(
+                        "${ConstantsUi.WIKI_URL}${
+                            binding.inputWikiFieldText.text.toString()}")
+                }
             }
         }
     }

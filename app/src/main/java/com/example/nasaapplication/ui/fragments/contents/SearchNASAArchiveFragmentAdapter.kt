@@ -35,7 +35,8 @@ class SearchNASAArchiveFragmentAdapter(
     ): SearchNASAArchiveFragmentAdapter.SearchNASAArchiveFragmentViewHolder {
         val newNASAArchiveItemView =
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.fragment_search_in_nasa_archive_recycler_item, parent, false)
+                .inflate(R.layout.fragment_search_in_nasa_archive_recycler_item,
+                    parent, false)
         return SearchNASAArchiveFragmentViewHolder(newNASAArchiveItemView)
     }
     override fun onBindViewHolder(
@@ -47,35 +48,37 @@ class SearchNASAArchiveFragmentAdapter(
         }
         holder.newNASAArchiveEntityTextViewContainer?.let {
             it.setOnClickListener {
-                // Загрузить найденную картинку
-                searchNASAArchiveFragment.binding.searchInNasaArchiveImageView
-                    .load(entitiesLinks[position]) {
-                    lifecycle(searchNASAArchiveFragment)
-                    error(R.drawable.ic_load_error_vector)
+                if (!searchNASAArchiveFragment.getIsBlockingOtherFABButtons()) {
+                    // Загрузить найденную картинку
+                    searchNASAArchiveFragment.binding.searchInNasaArchiveImageView
+                        .load(entitiesLinks[position]) {
+                            lifecycle(searchNASAArchiveFragment)
+                            error(R.drawable.ic_load_error_vector)
+                        }
+                    // Показать описание фотографии по запрошенному событию
+                    searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView.text =
+                        newNASAArchiveEntityList[position]
+                    searchNASAArchiveFragment.binding.searchInNasaArchiveDescriptionTextView.text =
+                        entitiesTexts[position]
+
+                    // Отобразить элементы View для вывода полученной информации
+                    searchNASAArchiveFragment.binding.fragmentSearchInNasaArchiveGroupElements
+                        .visibility = View.VISIBLE
+                    searchNASAArchiveFragment.binding.searchInNasaArchiveLoadingLayout
+                        .visibility = View.INVISIBLE
+
+                    // Скрытие списка Recycler View с результатами поиска в архиве NASA
+                    val constraintLayout =
+                        searchNASAArchiveFragment.binding.nasaArchiveEntityListContainer
+                    val timeLayoutParams: (ConstraintLayout.LayoutParams) =
+                        constraintLayout.layoutParams as ConstraintLayout.LayoutParams
+                    timeLayoutParams.constrainedWidth = true
+                    isRecyclerViewWindowHide = true
+                    constraintLayout.layoutParams = timeLayoutParams
+                    searchNASAArchiveFragment.setIsRecyclerViewWindowHide(isRecyclerViewWindowHide)
+                    searchNASAArchiveFragment.binding.fragmentSearchInNasaArchiveRecyclerView
+                        .visibility = View.INVISIBLE
                 }
-                // Показать описание фотографии по запрошенному событию
-                searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView.text =
-                    newNASAArchiveEntityList[position]
-                searchNASAArchiveFragment.binding.searchInNasaArchiveDescriptionTextView.text =
-                    entitiesTexts[position]
-
-                // Отобразить элементы View для вывода полученной информации
-                searchNASAArchiveFragment.binding.fragmentSearchInNasaArchiveGroupElements
-                    .visibility = View.VISIBLE
-                searchNASAArchiveFragment.binding.searchInNasaArchiveLoadingLayout
-                    .visibility = View.INVISIBLE
-
-                // Скрытие списка Recycler View с результатами поиска в архиве NASA
-                val constraintLayout =
-                    searchNASAArchiveFragment.binding.nasaArchiveEntityListContainer
-                val timeLayoutParams: (ConstraintLayout.LayoutParams) =
-                    constraintLayout.layoutParams as ConstraintLayout.LayoutParams
-                timeLayoutParams.constrainedWidth = true
-                isRecyclerViewWindowHide = true
-                constraintLayout.layoutParams = timeLayoutParams
-                searchNASAArchiveFragment.setIsRecyclerViewWindowHide(isRecyclerViewWindowHide)
-                searchNASAArchiveFragment.binding.fragmentSearchInNasaArchiveRecyclerView
-                    .visibility = View.INVISIBLE
             }
         }
     }

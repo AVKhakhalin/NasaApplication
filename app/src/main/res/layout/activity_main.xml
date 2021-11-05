@@ -7,17 +7,29 @@
     android:background="?attr/colorOnBackground"
     tools:context=".ui.activities.MainActivity">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
+    <FrameLayout
+        android:id="@+id/transparent_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible" />
+        android:animateLayoutChanges="true"
+        android:background="?attr/colorOnPrimary"
+        android:clickable="false" >
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:visibility="visible"/>
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            android:clickable="false"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:visibility="visible"
+            android:clickable="false"/>
+
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/activity_fragments_container"

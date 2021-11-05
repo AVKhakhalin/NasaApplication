@@ -16,7 +16,8 @@ import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.chip.Chip
 
-class SettingsFragment: ViewBindingFragment<FragmentSettingsBinding>(FragmentSettingsBinding::inflate) {
+class SettingsFragment:
+    ViewBindingFragment<FragmentSettingsBinding>(FragmentSettingsBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
     private lateinit var navigationDialogs: NavigationDialogs
@@ -61,35 +62,47 @@ class SettingsFragment: ViewBindingFragment<FragmentSettingsBinding>(FragmentSet
         buttonStyleChooseNight = view.findViewById(R.id.button_style_night)
         buttonStyleChooseDay?.let {
             it.setOnClickListener {
-                buttonStyleChooseNight?.let { it.visibility = View.INVISIBLE }
-                (requireActivity() as MainActivity).setIsThemeDay(true)
-                val sharedPreferences: SharedPreferences =
-                    requireActivity().getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY,
-                        AppCompatActivity.MODE_PRIVATE
+                if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                    buttonStyleChooseNight?.let { it.visibility = View.INVISIBLE }
+                    (requireActivity() as MainActivity).setIsThemeDay(true)
+                    val sharedPreferences: SharedPreferences =
+                        requireActivity().getSharedPreferences(
+                            ConstantsUi.SHARED_PREFERENCES_KEY,
+                            AppCompatActivity.MODE_PRIVATE
+                        )
+                    var sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
+                    sharedPreferencesEditor.putBoolean(
+                        ConstantsUi.SHARED_PREFERENCES_THEME_KEY,
+                        true
                     )
-                var sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
-                sharedPreferencesEditor.putBoolean(ConstantsUi.SHARED_PREFERENCES_THEME_KEY, true)
-                sharedPreferencesEditor.apply()
-                // Перезапуск видео в классе FireView
-                binding.settingsFireWall.setIsClick(true)
-                binding.settingsFireWall.invalidate()
+                    sharedPreferencesEditor.apply()
+                    // Перезапуск видео в классе FireView
+                    binding.settingsFireWall.setIsClick(true)
+                    binding.settingsFireWall.invalidate()
+                }
             }
         }
 
         buttonStyleChooseNight?.let {
             it.setOnClickListener {
-                buttonStyleChooseDay?.let { it.visibility = View.INVISIBLE }
-                (requireActivity() as MainActivity).setIsThemeDay(false)
-                val sharedPreferences: SharedPreferences =
-                    requireActivity().getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY,
-                        AppCompatActivity.MODE_PRIVATE
+                if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                    buttonStyleChooseDay?.let { it.visibility = View.INVISIBLE }
+                    (requireActivity() as MainActivity).setIsThemeDay(false)
+                    val sharedPreferences: SharedPreferences =
+                        requireActivity().getSharedPreferences(
+                            ConstantsUi.SHARED_PREFERENCES_KEY,
+                            AppCompatActivity.MODE_PRIVATE
+                        )
+                    var sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
+                    sharedPreferencesEditor.putBoolean(
+                        ConstantsUi.SHARED_PREFERENCES_THEME_KEY,
+                        false
                     )
-                var sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
-                sharedPreferencesEditor.putBoolean(ConstantsUi.SHARED_PREFERENCES_THEME_KEY, false)
-                sharedPreferencesEditor.apply()
-                // Перезапуск видео в классе FireView
-                binding.settingsFireWall.setIsClick(true)
-                binding.settingsFireWall.invalidate()
+                    sharedPreferencesEditor.apply()
+                    // Перезапуск видео в классе FireView
+                    binding.settingsFireWall.setIsClick(true)
+                    binding.settingsFireWall.invalidate()
+                }
             }
         }
     }

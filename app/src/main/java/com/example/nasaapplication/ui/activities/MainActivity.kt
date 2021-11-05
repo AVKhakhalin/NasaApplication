@@ -1,10 +1,12 @@
 package com.example.nasaapplication.ui.activities
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.SharedPreferences
 import android.os.*
-import android.transition.Slide
-import android.transition.TransitionManager
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -37,6 +39,12 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Bottom navigation menu
     private var isMain: Boolean = false
     private var isFABButtonsGroupView: Boolean = false
+    // Признак блокировки кнопок во всем приложении, при появления меню из нижней FAB
+    private var isBlockingOtherFABButtons: Boolean = false
+    // Переменные для анимации фона
+    private val durationAnimation: Long = 300
+    private val transparientValue: Float = 1f
+    private val notTransparientValue: Float = 0.2f
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +56,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         // Подключение ViewPagerAdapter и TabLayout для запуска фрагментов
-        binding.viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
+        binding.viewPager.adapter = ViewPagerAdapter(supportFragmentManager, this)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
 
         // Настройка TabLayout (установка на него картинок)
@@ -64,7 +72,10 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         hideAndShowFragmentsContainersAndDismissDialogs()
 
         // Методы работы с Bottom Navigation Menu
-        setBottmNavigationMenu()
+        setBottomNavigationMenu()
+
+        // Отключение блокировки всех кнопок, кроме кнопок, появившихся из FAB
+        isBlockingOtherFABButtons = false
 
         // Отображение содержимого макета
         setContentView(binding.root)
@@ -92,8 +103,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
         val sharedPreferences: SharedPreferences =
-            getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY,
-                AppCompatActivity.MODE_PRIVATE)
+            getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY, AppCompatActivity.MODE_PRIVATE)
         var sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
         sharedPreferencesEditor.putBoolean(ConstantsUi.SHARED_PREFERENCES_THEME_KEY, isThemeDay)
         sharedPreferencesEditor.apply()
@@ -125,6 +135,13 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Переключение режима нижней навигационной кнопки BottomAppBar
     // с центрального на крайнее левое положение и обратно
     fun switchBottomAppBar(context: MainActivity) {
+        // Отключение блокировки всех кнопок, кроме кнопок, появившихся из FAB
+        isBlockingOtherFABButtons = false
+        // Установка анимационного просветления фона
+        setHideShowBackgroundAnimation(transparientValue, durationAnimation, true)
+        // Отображение навигационного меню View Pager
+        binding.tabLayout.visibility = View.VISIBLE
+
         if (isMain) {
             // Изменение нижего меню, выходящего из FAB
             if (isFABButtonsGroupView) {
@@ -167,13 +184,18 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_bottom_bar_settings ->
-                // Отображение фрагмента с настройками приложения
-                showSettingsFragment()
+                if (!isBlockingOtherFABButtons) {
+                    // Отображение фрагмента с настройками приложения
+                    showSettingsFragment()
+                }
             android.R.id.home -> {
-                // Отображение списка основных содержательных разделов приложения
-                navigationDialogs?.let {
-                    it.showBottomNavigationDrawerDialogFragment(
-                        this)
+                if (!isBlockingOtherFABButtons) {
+                    // Отображение списка основных содержательных разделов приложения
+                    navigationDialogs?.let {
+                        it.showBottomNavigationDrawerDialogFragment(
+                            this
+                        )
+                    }
                 }
             }
         }
@@ -198,16 +220,34 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     }
 
     //region МЕТОДЫ ДЛЯ НАСТРОЙКИ КНОПОК BOTTOM NAVIGATION MENU
-    private fun setBottmNavigationMenu() {
+    private fun setBottomNavigationMenu() {
         // Установка Bottom Navigation Menu
         setBottomAppBar()
         // Установка слушателя на длительное нажатие на нижнюю кнопку FAB
         binding.fabButtonsGroup.visibility = View.INVISIBLE
         binding.bottomNavigationMenu.bottomAppBarFab.setOnLongClickListener {
             if (isFABButtonsGroupView) {
+                // Установка анимационного просветления фона
+                setHideShowBackgroundAnimation(
+                    transparientValue, durationAnimation, true)
+                // Установка признака блокировки кнопок во всем приложении,
+                // при появления меню из нижней FAB
+                isBlockingOtherFABButtons = false
+                // Отображение навигационного меню View Pager
+                binding.tabLayout.visibility = View.VISIBLE
+                // Скрытие группы кнопок от меню кнопки FAB
                 binding.fabButtonsGroup.visibility = View.INVISIBLE
                 isFABButtonsGroupView = !isFABButtonsGroupView
             } else {
+                // Установка анимационного затенения фона
+                setHideShowBackgroundAnimation(
+                    notTransparientValue, durationAnimation, false)
+                // Установка признака блокировки кнопок во всем приложении,
+                // при появления меню из нижней FAB
+                isBlockingOtherFABButtons = true
+                // Отображение навигационного меню View Pager
+                binding.tabLayout.visibility = View.INVISIBLE
+
                 // Анимация появления кнопок меню из нижней кнопки FAB
                 if (isMain) {
                     val constraintLayout =
@@ -243,18 +283,19 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     isFABButtonsGroupView = !isFABButtonsGroupView
                     Thread {
                         // Исходные параметры
-                        val numberFrames: Int = 30
-                        val deltaTime: Long = 8L
-                        val deltaRadius: Int = 8
+                        val numberFrames: Int = 30 // numberFrames - ОБЩЕЕ КОЛИЧЕСТВО ШАГОВ (С УЧЁТОМ РЕЛАКСАЦИИ)
+                        val deltaTime: Long = 8L // deltaTime - ВАЖНЫЙ ПАРАМТЕР - ДЛИТЕЛЬНОСТЬ ОДНОГО ШАГА
+                        val deltaRadius: Int = 8 // deltaRadius - ВАЖНЫЙ ПАРАМЕТР, ОТВЕЧАЕТ ЗА УВЕЛИЧЕНИЕ РАДИУСА НА ОДНОМ ШАГЕ
                         val handler = Handler(Looper.getMainLooper())
 
                         // Создание релаксации при прохождении через конечную точку
-                        val a: Double = 1.0
-                        val k: Double = 0.33
-                        val y: Double = (numberFrames * deltaRadius).toDouble()
-                        val maxX: Double = sqrt(y / a)
-                        val minX: Double = -k * maxX
-                        val deltaX: Double = (maxX - minX) / numberFrames
+                        val a: Double = 1.0 // a - В ПРИНЦИПЕ, МОЖНО ЭТОТ ПАРАМЕТР ИСКЛЮЧИТЬ, ПРИРАВНЯВ ЕГО К ЕДИНИЦЕ. ОН ОТВЕЧАЕТ В УРАВНЕНИИ y = a * x2 за широту нашей параболы
+                        val k: Double = 0.3 // k - ОЧЕНЬ ВАЖНЫЙ ПАРАМЕТР (0 <= k <= 1). ОТВЕЧАЕТ ЗА ТО, КАК ДАЛЕКО ПРОЙДЕТ ОБЪЕКТ, ПО СРАВНЕНИЮ С ПРОЙДЕННЫМ ДО КОНЕЧНОЙ ТОЧКИ ПУТИ. 1 - ПУТЬ ВОЗВРАТА БУДЕТ РАВЕН ПУТИ ДО КОНЕЧНОЙ ТОКИ
+                        var y: Double = (numberFrames * deltaRadius).toDouble() // Начальная точка движения для определения maxX и minX. После их определения y корректируется
+                        val maxX: Double = sqrt(y / a) // Расстояние до конечной точки
+                        val minX: Double = sqrt(y * k / a) // Длина траектории релаксации
+                        val deltaX: Double = (maxX + minX) / numberFrames // Смещение на одном шаге
+                        y *= (1 + k) // Учёт длины траектории релаксации (нужно увеличить начальный y, чтобы мы в результате удалились только на maxX от начальной точки
 
                         repeat(numberFrames) {
                             sleep(deltaTime)
@@ -322,25 +363,26 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                         R.id.fab_button_settings,
                         R.id.bottom_fab_maket_right,
                         0,
-                        20f
+                        15f
                     )
                     constraintSet.applyTo(constraintLayout)
                     binding.fabButtonsGroup.visibility = View.VISIBLE
                     isFABButtonsGroupView = !isFABButtonsGroupView
                     Thread {
-                        // Исходные данные
-                        val numberFrames: Int = 30
-                        val deltaTime: Long = 8L
-                        val deltaRadius: Int = 9
+                        // Исходные параметры
+                        val numberFrames: Int = 30 // numberFrames - ОБЩЕЕ КОЛИЧЕСТВО ШАГОВ (С УЧЁТОМ РЕЛАКСАЦИИ)
+                        val deltaTime: Long = 8L // deltaTime - ВАЖНЫЙ ПАРАМТЕР - ДЛИТЕЛЬНОСТЬ ОДНОГО ШАГА
+                        val deltaRadius: Int = 9 // deltaRadius - ВАЖНЫЙ ПАРАМЕТР, ОТВЕЧАЕТ ЗА УВЕЛИЧЕНИЕ РАДИУСА НА ОДНОМ ШАГЕ
                         val handler = Handler(Looper.getMainLooper())
 
                         // Создание релаксации при прохождении через конечную точку
-                        val a: Double = 1.0
-                        val k: Double = 0.33
-                        val y: Double = (numberFrames * deltaRadius).toDouble()
-                        val maxX: Double = sqrt(y / a)
-                        val minX: Double = -k * maxX
-                        val deltaX: Double = (maxX - minX) / numberFrames
+                        val a: Double = 1.0 // a - В ПРИНЦИПЕ, МОЖНО ЭТОТ ПАРАМЕТР ИСКЛЮЧИТЬ, ПРИРАВНЯВ ЕГО К ЕДИНИЦЕ. ОН ОТВЕЧАЕТ В УРАВНЕНИИ y = a * x2 за широту нашей параболы
+                        val k: Double = 0.3 // k - ОЧЕНЬ ВАЖНЫЙ ПАРАМЕТР (0 <= k <= 1). ОТВЕЧАЕТ ЗА ТО, КАК ДАЛЕКО ПРОЙДЕТ ОБЪЕКТ, ПО СРАВНЕНИЮ С ПРОЙДЕННЫМ ДО КОНЕЧНОЙ ТОЧКИ ПУТИ. 1 - ПУТЬ ВОЗВРАТА БУДЕТ РАВЕН ПУТИ ДО КОНЕЧНОЙ ТОКИ
+                        var y: Double = (numberFrames * deltaRadius).toDouble() // Начальная точка движения для определения maxX и minX. После их определения y корректируется
+                        val maxX: Double = sqrt(y / a) // Расстояние до конечной точки
+                        val minX: Double = sqrt(y * k / a) // Длина траектории релаксации
+                        val deltaX: Double = (maxX + minX) / numberFrames // Смещение на одном шаге
+                        y *= (1 + k) // Учёт длины траектории релаксации (нужно увеличить начальный y, чтобы мы в результате удалились только на maxX от начальной точки
 
                         repeat(numberFrames) {
                             sleep(deltaTime)
@@ -375,7 +417,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                                     R.id.bottom_fab_maket_right,
                                     round(y - a * (maxX - deltaX * it) *
                                             (maxX - deltaX * it)).toInt(),
-                                    20f
+                                    15f
                                 )
                                 constraintSet.applyTo(constraintLayout)
                             }
@@ -394,6 +436,10 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             // Проба анимации кнопки
 //            TransitionManager.beginDelayedTransition(binding.fabButtonsContainer, Slide(Gravity.END))
 //            binding.fabButtonDayPhoto.visibility = View.GONE
+            isBlockingOtherFABButtons = false
+            // Установка анимационного просветления фона
+            setHideShowBackgroundAnimation(
+                transparientValue, durationAnimation, true)
         }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в Википедии
         binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_wiki)
@@ -402,6 +448,10 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 hideAndShowFragmentsContainersAndDismissDialogs()
                 isFABButtonsGroupView = false
                 binding.viewPager.currentItem = 1
+                isBlockingOtherFABButtons = false
+                // Установка анимационного просветления фона
+                setHideShowBackgroundAnimation(
+                    transparientValue, durationAnimation, true)
             }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в архиве NASA
         binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_nasa_archive)
@@ -410,12 +460,20 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 hideAndShowFragmentsContainersAndDismissDialogs()
                 isFABButtonsGroupView = false
                 binding.viewPager.currentItem = 2
+                isBlockingOtherFABButtons = false
+                // Установка анимационного просветления фона
+                setHideShowBackgroundAnimation(
+                    transparientValue, durationAnimation, true)
             }
         // Установка слушателя на нажатие кнопки вызова настроек приложения
         binding.fabButtonsContainer.getViewById(R.id.fab_button_settings).setOnClickListener {
             binding.fabButtonsGroup.visibility = View.INVISIBLE
             isFABButtonsGroupView = false
+            isBlockingOtherFABButtons = false
             showSettingsFragment()
+            // Установка анимационного просветления фона
+            setHideShowBackgroundAnimation(
+                transparientValue, durationAnimation, true)
         }
     }
     //endregion
@@ -452,4 +510,21 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         setBottomAppBar()
     }
 
+    // Получение признака блокировки всех кнопок, кроме появившихся из контекстного меню
+    fun getIsBlockingOtherFABButtons(): Boolean {
+        return isBlockingOtherFABButtons
+    }
+
+    // Установка анимационного затенения/просветления фона
+    private fun setHideShowBackgroundAnimation (
+        alpha: Float, duration: Long, isClickable: Boolean) {
+        binding.transparentBackground.animate()
+            .alpha(alpha)
+            .setDuration(duration)
+            .setListener(object: AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    binding.transparentBackground.isClickable = isClickable
+                }
+            })
+    }
 }

@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -105,11 +104,14 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // Установка слушателя при нажатии на кнопку поиска в "Википедии"
         binding.inputNasaField.setEndIconOnClickListener {
-            if ((binding.inputNasaFieldText.text != null) &&
+            if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                if ((binding.inputNasaFieldText.text != null) &&
                 (binding.inputNasaFieldText.text!!.length <=
                         binding.inputNasaField.counterMaxLength)) {
-                            sendRequestToNASAArchive(
-                                "${binding.inputNasaFieldText.text.toString()}")
+                    sendRequestToNASAArchive(
+                        "${binding.inputNasaFieldText.text.toString()}"
+                    )
+                }
             }
         }
 
@@ -126,27 +128,38 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
 
         // Настройка кнопки отображения Recycler View списка найденной в архиве NASA информации
         binding.nasaArchiveEntityListContainerTouchableBorder.setOnClickListener {
-            showRecyclerViewWindowWithResults()
+            if (!mainActivity.getIsBlockingOtherFABButtons()) showRecyclerViewWindowWithResults()
         }
 
         // Установка слушателя на картинку для изменения её размеров по желанию пользователя
         binding.searchInNasaArchiveImageView.setOnClickListener {
-            val set = TransitionSet()
-                .addTransition(ChangeBounds())
-                .addTransition(ChangeImageTransform())
-            TransitionManager.beginDelayedTransition(binding.searchInNasaArchiveResultContainer,set)
-            when(typeChangeImage++) {
-                0 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.CENTER_CROP
-                1 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.FIT_XY
-                2 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.MATRIX
-                3 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                4 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.FIT_END
-                5 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.FIT_START
-                6 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.CENTER
-                7 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.FIT_CENTER
-                else -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+            if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                val set = TransitionSet()
+                    .addTransition(ChangeBounds())
+                    .addTransition(ChangeImageTransform())
+                TransitionManager.beginDelayedTransition(
+                    binding.searchInNasaArchiveResultContainer,
+                    set
+                )
+                when (typeChangeImage++) {
+                    0 -> binding.searchInNasaArchiveImageView.scaleType =
+                        ImageView.ScaleType.CENTER_CROP
+                    1 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.FIT_XY
+                    2 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.MATRIX
+                    3 -> binding.searchInNasaArchiveImageView.scaleType =
+                        ImageView.ScaleType.CENTER_INSIDE
+                    4 -> binding.searchInNasaArchiveImageView.scaleType =
+                        ImageView.ScaleType.FIT_END
+                    5 -> binding.searchInNasaArchiveImageView.scaleType =
+                        ImageView.ScaleType.FIT_START
+                    6 -> binding.searchInNasaArchiveImageView.scaleType = ImageView.ScaleType.CENTER
+                    7 -> binding.searchInNasaArchiveImageView.scaleType =
+                        ImageView.ScaleType.FIT_CENTER
+                    else -> binding.searchInNasaArchiveImageView.scaleType =
+                        ImageView.ScaleType.FIT_CENTER
+                }
+                if (typeChangeImage > 7) typeChangeImage = 0
             }
-            if (typeChangeImage > 7) typeChangeImage = 0
         }
         super.onViewCreated(view, savedInstanceState)
     }
@@ -236,5 +249,10 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
             viewModel.getData(finalRequest)
                 .observe(viewLifecycleOwner, Observer<NASAArchiveData> { renderData(it) })
         }
+    }
+
+    // Получение признака блокировки всех кнопок, кроме появившихся из контекстного меню
+    fun getIsBlockingOtherFABButtons(): Boolean {
+        return mainActivity.getIsBlockingOtherFABButtons()
     }
 }

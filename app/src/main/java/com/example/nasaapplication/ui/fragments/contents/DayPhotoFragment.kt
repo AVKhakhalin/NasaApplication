@@ -28,7 +28,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import java.util.*
 
-class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDayPhotoBinding::inflate) {
+class DayPhotoFragment:
+    ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDayPhotoBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
     private lateinit var navigationDialogs: NavigationDialogs
@@ -139,51 +140,58 @@ class DayPhotoFragment: ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDay
             buttonChipToday = binding.buttonTodayPhoto
             buttonChipToday?.let {
                 it.setOnClickListener {
-                    currentDateTextView!!.text =
-                        "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(0)}"
-                    viewModel.getData(curDate)
-                        .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
-
+                    if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                        currentDateTextView!!.text =
+                            "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(0)}"
+                        viewModel.getData(curDate)
+                            .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
+                    }
                 }
             }
             buttonChipYesterday = binding.buttonYesterdayPhoto
             buttonChipYesterday?.let {
                 it.setOnClickListener {
-                    currentDateTextView!!.text =
-                        "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-1)}"
-                    viewModel.getData(curDate)
-                        .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
+                    if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                        currentDateTextView!!.text =
+                            "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-1)}"
+                        viewModel.getData(curDate)
+                            .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
+                    }
                 }
             }
             buttonChipBeforeYesterday = binding.buttonBeforeYesterdayPhoto
             buttonChipBeforeYesterday?.let {
                 it.setOnClickListener {
-                    currentDateTextView!!.text =
-                        "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-2)}"
-                    viewModel.getData(curDate)
-                        .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
+                    if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                        currentDateTextView!!.text =
+                            "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-2)}"
+                        viewModel.getData(curDate)
+                            .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
+                    }
                 }
             }
         }
 
         // Установка слушателя на картинку для изменения её размеров по желанию пользователя
         binding.pODImageView.setOnClickListener {
-            val set = TransitionSet()
-                .addTransition(ChangeBounds())
-                .addTransition(ChangeImageTransform())
-            TransitionManager.beginDelayedTransition(binding.mainConstraintLayout,set)
-            when(typeChangeImage++) {
-                0 -> binding.pODImageView.scaleType = ImageView.ScaleType.CENTER_CROP
-                1 -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_XY
-                2 -> binding.pODImageView.scaleType = ImageView.ScaleType.MATRIX
-                3 -> binding.pODImageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                4 -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_END
-                5 -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_START
-                6 -> binding.pODImageView.scaleType = ImageView.ScaleType.CENTER
-                7 -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_CENTER
-                else -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+            if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                val set = TransitionSet()
+                    .addTransition(ChangeBounds())
+                    .addTransition(ChangeImageTransform())
+                TransitionManager.beginDelayedTransition(binding.mainConstraintLayout, set)
+                when (typeChangeImage++) {
+                    0 -> binding.pODImageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                    1 -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_XY
+                    2 -> binding.pODImageView.scaleType = ImageView.ScaleType.MATRIX
+                    3 -> binding.pODImageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                    4 -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_END
+                    5 -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_START
+                    6 -> binding.pODImageView.scaleType = ImageView.ScaleType.CENTER
+                    7 -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+                    else -> binding.pODImageView.scaleType = ImageView.ScaleType.FIT_CENTER
+                }
+                if (typeChangeImage > 7) typeChangeImage = 0
             }
-            if (typeChangeImage > 7) typeChangeImage = 0
         }
     }
 
