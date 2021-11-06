@@ -1,35 +1,27 @@
 package com.example.nasaapplication.controller.navigation.contents
 
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.nasaapplication.controller.ConstantsController
-import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.fragments.contents.DayPhotoFragment
 import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragment
 import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
 
 class ViewPagerAdapter(
-    private val fragmentManager: FragmentManager,
-    private val mainActivity: MainActivity
-):FragmentStatePagerAdapter(fragmentManager) {
+    private val fragmentActivity: FragmentActivity
+): FragmentStateAdapter(fragmentActivity) {
     private val fragments = arrayOf(
         DayPhotoFragment(),
         SearchWikiFragment(),
         SearchNASAArchiveFragment()
     )
 
-    override fun getCount(): Int {
+    override fun getItemCount(): Int {
         return fragments.size
     }
 
-    override fun getItem(position: Int): Fragment {
-//        var correctedPosition: Int = position
-//        if (mainActivity.getIsBlockingOtherFABButtons()) {
-//            correctedPosition = mainActivity.currentViewPagerPosition
-//        }
-//        return when(correctedPosition){
+    override fun createFragment(position: Int): Fragment {
         return when(position){
             ConstantsController.DAY_PHOTO_FRAGMENT_INDEX ->
                 fragments[ConstantsController.DAY_PHOTO_FRAGMENT_INDEX]
@@ -39,9 +31,5 @@ class ViewPagerAdapter(
                 fragments[ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
             else -> fragments[ConstantsController.DAY_PHOTO_FRAGMENT_INDEX]
         }
-    }
-
-    override fun getPageTitle(position: Int): String? {
-        return null
     }
 }

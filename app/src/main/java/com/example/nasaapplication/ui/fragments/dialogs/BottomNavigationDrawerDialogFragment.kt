@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.databinding.BottomNavigationLayoutBinding
@@ -23,7 +24,7 @@ class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
     val binding: BottomNavigationLayoutBinding
         get() = _binding!!
     // ViewPager
-    var viewPager: ViewPager? = null
+    var viewPager: ViewPager2? = null
     // MainActivity
     lateinit var mainActivity: MainActivity
     //endregion

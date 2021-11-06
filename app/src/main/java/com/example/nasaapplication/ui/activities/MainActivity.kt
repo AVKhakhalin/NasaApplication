@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
@@ -23,6 +24,7 @@ import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialo
 import com.example.nasaapplication.databinding.ActivityMainBinding
 import com.example.nasaapplication.ui.ConstantsUi
 import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.tabs.TabLayoutMediator
 import java.lang.Thread.sleep
 import kotlin.math.round
 import kotlin.math.sqrt
@@ -56,10 +58,12 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         // Подключение Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
 
+        //region ПОДКЛЮЧЕНИЕ И НАСТРОЙКА VIEWPAGER2
         // Подключение ViewPagerAdapter и TabLayout для запуска фрагментов
-        binding.viewPager.adapter = ViewPagerAdapter(supportFragmentManager, this)
-        binding.tabLayout.setupWithViewPager(binding.viewPager)
-
+        binding.viewPager.adapter = ViewPagerAdapter(this)
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) {tab, position ->
+            tab.text = "OBJECT ${(position + 1)}"
+        }.attach()
         // Настройка TabLayout (установка на него картинок)
         binding.tabLayout.getTabAt(ConstantsController.DAY_PHOTO_FRAGMENT_INDEX)?.customView =
             layoutInflater.inflate(R.layout.tablayout_photo_of_day, null)
@@ -68,6 +72,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         binding.tabLayout.getTabAt(
             ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)?.customView =
             layoutInflater.inflate(R.layout.tablayout_search_in_nasa_archive, null)
+        //endregion
 
         // Установка настроек видимости элементов макета MainActivity
         hideAndShowFragmentsContainersAndDismissDialogs()
@@ -218,8 +223,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         }
     }
 
-    // Метод получения ViewPager
-    fun getViewPager(): ViewPager {
+    // Метод получения ViewPager2
+    fun getViewPager(): ViewPager2 {
         return binding.viewPager
     }
 
