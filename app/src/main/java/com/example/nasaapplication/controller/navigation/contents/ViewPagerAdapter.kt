@@ -11,7 +11,8 @@ import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
 class ViewPagerAdapter(
     private val fragmentActivity: FragmentActivity
 ): FragmentStateAdapter(fragmentActivity) {
-    private val fragments = arrayOf(
+
+    private var fragments = arrayOf(
         DayPhotoFragment(),
         SearchWikiFragment(),
         SearchNASAArchiveFragment()

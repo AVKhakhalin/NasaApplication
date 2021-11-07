@@ -19,15 +19,13 @@
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
-            android:clickable="false"/>
+            android:visibility="visible" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:visibility="visible"
-            android:clickable="false"/>
+            android:visibility="visible" />
 
     </FrameLayout>
 

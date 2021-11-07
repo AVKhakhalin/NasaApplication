@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.os.*
 import android.view.Menu
 import android.view.MenuItem
@@ -12,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.ConstantsController
@@ -26,6 +26,7 @@ import com.example.nasaapplication.ui.ConstantsUi
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.tabs.TabLayoutMediator
 import java.lang.Thread.sleep
+import java.util.ArrayList
 import kotlin.math.round
 import kotlin.math.sqrt
 
@@ -48,6 +49,10 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     private val durationAnimation: Long = 300
     private val transparientValue: Float = 1f
     private val notTransparientValue: Float = 0.2f
+    // ViewPager2
+    private val viewPagerAdapter: ViewPagerAdapter = ViewPagerAdapter(this)
+    private var textTabLayouts: List<String> = listOf()
+    private var touchableListTabLayot: ArrayList<View> = arrayListOf()
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,10 +65,15 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
 
         //region ПОДКЛЮЧЕНИЕ И НАСТРОЙКА VIEWPAGER2
         // Подключение ViewPagerAdapter и TabLayout для запуска фрагментов
-        binding.viewPager.adapter = ViewPagerAdapter(this)
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) {tab, position ->
-            tab.text = "OBJECT ${(position + 1)}"
+        binding.viewPager.adapter = viewPagerAdapter
+        textTabLayouts = listOf(resources.getString(R.string.tablayout_photo_of_day_icon_text),
+            resources.getString(R.string.tablayout_search_in_wiki_icon_text),
+            resources.getString(R.string.tablayout_search_in_nasa_archive_text))
+        TabLayoutMediator(binding.tabLayout, binding.viewPager, true, true) {tab, position ->
+            tab.text = "${textTabLayouts[position]}"
         }.attach()
+        // Получение списка View закладок TabLayout
+        touchableListTabLayot = binding.tabLayout.touchables
         // Настройка TabLayout (установка на него картинок)
         binding.tabLayout.getTabAt(ConstantsController.DAY_PHOTO_FRAGMENT_INDEX)?.customView =
             layoutInflater.inflate(R.layout.tablayout_photo_of_day, null)
@@ -110,7 +120,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         super.onSaveInstanceState(outState, outPersistentState)
         val sharedPreferences: SharedPreferences =
             getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY, AppCompatActivity.MODE_PRIVATE)
-        var sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
+        val sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
         sharedPreferencesEditor.putBoolean(ConstantsUi.SHARED_PREFERENCES_THEME_KEY, isThemeDay)
         sharedPreferencesEditor.apply()
     }
@@ -127,7 +137,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     //region УСТАНОВКА BOTTOM NAVIGATION MENU
     private fun setBottomAppBar() {
         this.setSupportActionBar(binding.bottomNavigationMenu.bottomAppBar)
-//        setHasOptionsMenu(true)
 
         switchBottomAppBar(this)
         binding.bottomNavigationMenu.bottomAppBarFab.setOnClickListener {
@@ -237,13 +246,15 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         binding.bottomNavigationMenu.bottomAppBarFab.setOnLongClickListener {
             if (isFABButtonsGroupView) {
                 // Установка анимационного просветления фона
-                setHideShowBackgroundAnimation(
-                    transparientValue, durationAnimation, true)
+//                setHideShowBackgroundAnimation(
+//                    transparientValue, durationAnimation, true)
                 // Установка признака блокировки кнопок во всем приложении,
                 // при появления меню из нижней FAB
                 isBlockingOtherFABButtons = false
-                // Отображение навигационного меню View Pager
-                binding.tabLayout.visibility = View.VISIBLE
+                // Разблокировка перелистывания во View Pager 2
+                binding.viewPager.setUserInputEnabled(true)
+                touchableListTabLayot.forEach { it.isEnabled = true }
+
                 // Скрытие группы кнопок от меню кнопки FAB
                 binding.fabButtonsGroup.visibility = View.INVISIBLE
                 isFABButtonsGroupView = !isFABButtonsGroupView
@@ -254,8 +265,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 // Установка признака блокировки кнопок во всем приложении,
                 // при появления меню из нижней FAB
                 isBlockingOtherFABButtons = true
-                // Отображение навигационного меню View Pager
-                binding.tabLayout.visibility = View.INVISIBLE
+                // Блокировка перелистывания во View Pager 2
+                binding.viewPager.setUserInputEnabled(false)
+                touchableListTabLayot.forEach { it.isEnabled = false }
 
                 // Анимация появления кнопок меню из нижней кнопки FAB
                 if (isMain) {
@@ -449,6 +461,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             // Установка анимационного просветления фона
             setHideShowBackgroundAnimation(
                 transparientValue, durationAnimation, true)
+            // Разблокировка перелистывания во View Pager 2
+            binding.viewPager.setUserInputEnabled(true)
+            touchableListTabLayot.forEach { it.isEnabled = true }
         }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в Википедии
         binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_wiki)
@@ -461,6 +476,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 // Установка анимационного просветления фона
                 setHideShowBackgroundAnimation(
                     transparientValue, durationAnimation, true)
+                // Разблокировка перелистывания во View Pager 2
+                binding.viewPager.setUserInputEnabled(true)
+                touchableListTabLayot.forEach { it.isEnabled = true }
             }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в архиве NASA
         binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_nasa_archive)
@@ -473,6 +491,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 // Установка анимационного просветления фона
                 setHideShowBackgroundAnimation(
                     transparientValue, durationAnimation, true)
+                // Разблокировка перелистывания во View Pager 2
+                binding.viewPager.setUserInputEnabled(true)
+                touchableListTabLayot.forEach { it.isEnabled = true }
             }
         // Установка слушателя на нажатие кнопки вызова настроек приложения
         binding.fabButtonsContainer.getViewById(R.id.fab_button_settings).setOnClickListener {
@@ -483,6 +504,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             // Установка анимационного просветления фона
             setHideShowBackgroundAnimation(
                 transparientValue, durationAnimation, true)
+            // Разблокировка перелистывания во View Pager 2
+            binding.viewPager.setUserInputEnabled(true)
+            touchableListTabLayot.forEach { it.isEnabled = true }
         }
     }
     //endregion
