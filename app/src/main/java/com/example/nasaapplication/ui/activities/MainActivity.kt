@@ -245,14 +245,12 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         binding.fabButtonsGroup.visibility = View.INVISIBLE
         binding.bottomNavigationMenu.bottomAppBarFab.setOnLongClickListener {
             if (isFABButtonsGroupView) {
-                // Установка анимационного просветления фона
-//                setHideShowBackgroundAnimation(
-//                    transparientValue, durationAnimation, true)
                 // Установка признака блокировки кнопок во всем приложении,
                 // при появления меню из нижней FAB
                 isBlockingOtherFABButtons = false
                 // Разблокировка перелистывания во View Pager 2
                 binding.viewPager.setUserInputEnabled(true)
+                // Разблокировка кликов по закладкам во View Pager 2
                 touchableListTabLayot.forEach { it.isEnabled = true }
 
                 // Скрытие группы кнопок от меню кнопки FAB
@@ -267,6 +265,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 isBlockingOtherFABButtons = true
                 // Блокировка перелистывания во View Pager 2
                 binding.viewPager.setUserInputEnabled(false)
+                // Блокировка кликов по закладкам во View Pager 2
                 touchableListTabLayot.forEach { it.isEnabled = false }
 
                 // Анимация появления кнопок меню из нижней кнопки FAB
@@ -463,6 +462,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 transparientValue, durationAnimation, true)
             // Разблокировка перелистывания во View Pager 2
             binding.viewPager.setUserInputEnabled(true)
+            // Разблокировка кликов по закладкам во View Pager 2
             touchableListTabLayot.forEach { it.isEnabled = true }
         }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в Википедии
@@ -478,6 +478,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     transparientValue, durationAnimation, true)
                 // Разблокировка перелистывания во View Pager 2
                 binding.viewPager.setUserInputEnabled(true)
+                // Разблокировка кликов по закладкам во View Pager 2
                 touchableListTabLayot.forEach { it.isEnabled = true }
             }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в архиве NASA
@@ -493,6 +494,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     transparientValue, durationAnimation, true)
                 // Разблокировка перелистывания во View Pager 2
                 binding.viewPager.setUserInputEnabled(true)
+                // Разблокировка кликов по закладкам во View Pager 2
                 touchableListTabLayot.forEach { it.isEnabled = true }
             }
         // Установка слушателя на нажатие кнопки вызова настроек приложения
@@ -506,6 +508,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 transparientValue, durationAnimation, true)
             // Разблокировка перелистывания во View Pager 2
             binding.viewPager.setUserInputEnabled(true)
+            // Разблокировка кликов по закладкам во View Pager 2
             touchableListTabLayot.forEach { it.isEnabled = true }
         }
     }
