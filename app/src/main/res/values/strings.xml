@@ -34,7 +34,7 @@
 
     <string name="action_bottom_bar_navigation_to_archive_title">Перейти в архив</string>
     <string name="action_bottom_bar_navigation_to_send_title">Перейти к отправке</string>
-    <string name="action_bottom_bar_add_to_favorite_title">Добавить в любимое</string>
+    <string name="action_bottom_bar_add_to_favorite_title">Добавить в избранное</string>
     <string name="tablayout_search_in_nasa_archive_text">Архив</string>
     <string name="search_in_nasa_archive_image_view_description" />
     <string name="search_in_nasa_archive_title_text_view" />

@@ -3,13 +3,13 @@ package com.example.nasaapplication.ui.activities
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.*
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -33,7 +33,6 @@ import java.util.*
 import kotlin.math.round
 import kotlin.math.sqrt
 
-
 class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationContentGetter {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Навигационных переменны
@@ -56,6 +55,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     private val viewPagerAdapter: ViewPagerAdapter = ViewPagerAdapter(this)
     private var textTabLayouts: List<String> = listOf()
     private var touchableListTabLayot: ArrayList<View> = arrayListOf()
+    // Menu
+    private var bottomMenu: Menu? = null
+    private var isFavorite: Boolean = false
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -196,28 +198,27 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 }
             })
             // Получение поискового поля для ввода и редактирования текста поискового
-            val editText =
+            val searchedEditText =
                 searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
             // Установка фона для поискового поля
-            editText.setBackgroundResource(R.drawable.search_view_shape)
+            searchedEditText.setBackgroundResource(R.drawable.search_view_shape)
             if (isThemeDay) {
-                editText.setTextColor(resources.getColor(
+                searchedEditText.setTextColor(resources.getColor(
                     R.color.bottom_sheet_background_color_night_description_text_day))
-                editText.setHintTextColor(resources.getColor(
+                searchedEditText.setHintTextColor(resources.getColor(
                     R.color.bottom_sheet_background_color_night_description_text_day))
             } else {
-                editText.setTextColor(resources.getColor(
+                searchedEditText.setTextColor(resources.getColor(
                     R.color.bottom_sheet_background_color_night_description_text_night))
-                editText.setHintTextColor(resources.getColor(
+                searchedEditText.setHintTextColor(resources.getColor(
                     R.color.bottom_sheet_background_color_night_description_text_night))
             }
             // Установка размера поискового текста
-            editText.setTextSize(ConstantsUi.SEARCH_FIELD_TEXT_SIZE)
+            searchedEditText.setTextSize(ConstantsUi.SEARCH_FIELD_TEXT_SIZE)
             // Установка значка поиска внутри editText (без исчезновения)
 //            editText.setCompoundDrawablesWithIntrinsicBounds(
 //                android.R.drawable.ic_menu_search,0,0,0)
             //endregion
-
         } else {
             // Изменение нижего меню, выходящего из FAB
             if (isFABButtonsGroupView) {
@@ -239,15 +240,33 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Отобразить справа внизу стартового меню
         menuInflater.inflate(R.menu.bottom_menu_bottom_bar, menu)
+        bottomMenu = menu
         return true
 //        return super.onCreateOptionsMenu(menu)
     }
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_bottom_bar_settings ->
                 if (!isBlockingOtherFABButtons) {
                     // Отображение фрагмента с настройками приложения
                     showSettingsFragment()
+                }
+            R.id.action_bottom_bar_add_to_favorite ->
+                if (!isBlockingOtherFABButtons) {
+                    // Добавление понравившегося содержимое в список "Избранного"
+                    bottomMenu?.let {
+                        if (it.size() > 0) {
+                            if (!isFavorite) {
+                                it.getItem(ConstantsUi.INDEX_ADD_FAVORITE_MENU_ITEM)
+                                    .setIcon(R.drawable.ic_favourite_on)
+                            } else {
+                                it.getItem(ConstantsUi.INDEX_ADD_FAVORITE_MENU_ITEM)
+                                    .setIcon(R.drawable.ic_favourite)
+                            }
+                            isFavorite = !isFavorite
+                        }
+                    }
                 }
             android.R.id.home -> {
                 if (!isBlockingOtherFABButtons) {

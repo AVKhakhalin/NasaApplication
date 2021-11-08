@@ -35,5 +35,7 @@ class ConstantsUi {
 
         @JvmField
         val SEARCH_FIELD_TEXT_SIZE: Float = 20F
+        @JvmField
+        val INDEX_ADD_FAVORITE_MENU_ITEM: Int = 0
     }
 }
