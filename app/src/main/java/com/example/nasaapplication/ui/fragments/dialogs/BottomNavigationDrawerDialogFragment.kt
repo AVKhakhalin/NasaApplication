@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
@@ -76,7 +75,7 @@ class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
 
     fun hideShowDismissElements() {
         // Установка настроек видимости элементов макета
-        requireActivity().findViewById<ViewPager>(R.id.view_pager).visibility =
+        requireActivity().findViewById<ViewPager2>(R.id.view_pager).visibility =
             View.VISIBLE
         requireActivity().findViewById<TabLayout>(R.id.tab_layout).visibility =
             View.VISIBLE

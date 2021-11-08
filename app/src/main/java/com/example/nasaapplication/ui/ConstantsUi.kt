@@ -32,5 +32,8 @@ class ConstantsUi {
         val SHOWURLINWIKI_TEXT_CHARSER: String = "text/html; charset=utf-8"
         @JvmField
         val SHOWURLINWIKI_ENCODING: String = "utf-8"
+
+        @JvmField
+        val SEARCH_FIELD_TEXT_SIZE: Float = 20F
     }
 }

@@ -4,12 +4,15 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.os.*
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -26,7 +29,7 @@ import com.example.nasaapplication.ui.ConstantsUi
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.tabs.TabLayoutMediator
 import java.lang.Thread.sleep
-import java.util.ArrayList
+import java.util.*
 import kotlin.math.round
 import kotlin.math.sqrt
 
@@ -176,6 +179,45 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             )
             binding.bottomNavigationMenu.bottomAppBar.replaceMenu(
                 R.menu.bottom_menu_bottom_bar_other_screen)
+
+            //region НАСТРОЙКИ ПОИСКОВОГО ПОЛЯ
+            val searchViewActionView = binding.bottomNavigationMenu.bottomAppBar.menu
+                .findItem(R.id.action_bottom_bar_search_request_form).actionView
+            val searchView = searchViewActionView as SearchView
+            searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    // Отображение полученного поискового запроса
+                    Toast.makeText(this@MainActivity, query, Toast.LENGTH_SHORT).show()
+                    return false
+                }
+                // Отслеживание появления каждого символа
+                override fun onQueryTextChange(newText: String): Boolean {
+                    return false
+                }
+            })
+            // Получение поискового поля для ввода и редактирования текста поискового
+            val editText =
+                searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+            // Установка фона для поискового поля
+            editText.setBackgroundResource(R.drawable.search_view_shape)
+            if (isThemeDay) {
+                editText.setTextColor(resources.getColor(
+                    R.color.bottom_sheet_background_color_night_description_text_day))
+                editText.setHintTextColor(resources.getColor(
+                    R.color.bottom_sheet_background_color_night_description_text_day))
+            } else {
+                editText.setTextColor(resources.getColor(
+                    R.color.bottom_sheet_background_color_night_description_text_night))
+                editText.setHintTextColor(resources.getColor(
+                    R.color.bottom_sheet_background_color_night_description_text_night))
+            }
+            // Установка размера поискового текста
+            editText.setTextSize(ConstantsUi.SEARCH_FIELD_TEXT_SIZE)
+            // Установка значка поиска внутри editText (без исчезновения)
+//            editText.setCompoundDrawablesWithIntrinsicBounds(
+//                android.R.drawable.ic_menu_search,0,0,0)
+            //endregion
+
         } else {
             // Изменение нижего меню, выходящего из FAB
             if (isFABButtonsGroupView) {
@@ -198,6 +240,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         // Отобразить справа внизу стартового меню
         menuInflater.inflate(R.menu.bottom_menu_bottom_bar, menu)
         return true
+//        return super.onCreateOptionsMenu(menu)
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -245,6 +288,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         binding.fabButtonsGroup.visibility = View.INVISIBLE
         binding.bottomNavigationMenu.bottomAppBarFab.setOnLongClickListener {
             if (isFABButtonsGroupView) {
+                // Установка анимационного просветления фона
+                setHideShowBackgroundAnimation(
+                    transparientValue, durationAnimation, false)
                 // Установка признака блокировки кнопок во всем приложении,
                 // при появления меню из нижней FAB
                 isBlockingOtherFABButtons = false
@@ -252,7 +298,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 binding.viewPager.setUserInputEnabled(true)
                 // Разблокировка кликов по закладкам во View Pager 2
                 touchableListTabLayot.forEach { it.isEnabled = true }
-
                 // Скрытие группы кнопок от меню кнопки FAB
                 binding.fabButtonsGroup.visibility = View.INVISIBLE
                 isFABButtonsGroupView = !isFABButtonsGroupView

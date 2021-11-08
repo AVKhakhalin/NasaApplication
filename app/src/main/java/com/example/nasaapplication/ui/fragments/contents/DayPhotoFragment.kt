@@ -77,7 +77,6 @@ class DayPhotoFragment:
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel.getData(curDate)
-//            .observe(this@DayPhotoFragment, Observer<PODData> { renderData(it) })
             .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
     }
 

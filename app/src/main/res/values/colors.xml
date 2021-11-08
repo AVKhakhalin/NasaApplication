@@ -21,7 +21,7 @@
     <color name="bottom_sheet_background_color_day">#B4F6FD</color>
     <color name="bottom_sheet_background_color_night_description_text_day">#262727</color>
 
-    <!-- Цвета темы DAY -->
+    <!-- Цвета темы NIGHT -->
     <!-- Цвета для нижней плавающей кнопки -->
     <color name="color_primary_night">#00665B</color>
     <color name="color_primary_dark_night">#003730</color>

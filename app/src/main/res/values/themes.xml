@@ -24,6 +24,7 @@
 
         <!-- Применение собственных стилей компонент -->
         <item name="textInputStyle">@style/CustomOutlinedBox</item>
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
     </style>
 
     <!-- РАСШИФРОВКИ СТИЛЕЙ ТЕМЫ DAY -->
@@ -31,6 +32,22 @@
     <style name="CustomOutlinedBox" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="counterEnabled">true</item>
         <item name="endIconMode">custom</item>
+    </style>
+    <!-- Переопределение стиля поискового поля для поиска информации в разделе Любимое -->
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <!-- Основная иконка для вызова поискового поля -->
+        <item name="searchIcon">@drawable/ic_search</item>
+        <!-- Цвет фона всего поискового элемента -->
+<!--        <item name="queryBackground">@color/black</item> -->
+        <!-- Иконка внутри поискового поля -->
+<!--        <item name="searchHintIcon">@drawable/ic_save</item> -->
+        <!-- Фраза на фоне поискового поля -->
+        <item name="queryHint">"Поиск в избранном"</item>
+        <!-- Иконка закрытия -->
+       <item name="closeIcon">@drawable/ic_close</item>
+        <!-- Иконка подсказки внутри текстового поискового поля.
+        Исчезает при начале набора текста -->
+       <item name="searchHintIcon">@drawable/ic_search_gray</item>
     </style>
 
     <!-- NIGHT THEME -->
@@ -58,5 +75,6 @@
 
         <!-- Применение собственных стилей компонент -->
         <item name="textInputStyle">@style/CustomOutlinedBox</item>
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
     </style>
 </resources>
