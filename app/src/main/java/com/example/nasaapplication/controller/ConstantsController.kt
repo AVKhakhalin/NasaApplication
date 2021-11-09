@@ -19,7 +19,9 @@ class ConstantsController(
         // Индексы фрагментов
         @JvmField
         val DAY_PHOTO_FRAGMENT_INDEX: Int = 0
+        @JvmField
         val SEARCH_WIKI_FRAGMENT_INDEX: Int = 1
+        @JvmField
         val SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX: Int = 2
     }
 }
