@@ -42,4 +42,5 @@
     <string name="fragment_search_in_nasa_archive_recycler_item_text_view_text" />
     <string name="nasa_archive_entity_list_container_title_text">Найденные события (факты):</string>
     <string name="action_bottom_bar_search_request_form_title">Поиск в избранном</string>
+    <string name="action_bottom_bar_open_favorite_list_title">Открыть список избранного</string>
 </resources>
