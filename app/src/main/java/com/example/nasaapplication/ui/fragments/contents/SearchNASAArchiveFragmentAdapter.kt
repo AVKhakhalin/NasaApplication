@@ -58,6 +58,13 @@ class SearchNASAArchiveFragmentAdapter(
         holder.newNASAArchiveEntityTextViewContainer?.let {
             it.setOnClickListener {
                 if (!searchNASAArchiveFragment.getIsBlockingOtherFABButtons()) {
+                    // Сохранение ссылки на картинку, заголовка и описания в "Избранное"
+                    searchNASAArchiveFragment.getMainActivity()
+                        .setListFavoriteDataLinkImage(entitiesLinks[position])
+                    searchNASAArchiveFragment.getMainActivity()
+                        .setListFavoriteDataTitle(newNASAArchiveEntityList[position])
+                    searchNASAArchiveFragment.getMainActivity()
+                        .setListFavoriteDataDescription(entitiesTexts[position])
                     // Анимированное появление найденной картинки по запросу в архиве NASA
                     searchNASAArchiveFragment.binding.searchInNasaArchiveImageView.alpha =
                         transparientValue

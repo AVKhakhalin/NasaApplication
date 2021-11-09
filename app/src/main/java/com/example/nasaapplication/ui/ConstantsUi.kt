@@ -37,5 +37,15 @@ class ConstantsUi {
         val SEARCH_FIELD_TEXT_SIZE: Float = 20F
         @JvmField
         val INDEX_ADD_FAVORITE_MENU_ITEM: Int = 0
+        @JvmField
+        val ANGLE_TO_ROTATE_BOTTOM_FAB: Float = -360f
+
+        // Приоритеты записей в "Избранное"
+        @JvmField
+        val PRIORITY_LOW: Int = 0
+        @JvmField
+        val PRIORITY_NORMAL: Int = 1
+        @JvmField
+        val PRIORITY_HIGH: Int = 2
     }
 }

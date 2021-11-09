@@ -7,22 +7,22 @@ class FavoriteLogic {
     //endregion
 
     //region МЕТОДЫ ДОБАВЛЕНИЯ ДАННЫХ В СПИСОК ИЗБРАННЫХ ДАННЫХ
-    fun addFavoriteData(newTypeSource: Int,
-                        newPriority: Int,
-                        newLinkSource: String,
-                        newTitle: String,
-                        newDescription: String,
-                        newSearchRequest: String,
-                        newLinkImage: String) {
-        datesList.add(FavoriteData(newTypeSource, newPriority, newLinkSource, newTitle,
-            newDescription, newSearchRequest, newLinkImage))
-    }
-    fun addFavoriteData(newTypeSource: Int,
-                        newLinkSource: String,
-                        newDescription: String,
-                        newSearchRequest: String) {
-        datesList.add(FavoriteData(newTypeSource, 0, newLinkSource, "",
-            newDescription, newSearchRequest, ""))
+    fun addFavoriteData(newFavoriteData: FavoriteData): Int {
+        var indexSimilarData: Int = -1
+        for(counter in 0 until datesList.size) {
+            if (datesList[counter].getTypeSource() == newFavoriteData.getTypeSource()) {
+                if ((datesList[counter].getLinkSource() == newFavoriteData.getLinkSource())
+                    && (datesList[counter].getTitle() == newFavoriteData.getTitle())
+                    && (datesList[counter].getDescription() == newFavoriteData.getDescription())
+                    && (datesList[counter].getSearchRequest() == newFavoriteData.getSearchRequest())
+                    && (datesList[counter].getLinkImage() == newFavoriteData.getLinkImage())) {
+                        indexSimilarData = counter
+                        break
+                    }
+                }
+        }
+        if (indexSimilarData == -1) datesList.add(newFavoriteData)
+        return indexSimilarData
     }
     //endregion
 

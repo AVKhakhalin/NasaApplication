@@ -9,19 +9,20 @@ import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragme
 import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
 
 class ViewPagerAdapter(
-    private val fragmentActivity: FragmentActivity
+    private val fragmentActivity: FragmentActivity,
 ): FragmentStateAdapter(fragmentActivity) {
-
+    //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     private var fragments = arrayOf(
         DayPhotoFragment(),
         SearchWikiFragment(),
         SearchNASAArchiveFragment()
     )
+    //endregion
 
+    //region БАЗОВЫЕ МЕТОДЫ ДЛЯ РАБОТЫ VIEWPAGER2
     override fun getItemCount(): Int {
         return fragments.size
     }
-
     override fun createFragment(position: Int): Fragment {
         return when(position){
             ConstantsController.DAY_PHOTO_FRAGMENT_INDEX ->
@@ -33,4 +34,5 @@ class ViewPagerAdapter(
             else -> fragments[ConstantsController.DAY_PHOTO_FRAGMENT_INDEX]
         }
     }
+    //endregion
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.nasaapplication.controller.ConstantsController
+import com.example.nasaapplication.repository.ConstantsRepository
 import com.example.nasaapplication.repository.facadeuser.POD.PODRetrofitImpl
 import com.example.nasaapplication.repository.facadeuser.POD.PODServerResponseData
 import retrofit2.Call
@@ -18,7 +19,13 @@ class PODViewModel (
 
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     private var curDate: String = ""
+    // Ссылка запроса для сохранения в избранных данных
+    private var requestUrl: String = "${ConstantsRepository.POD_BASE_URL}planetary/apod?date="
     //endregion
+
+    fun getRequestUrl(): String {
+        return requestUrl
+    }
 
     fun getData(curDate: String): LiveData<PODData> {
         this.curDate = curDate
@@ -31,6 +38,9 @@ class PODViewModel (
         if (ConstantsController.API_KEY.isBlank()) {
             PODData.Error(Throwable(ConstantsController.ERROR_NO_API_KEY))
         } else {
+            // Сохранение ссылки запроса
+            requestUrl += "${getCurDate()}&api_key=${ConstantsController.API_KEY}"
+            // Выполнение запроса
             retrofitImpl.getRetrofitImpl().getPictureOfTheDay(getCurDate(),
                 ConstantsController.API_KEY).enqueue(object:
                 Callback<PODServerResponseData> {

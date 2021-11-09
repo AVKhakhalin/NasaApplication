@@ -18,11 +18,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import coil.load
 import com.example.nasaapplication.R
+import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.observers.viewmodels.POD.PODData
 import com.example.nasaapplication.controller.observers.viewmodels.POD.PODViewModel
 import com.example.nasaapplication.databinding.FragmentDayPhotoBinding
+import com.example.nasaapplication.domain.logic.FavoriteData
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
@@ -68,6 +70,8 @@ class DayPhotoFragment:
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = (context as MainActivity)
+        // Обнуление данных для списка "Избранное"
+        mainActivity.setListFavoriteEmptyData()
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
         navigationDialogs = mainActivity.getNavigationDialogs()
         navigationContent = mainActivity.getNavigationContent()
@@ -90,6 +94,16 @@ class DayPhotoFragment:
                     toast(ConstantsUi.ERROR_LINK_EMPTY)
                 } else {
                     //showSuccess()
+                    // Сохранение данных для списка "Избранное"
+                    mainActivity.setListFavoriteDataLinkSource(viewModel.getRequestUrl())
+                    mainActivity.setListFavoriteDataTitle(serverResponseData.title ?: "")
+                    mainActivity.setListFavoriteDataDescription(
+                        serverResponseData.explanation ?: "")
+                    mainActivity.setListFavoriteDataLinkImage(url)
+                    mainActivity.setListFavoriteDataTypeSource(
+                        ConstantsController.DAY_PHOTO_FRAGMENT_INDEX)
+                    mainActivity.setListFavoriteDataPriority(ConstantsUi.PRIORITY_LOW)
+                    // Отображение результатов запроса
                     binding.pODImageView.alpha = transparientValue
                     binding.pODImageView.load(url) {
                         lifecycle(this@DayPhotoFragment)
@@ -178,6 +192,8 @@ class DayPhotoFragment:
                             "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(0)}"
                         viewModel.getData(curDate)
                             .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
+                        // Сохранение запроса в "Избранное"
+                        mainActivity.setListFavoriteDataSearchRequest(curDate)
                     }
                 }
             }
@@ -189,6 +205,8 @@ class DayPhotoFragment:
                             "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-1)}"
                         viewModel.getData(curDate)
                             .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
+                        // Сохранение запроса в "Избранное"
+                        mainActivity.setListFavoriteDataSearchRequest(curDate)
                     }
                 }
             }
@@ -200,6 +218,8 @@ class DayPhotoFragment:
                             "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-2)}"
                         viewModel.getData(curDate)
                             .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
+                        // Сохранение запроса в "Избранное"
+                        mainActivity.setListFavoriteDataSearchRequest(curDate)
                     }
                 }
             }

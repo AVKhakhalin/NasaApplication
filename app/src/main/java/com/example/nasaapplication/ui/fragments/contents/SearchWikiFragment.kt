@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProviders
 import com.example.nasaapplication.R
+import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.observers.viewmodels.POD.PODViewModel
@@ -61,6 +62,8 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = (context as MainActivity)
+        // Обнуление данных для списка "Избранное"
+        mainActivity.setListFavoriteEmptyData()
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
         navigationDialogs = mainActivity.getNavigationDialogs()
         navigationContent = mainActivity.getNavigationContent()
@@ -90,6 +93,16 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
                     showUrlInWiki(
                         "${ConstantsUi.WIKI_URL}${
                             binding.inputWikiFieldText.text.toString()}")
+                    // Сохранение запроса в "Избранное"
+                    mainActivity.setListFavoriteDataSearchRequest(
+                        "${binding.inputWikiFieldText.text.toString()}")
+                    mainActivity.setListFavoriteDataTypeSource(
+                        ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX)
+                    mainActivity.setListFavoriteDataPriority(ConstantsUi.PRIORITY_LOW)
+                    mainActivity.setListFavoriteDataLinkSource("${ConstantsUi.WIKI_URL}${
+                        binding.inputWikiFieldText.text.toString()}")
+                    mainActivity.setListFavoriteDataTitle(
+                        "${binding.inputWikiFieldText.text.toString()}")
                 }
             }
         }
@@ -102,7 +115,7 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
         }
     }
 
-    fun showUrlInWiki(urlString:String){
+    fun showUrlInWiki(urlString: String){
         val url = URL(urlString)
         binding.webViewContainer.alpha = transparientValue
         Thread{
@@ -117,6 +130,9 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
             }
             if (reader != null) {
                 val result = getLines(reader)
+                // Сохранение результата запроса в "Избранное"
+                mainActivity.setListFavoriteDataDescription(result)
+                // Отображение результата запроса
                 val handler = Handler(Looper.getMainLooper())
                 handler.post {
                     binding.webViewContainer.loadDataWithBaseURL(
@@ -126,7 +142,12 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
                         ConstantsUi.SHOWURLINWIKI_ENCODING,
                         null)
                 }
+
             } else {
+                // Сохранение результата запроса в "Избранное"
+                mainActivity.setListFavoriteDataDescription(
+                    resources.getString(R.string.error_wiki_empty_request))
+                // Отображение сообщения об отсутствии результата по запросу
                 val handler = Handler(Looper.getMainLooper())
                 handler.post {
                     binding.webViewContainer.loadDataWithBaseURL(

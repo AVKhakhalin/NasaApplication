@@ -26,6 +26,8 @@ import com.example.nasaapplication.controller.navigation.contents.ViewPagerAdapt
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogsGetter
 import com.example.nasaapplication.databinding.ActivityMainBinding
+import com.example.nasaapplication.domain.logic.FavoriteData
+import com.example.nasaapplication.domain.logic.FavoriteLogic
 import com.example.nasaapplication.ui.ConstantsUi
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.tabs.TabLayoutMediator
@@ -59,6 +61,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Menu
     private var bottomMenu: Menu? = null
     private var isFavorite: Boolean = false
+    // Данные для сохранения в "Избранное"
+    private var newFavoriteData: FavoriteData = FavoriteData()
+    private var favoriteListData: FavoriteLogic = FavoriteLogic()
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -164,7 +169,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         binding.tabLayout.visibility = View.VISIBLE
         // Анимация вращения картинки на нижней кнопке FAB
         ObjectAnimator.ofFloat(binding.bottomNavigationMenu.bottomAppBarFab,
-            "rotation", 0f, -360f).start()
+            "rotation", 0f, ConstantsUi.ANGLE_TO_ROTATE_BOTTOM_FAB).start()
 
         if (isMain) {
             // Изменение нижего меню, выходящего из FAB
@@ -255,18 +260,24 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 }
             R.id.action_bottom_bar_add_to_favorite ->
                 if (!isBlockingOtherFABButtons) {
-                    // Добавление понравившегося содержимое в список "Избранного"
-                    bottomMenu?.let {
-                        if (it.size() > 0) {
-                            if (!isFavorite) {
-                                it.getItem(ConstantsUi.INDEX_ADD_FAVORITE_MENU_ITEM)
-                                    .setIcon(R.drawable.ic_favourite_on)
-                            } else {
-                                it.getItem(ConstantsUi.INDEX_ADD_FAVORITE_MENU_ITEM)
-                                    .setIcon(R.drawable.ic_favourite)
-                            }
-                            isFavorite = !isFavorite
-                        }
+                    // Добавление понравившегося содержимого в список "Избранное"
+                    val indexSimilarData: Int = favoriteListData.addFavoriteData(newFavoriteData)
+                    if (indexSimilarData == -1) {
+                        // Изменение вида иконки сердца
+                        changeHeartIconState()
+                        // Уведомление пользователя о добавлении новой записи в список "Избранное"
+                        Toast.makeText(this, "В Ваш список добавлена новая запись:\n\"${
+                                newFavoriteData.getTitle()}\"", Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        // Удаление понравившегося содержимого из списка "Избранное"
+                        favoriteListData.removeFavoriteData(indexSimilarData)
+                        // Изменение вида иконки сердца
+                        changeHeartIconState()
+                        // Уведомление пользователя о добавлении новой записи в список "Избранное"
+                        Toast.makeText(this, "Из Вашего списка удалена запись:\n\"${
+                            newFavoriteData.getTitle()}\"", Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             android.R.id.home -> {
@@ -627,5 +638,48 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     binding.transparentBackground.isClickable = isClickable
                 }
             })
+    }
+
+    //region МЕТОДЫ ДЛЯ ПОЛУЧЕНИЯ ДАННЫХ ДЛЯ СПИСКА "ИЗБРАННОЕ"
+    fun setListFavoriteDataTypeSource(newTypeSource: Int) {
+        newFavoriteData.setTypeSource(newTypeSource)
+    }
+    fun setListFavoriteDataPriority(newPriority: Int) {
+        newFavoriteData.setPriority(newPriority)
+    }
+    fun setListFavoriteDataLinkSource(newLinkSource: String) {
+        newFavoriteData.setLinkSource(newLinkSource)
+    }
+    fun setListFavoriteDataTitle(newTitle: String) {
+        newFavoriteData.setTitle(newTitle)
+    }
+    fun setListFavoriteDataDescription(newDescription: String) {
+        newFavoriteData.setDescription(newDescription)
+    }
+    fun setListFavoriteDataSearchRequest(newSearchRequest: String) {
+        newFavoriteData.setSearchRequest(newSearchRequest)
+    }
+    fun setListFavoriteDataLinkImage(newLinkImage: String) {
+        newFavoriteData.setLinkImage(newLinkImage)
+    }
+    fun setListFavoriteEmptyData() {
+        newFavoriteData = FavoriteData()
+    }
+    //endregion
+
+    // Изменение вида иконки сердца
+    private fun changeHeartIconState() {
+        bottomMenu?.let {
+            if (it.size() > 0) {
+                if (!isFavorite) {
+                    it.getItem(ConstantsUi.INDEX_ADD_FAVORITE_MENU_ITEM)
+                        .setIcon(R.drawable.ic_favourite_on)
+                } else {
+                    it.getItem(ConstantsUi.INDEX_ADD_FAVORITE_MENU_ITEM)
+                        .setIcon(R.drawable.ic_favourite)
+                }
+                isFavorite = !isFavorite
+            }
+        }
     }
 }

@@ -25,6 +25,7 @@ import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialo
 import com.example.nasaapplication.controller.observers.viewmodels.NASAArchive.NASAArchiveData
 import com.example.nasaapplication.controller.observers.viewmodels.NASAArchive.NASAArchiveDataViewModel
 import com.example.nasaapplication.databinding.FragmentSearchInNasaArchiveBinding
+import com.example.nasaapplication.repository.ConstantsRepository
 import com.example.nasaapplication.repository.facadeuser.NASAArchive.NASAArchiveServerResponseItems
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
@@ -66,6 +67,8 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = (context as MainActivity)
+        // Обнуление данных для списка "Избранное"
+        mainActivity.setListFavoriteEmptyData()
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
         navigationDialogs = mainActivity.getNavigationDialogs()
         navigationContent = mainActivity.getNavigationContent()
@@ -86,7 +89,7 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                     this)
         }
     }
-    private fun updateRecycleViewList(
+    private fun updateRecyclerViewList(
         newFoundedItemsInNASAArchive: List<NASAArchiveServerResponseItems>) {
         newNASAArchiveEntityList.clear()
         newFoundedItemsInNASAArchive.forEach {
@@ -114,7 +117,19 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                 if ((binding.inputNasaFieldText.text != null) &&
                 (binding.inputNasaFieldText.text!!.length <=
                         binding.inputNasaField.counterMaxLength)) {
+                    val finalRequest: String =
                     sendRequestToNASAArchive("${binding.inputNasaFieldText.text.toString()}")
+                    // Сохранение запроса в "Избранное"
+                    mainActivity.setListFavoriteDataTypeSource(
+                        ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
+                    mainActivity.setListFavoriteDataPriority(ConstantsUi.PRIORITY_LOW)
+                    mainActivity.setListFavoriteDataSearchRequest(
+                        "${binding.inputNasaFieldText.text.toString()}")
+                    mainActivity.setListFavoriteDataTitle(
+                        "${binding.inputNasaFieldText.text.toString()}")
+                    mainActivity.setListFavoriteDataLinkSource(
+                        "${ConstantsRepository.NASA_ARCHIVE_BASE_URL
+                        }?q=$finalRequest&media_type=image")
                 }
             }
         }
@@ -214,9 +229,15 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                         binding.searchInNasaArchiveTitleTextView.text = ""
                         // Обновление списка найденных элементов в Recycler View
                         isRecyclerViewWindowHide = true
-                        updateRecycleViewList(serverResponseData.collection.items)
+                        updateRecyclerViewList(serverResponseData.collection.items)
                         // Сброс типа анимации для изменения размера фотографии
                         typeChangeImage = 0
+                        // Сохранение в "Избранное" найденных ответов от сервера NASA
+                        var tempDescription: String = ""
+                        serverResponseData.collection.items.forEach {
+                            tempDescription += "$it\n"
+                        }
+                        mainActivity.setListFavoriteDataDescription(tempDescription)
                     }
                 } else {
                     // Скрытие неиспользуемых полей
@@ -228,6 +249,9 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                     binding.searchInNasaArchiveTitleTextView.text =
                         ConstantsController.ERROR_EMPTY_DOWNLOAD_DATES
                     binding.searchInNasaArchiveTitleTextView.visibility = View.VISIBLE
+                    // Сохранение в "Избранное" ответ об отсутствии информации на сервере NASA
+                    mainActivity.setListFavoriteDataDescription(
+                        ConstantsController.ERROR_EMPTY_DOWNLOAD_DATES)
                 }
             }
             is NASAArchiveData.Loading -> {
@@ -251,7 +275,7 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     }
 
     // Отправка запроса в NASA-архив
-    private fun sendRequestToNASAArchive(request: String) {
+    private fun sendRequestToNASAArchive(request: String): String {
         val twoSpaces: String = "  "
         val oneSpace: String = " "
         val replaceSpaceSymbol: String = "%"
@@ -266,10 +290,16 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
             dataViewModel.getData(finalRequest)
                 .observe(viewLifecycleOwner, Observer<NASAArchiveData> { renderData(it) })
         }
+        return finalRequest
     }
 
     // Получение признака блокировки всех кнопок, кроме появившихся из контекстного меню
     fun getIsBlockingOtherFABButtons(): Boolean {
         return mainActivity.getIsBlockingOtherFABButtons()
+    }
+
+    // Передача MainActivity
+    fun getMainActivity(): MainActivity {
+        return mainActivity
     }
 }
