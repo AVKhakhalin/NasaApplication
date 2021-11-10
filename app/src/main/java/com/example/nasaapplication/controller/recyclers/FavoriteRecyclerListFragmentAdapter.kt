@@ -3,7 +3,9 @@ package com.example.nasaapplication.controller.recyclers
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemPhotoOfDayBinding
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemSearchInNasaBinding
@@ -78,12 +80,19 @@ class FavoriteRecyclerListFragmentAdapter (
         fun bind(favoriteData: Favorite) {
             FavoriteListRecyclerItemPhotoOfDayBinding.bind(itemView).apply {
                 recyclerItemPhotoOfDayItemTitle.text = favoriteData.getTitle()
-                // Смена картинки в зависимости от приоритета
-//                recyclerItemPhotoOfDayTypeImage.setImageDrawable(
-//                    ContextCompat.getDrawable(mainActivity, R.drawable.ic_favourite_on))
                 recyclerItemPhotoOfDayTypeImage.setOnClickListener {
                     onListItemClickListener.onItemClick(favoriteData)
                 }
+                // Смена картинки в зависимости от приоритета
+                if (favoriteData.getPriority() == 0) {
+                    recyclerItemPhotoOfDayTypeImage.setImageDrawable(
+                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope))
+                } else if (favoriteData.getPriority() == 1) {
+                    recyclerItemPhotoOfDayTypeImage.setImageDrawable(
+                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope_tab))
+                } else
+                    recyclerItemPhotoOfDayTypeImage.setImageDrawable(
+                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope_tab_bottom))
             }
         }
     }
@@ -95,6 +104,16 @@ class FavoriteRecyclerListFragmentAdapter (
                 recyclerItemSearchInNasaTypeImage.setOnClickListener {
                     onListItemClickListener.onItemClick(favoriteData)
                 }
+                // Смена картинки в зависимости от приоритета
+                if (favoriteData.getPriority() == 0) {
+                    recyclerItemSearchInNasaTypeImage.setImageDrawable(
+                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive))
+                } else if (favoriteData.getPriority() == 1) {
+                    recyclerItemSearchInNasaTypeImage.setImageDrawable(
+                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive_tab))
+                } else
+                    recyclerItemSearchInNasaTypeImage.setImageDrawable(
+                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive_tab_bottom))
             }
         }
     }
@@ -106,6 +125,17 @@ class FavoriteRecyclerListFragmentAdapter (
                 recyclerItemSearchInWikiTypeImage.setOnClickListener {
                     onListItemClickListener.onItemClick(favoriteData)
                 }
+                // Смена картинки в зависимости от приоритета
+                if (favoriteData.getPriority() == 0) {
+                    recyclerItemSearchInWikiTypeImage.setImageDrawable(
+                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_wikipedia))
+                } else if (favoriteData.getPriority() == 1) {
+                    recyclerItemSearchInWikiTypeImage.setImageDrawable(
+                        ContextCompat.getDrawable(mainActivity,
+                            R.drawable.ic_wikipedia_priority_normal))
+                } else
+                    recyclerItemSearchInWikiTypeImage.setImageDrawable(
+                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_wikipedia_tab_bottom))
             }
         }
     }
