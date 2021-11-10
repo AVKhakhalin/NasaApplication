@@ -3,14 +3,17 @@ package com.example.nasaapplication.controller.recyclers
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemPhotoOfDayBinding
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemSearchInNasaBinding
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemSearchInWikiBinding
 import com.example.nasaapplication.domain.logic.Favorite
+import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 
 class FavoriteRecyclerListFragmentAdapter (
@@ -80,19 +83,30 @@ class FavoriteRecyclerListFragmentAdapter (
         fun bind(favoriteData: Favorite) {
             FavoriteListRecyclerItemPhotoOfDayBinding.bind(itemView).apply {
                 recyclerItemPhotoOfDayItemTitle.text = favoriteData.getTitle()
+                // Загрузка информации по выбранному элементу на странице фрагмента "Картинка дня"
                 recyclerItemPhotoOfDayTypeImage.setOnClickListener {
                     onListItemClickListener.onItemClick(favoriteData)
                 }
-                // Смена картинки в зависимости от приоритета
-                if (favoriteData.getPriority() == 0) {
-                    recyclerItemPhotoOfDayTypeImage.setImageDrawable(
-                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope))
-                } else if (favoriteData.getPriority() == 1) {
-                    recyclerItemPhotoOfDayTypeImage.setImageDrawable(
-                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope_tab))
-                } else
-                    recyclerItemPhotoOfDayTypeImage.setImageDrawable(
-                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope_tab_bottom))
+                //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
+                recyclerItemPhotoOfDayPriorityHigh.setOnClickListener {
+                    favoriteData.setPriority(ConstantsUi.PRIORITY_HIGH)
+                    changePhotoOfDayItemImageOnPriority(
+                        favoriteData, this.recyclerItemPhotoOfDayTypeImage)
+                }
+                recyclerItemPhotoOfDayPriorityNormal.setOnClickListener {
+                    favoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
+                    changePhotoOfDayItemImageOnPriority(
+                        favoriteData, this.recyclerItemPhotoOfDayTypeImage)
+                }
+                recyclerItemPhotoOfDayPriorityLow.setOnClickListener {
+                    favoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
+                    changePhotoOfDayItemImageOnPriority(
+                        favoriteData, this.recyclerItemPhotoOfDayTypeImage)
+                }
+                //endregion
+                // Изменение картинки элемента в зависимости от его приоритета
+                changePhotoOfDayItemImageOnPriority(
+                    favoriteData, this.recyclerItemPhotoOfDayTypeImage)
             }
         }
     }
@@ -101,19 +115,31 @@ class FavoriteRecyclerListFragmentAdapter (
         fun bind(favoriteData: Favorite) {
             FavoriteListRecyclerItemSearchInNasaBinding.bind(itemView).apply {
                 recyclerItemSearchInNasaItemTitle.text = favoriteData.getTitle()
+                // Загрузка информации по выбранному элементу
+                // на странице фрагмента поиска в архиве NASA
                 recyclerItemSearchInNasaTypeImage.setOnClickListener {
                     onListItemClickListener.onItemClick(favoriteData)
                 }
-                // Смена картинки в зависимости от приоритета
-                if (favoriteData.getPriority() == 0) {
-                    recyclerItemSearchInNasaTypeImage.setImageDrawable(
-                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive))
-                } else if (favoriteData.getPriority() == 1) {
-                    recyclerItemSearchInNasaTypeImage.setImageDrawable(
-                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive_tab))
-                } else
-                    recyclerItemSearchInNasaTypeImage.setImageDrawable(
-                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive_tab_bottom))
+                //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
+                recyclerItemSearchInNasaPriorityHigh.setOnClickListener {
+                    favoriteData.setPriority(ConstantsUi.PRIORITY_HIGH)
+                    changePhotoOfDayItemImageOnPriority(
+                        favoriteData, this.recyclerItemSearchInNasaTypeImage)
+                }
+                recyclerItemSearchInNasaPriorityNormal.setOnClickListener {
+                    favoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
+                    changePhotoOfDayItemImageOnPriority(
+                        favoriteData, this.recyclerItemSearchInNasaTypeImage)
+                }
+                recyclerItemSearchInNasaPriorityLow.setOnClickListener {
+                    favoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
+                    changePhotoOfDayItemImageOnPriority(
+                        favoriteData, this.recyclerItemSearchInNasaTypeImage)
+                }
+                //endregion
+                // Изменение картинки элемента в зависимости от его приоритета
+                changePhotoOfDayItemImageOnPriority(
+                    favoriteData, this.recyclerItemSearchInNasaTypeImage)
             }
         }
     }
@@ -122,21 +148,86 @@ class FavoriteRecyclerListFragmentAdapter (
         fun bind(favoriteData: Favorite) {
             FavoriteListRecyclerItemSearchInWikiBinding.bind(itemView).apply {
                 recyclerItemSearchInWikiItemTitle.text = favoriteData.getTitle()
+                // Загрузка информации по выбранному элементу
+                // на странице фрагмента с поиском в Википедии
                 recyclerItemSearchInWikiTypeImage.setOnClickListener {
                     onListItemClickListener.onItemClick(favoriteData)
                 }
-                // Смена картинки в зависимости от приоритета
-                if (favoriteData.getPriority() == 0) {
-                    recyclerItemSearchInWikiTypeImage.setImageDrawable(
-                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_wikipedia))
-                } else if (favoriteData.getPriority() == 1) {
-                    recyclerItemSearchInWikiTypeImage.setImageDrawable(
-                        ContextCompat.getDrawable(mainActivity,
-                            R.drawable.ic_wikipedia_priority_normal))
-                } else
-                    recyclerItemSearchInWikiTypeImage.setImageDrawable(
-                        ContextCompat.getDrawable(mainActivity, R.drawable.ic_wikipedia_tab_bottom))
+                //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
+                recyclerItemSearchInWikiPriorityHigh.setOnClickListener {
+                    favoriteData.setPriority(ConstantsUi.PRIORITY_HIGH)
+                    changePhotoOfDayItemImageOnPriority(
+                        favoriteData, this.recyclerItemSearchInWikiTypeImage)
+                }
+                recyclerItemSearchInWikiPriorityNormal.setOnClickListener {
+                    favoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
+                    changePhotoOfDayItemImageOnPriority(
+                        favoriteData, this.recyclerItemSearchInWikiTypeImage)
+                }
+                recyclerItemSearchInWikiPriorityLow.setOnClickListener {
+                    favoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
+                    changePhotoOfDayItemImageOnPriority(
+                        favoriteData, this.recyclerItemSearchInWikiTypeImage)
+                }
+                //endregion
+                // Изменение картинки элемента в зависимости от его приоритета
+                changePhotoOfDayItemImageOnPriority(
+                    favoriteData, this.recyclerItemSearchInWikiTypeImage)
+
             }
         }
     }
+
+    //region МЕТОДЫ ИЗМЕНЕНИЯ КАРТИНКИ ЭЛЕМЕНТОВ В ЗАВИСИМОСТИ ОТ ИХ ПРИОРИТЕТОВ
+    // Смена картинки информации с фрагмента "Картинка дня" в зависимости от приоритета
+    private fun changePhotoOfDayItemImageOnPriority(
+        favoriteData: Favorite, currentImageView: ImageView) {
+        if (favoriteData.getPriority() == 0) {
+            currentImageView.setImageDrawable(
+                ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope))
+        } else if (favoriteData.getPriority() == 1) {
+            currentImageView.setImageDrawable(
+                ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope_tab))
+        } else if (favoriteData.getPriority() == 2) {
+            currentImageView.setImageDrawable(
+                ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope_tab_bottom))
+        } else
+            currentImageView.setImageDrawable(
+                ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope))
+    }
+    // Смена картинки информации с фрагмента "Поиск в Википедии" в зависимости от приоритета
+    private fun changeSearchInWikiItemImageOnPriority(
+        favoriteData: Favorite, currentImageView: ImageView) {
+        if (favoriteData.getPriority() == 0) {
+            currentImageView.setImageDrawable(
+                ContextCompat.getDrawable(mainActivity, R.drawable.ic_wikipedia))
+        } else if (favoriteData.getPriority() == 1) {
+            currentImageView.setImageDrawable(
+                ContextCompat.getDrawable(mainActivity,
+                    R.drawable.ic_wikipedia_priority_normal))
+        } else if (favoriteData.getPriority() == 2) {
+            currentImageView.setImageDrawable(
+                ContextCompat.getDrawable(mainActivity, R.drawable.ic_wikipedia_tab_bottom)
+            )
+        } else
+            currentImageView.setImageDrawable(
+                ContextCompat.getDrawable(mainActivity, R.drawable.ic_wikipedia))
+    }
+    // Смена картинки информации с фрагмента "Поиск в архиве NASA" в зависимости от приоритета
+    private fun changeSearchInNASAArchiveImageOnPriority(
+        favoriteData: Favorite, currentImageView: ImageView) {
+        if (favoriteData.getPriority() == 0) {
+            currentImageView.setImageDrawable(
+                ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive))
+        } else if (favoriteData.getPriority() == 1) {
+            currentImageView.setImageDrawable(
+                ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive_tab))
+        } else if (favoriteData.getPriority() == 2) {
+            currentImageView.setImageDrawable(
+                ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive_tab_bottom))
+        } else
+            currentImageView.setImageDrawable(
+                ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive))
+    }
+    //endregion
 }
