@@ -24,6 +24,7 @@ import com.example.nasaapplication.controller.navigation.contents.NavigationCont
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.observers.viewmodels.NASAArchive.NASAArchiveData
 import com.example.nasaapplication.controller.observers.viewmodels.NASAArchive.NASAArchiveDataViewModel
+import com.example.nasaapplication.controller.recyclers.SearchNASAArchiveFragmentAdapter
 import com.example.nasaapplication.databinding.FragmentSearchInNasaArchiveBinding
 import com.example.nasaapplication.repository.ConstantsRepository
 import com.example.nasaapplication.repository.facadeuser.NASAArchive.NASAArchiveServerResponseItems
@@ -67,12 +68,20 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = (context as MainActivity)
-        // Обнуление данных для списка "Избранное"
-        mainActivity.setListFavoriteEmptyData()
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
         navigationDialogs = mainActivity.getNavigationDialogs()
         navigationContent = mainActivity.getNavigationContent()
         //endregion
+    }
+
+    override fun onResume() {
+        // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
+        mainActivity.setListFavoriteEmptyData()
+        if (mainActivity.getIsFavorite()) mainActivity.changeHeartIconState(mainActivity)
+        // Метод проверки наличия текущей информации в списке "Избранное"
+        // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+        // TODO: ДОДЕЛАТЬ
+        super.onResume()
     }
 
     //region МЕТОДЫ РАБОТЫ С RECYCLER VIEW (СПИСКОМ НАЙДЕННЫХ В АРХИВЕ NASA ПО ЗАПРОСУ ЗАПИСЕЙ)
@@ -118,15 +127,15 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                 (binding.inputNasaFieldText.text!!.length <=
                         binding.inputNasaField.counterMaxLength)) {
                     val finalRequest: String =
-                    sendRequestToNASAArchive("${binding.inputNasaFieldText.text.toString()}")
+                    sendRequestToNASAArchive("${binding.inputNasaFieldText.text}")
                     // Сохранение запроса в "Избранное"
                     mainActivity.setListFavoriteDataTypeSource(
                         ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
                     mainActivity.setListFavoriteDataPriority(ConstantsUi.PRIORITY_LOW)
                     mainActivity.setListFavoriteDataSearchRequest(
-                        "${binding.inputNasaFieldText.text.toString()}")
+                        "${binding.inputNasaFieldText.text}")
                     mainActivity.setListFavoriteDataTitle(
-                        "${binding.inputNasaFieldText.text.toString()}")
+                        "${binding.inputNasaFieldText.text}")
                     mainActivity.setListFavoriteDataLinkSource(
                         "${ConstantsRepository.NASA_ARCHIVE_BASE_URL
                         }?q=$finalRequest&media_type=image")

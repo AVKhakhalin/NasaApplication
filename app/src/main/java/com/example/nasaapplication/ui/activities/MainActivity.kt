@@ -11,7 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +25,7 @@ import com.example.nasaapplication.controller.navigation.contents.ViewPagerAdapt
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogsGetter
 import com.example.nasaapplication.databinding.ActivityMainBinding
-import com.example.nasaapplication.domain.logic.FavoriteData
+import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.domain.logic.FavoriteLogic
 import com.example.nasaapplication.ui.ConstantsUi
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -39,7 +38,8 @@ import kotlin.math.sqrt
 class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationContentGetter {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Навигационных переменны
-    private val navigationContent: NavigationContent = NavigationContent(supportFragmentManager)
+    private val navigationContent: NavigationContent =
+        NavigationContent(supportFragmentManager, this)
     private val navigationDialogs: NavigationDialogs = NavigationDialogs()
     // Установка темы приложения
     private var isThemeDay: Boolean = true
@@ -62,7 +62,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     private var bottomMenu: Menu? = null
     private var isFavorite: Boolean = false
     // Данные для сохранения в "Избранное"
-    private var newFavoriteData: FavoriteData = FavoriteData()
+    private var newFavorite: Favorite = Favorite()
     private var favoriteListData: FavoriteLogic = FavoriteLogic()
     //endregion
 
@@ -80,9 +80,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         textTabLayouts = listOf(resources.getString(R.string.tablayout_photo_of_day_icon_text),
             resources.getString(R.string.tablayout_search_in_wiki_icon_text),
             resources.getString(R.string.tablayout_search_in_nasa_archive_text))
-        TabLayoutMediator(binding.tabLayout, binding.viewPager, true, true) {tab, position ->
-            tab.text = "${textTabLayouts[position]}"
-        }.attach()
+        TabLayoutMediator(binding.tabLayout, binding.viewPager, true, true)
+        {tab, position -> tab.text = textTabLayouts[position] }.attach()
         // Получение списка View закладок TabLayout
         touchableListTabLayot = binding.tabLayout.touchables
         // Настройка TabLayout (установка на него картинок)
@@ -112,8 +111,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // и отображение элементов viewPager и tabLayout,
     // а также закрытие всех открытых диалоговых фрагментов
     private fun hideAndShowFragmentsContainersAndDismissDialogs() {
-        binding.viewPager.visibility = View.VISIBLE
-        binding.tabLayout.visibility = View.VISIBLE
+        binding.transparentBackground.visibility = View.VISIBLE
         binding.activityFragmentsContainer.visibility = View.INVISIBLE
         navigationDialogs.closeDialogs()
     }
@@ -258,26 +256,32 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     // Отображение фрагмента с настройками приложения
                     showSettingsFragment()
                 }
-            R.id.action_bottom_bar_add_to_favorite ->
+            R.id.action_bottom_bar_open_favorite_list ->
                 if (!isBlockingOtherFABButtons) {
+                    // Отображение фрагмента со списком "Избранное"
+                    showFavoriteRecyclerListFragment()
+                }
+            R.id.action_bottom_bar_add_to_favorite ->
+                if ((!isBlockingOtherFABButtons) && (newFavorite.getTitle().isNotEmpty())) {
                     // Добавление понравившегося содержимого в список "Избранное"
-                    val indexSimilarData: Int = favoriteListData.addFavoriteData(newFavoriteData)
+                    val indexSimilarData: Int = favoriteListData.addFavoriteData(newFavorite)
                     if (indexSimilarData == -1) {
                         // Изменение вида иконки сердца
-                        changeHeartIconState()
+                        changeHeartIconState(this)
                         // Уведомление пользователя о добавлении новой записи в список "Избранное"
-                        Toast.makeText(this, "В Ваш список добавлена новая запись:\n\"${
-                                newFavoriteData.getTitle()}\"", Toast.LENGTH_LONG
+                        Toast.makeText(this, "${
+                            resources.getString(R.string.info_added_item_in_favorite_list)}:\n\"${
+                                newFavorite.getTitle()}\"", Toast.LENGTH_LONG
                         ).show()
                     } else {
                         // Удаление понравившегося содержимого из списка "Избранное"
                         favoriteListData.removeFavoriteData(indexSimilarData)
                         // Изменение вида иконки сердца
-                        changeHeartIconState()
+                        changeHeartIconState(this)
                         // Уведомление пользователя о добавлении новой записи в список "Избранное"
-                        Toast.makeText(this, "Из Вашего списка удалена запись:\n\"${
-                            newFavoriteData.getTitle()}\"", Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(this, "${resources.getString(
+                            R.string.info_deleted_item_from_favorite_list)}\n\"${
+                            newFavorite.getTitle()}\"", Toast.LENGTH_LONG).show()
                     }
                 }
             android.R.id.home -> {
@@ -298,11 +302,18 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Метод отображения фрагмента с настройками приложения
     fun showSettingsFragment() {
         navigationContent?.let{
-            // Отобразить фрагмент с настройками приложения
-            binding.viewPager.visibility = View.INVISIBLE
-            binding.tabLayout.visibility = View.INVISIBLE
             binding.activityFragmentsContainer.visibility = View.VISIBLE
+            binding.transparentBackground.visibility = View.INVISIBLE
             it.showSettingsFragment(false)
+        }
+    }
+
+    // Метод отображения фрагмента со списком "Избранное"
+    fun showFavoriteRecyclerListFragment() {
+        navigationContent?.let{
+            binding.activityFragmentsContainer.visibility = View.VISIBLE
+            binding.transparentBackground.visibility = View.INVISIBLE
+            it.showFavoriteRecyclerListFragment(false)
         }
     }
 
@@ -611,7 +622,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     }
 
     // Установка значения переменной isMain
-    fun setSsMain(isMain: Boolean) {
+    fun setIsMain(isMain: Boolean) {
         this.isMain = isMain
     }
 
@@ -642,34 +653,35 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
 
     //region МЕТОДЫ ДЛЯ ПОЛУЧЕНИЯ ДАННЫХ ДЛЯ СПИСКА "ИЗБРАННОЕ"
     fun setListFavoriteDataTypeSource(newTypeSource: Int) {
-        newFavoriteData.setTypeSource(newTypeSource)
+        newFavorite.setTypeSource(newTypeSource)
     }
     fun setListFavoriteDataPriority(newPriority: Int) {
-        newFavoriteData.setPriority(newPriority)
+        newFavorite.setPriority(newPriority)
     }
     fun setListFavoriteDataLinkSource(newLinkSource: String) {
-        newFavoriteData.setLinkSource(newLinkSource)
+        newFavorite.setLinkSource(newLinkSource)
     }
     fun setListFavoriteDataTitle(newTitle: String) {
-        newFavoriteData.setTitle(newTitle)
+        newFavorite.setTitle(newTitle)
     }
     fun setListFavoriteDataDescription(newDescription: String) {
-        newFavoriteData.setDescription(newDescription)
+        newFavorite.setDescription(newDescription)
     }
     fun setListFavoriteDataSearchRequest(newSearchRequest: String) {
-        newFavoriteData.setSearchRequest(newSearchRequest)
+        newFavorite.setSearchRequest(newSearchRequest)
     }
     fun setListFavoriteDataLinkImage(newLinkImage: String) {
-        newFavoriteData.setLinkImage(newLinkImage)
+        newFavorite.setLinkImage(newLinkImage)
     }
     fun setListFavoriteEmptyData() {
-        newFavoriteData = FavoriteData()
+        newFavorite = Favorite()
     }
     //endregion
 
+    //region МЕТОДЫ ДЛЯ ИЗМЕНЕНИЯ ВИДА ИКОНКИ СЕРДЦА
     // Изменение вида иконки сердца
-    private fun changeHeartIconState() {
-        bottomMenu?.let {
+    fun changeHeartIconState(mainActivity: MainActivity) {
+        mainActivity.getBottomMenu()?.let {
             if (it.size() > 0) {
                 if (!isFavorite) {
                     it.getItem(ConstantsUi.INDEX_ADD_FAVORITE_MENU_ITEM)
@@ -682,4 +694,17 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             }
         }
     }
+    private fun getBottomMenu(): Menu? {
+        return bottomMenu
+    }
+    fun getIsFavorite(): Boolean {
+        return isFavorite
+    }
+    //endregion
+
+    // Получение списка избранных данных
+    fun getFavoriteDataList(): MutableList<Favorite> {
+        return favoriteListData.getDatesList()
+    }
+
 }

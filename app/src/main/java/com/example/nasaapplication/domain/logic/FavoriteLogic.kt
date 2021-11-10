@@ -3,25 +3,26 @@ package com.example.nasaapplication.domain.logic
 // Класс с логикой проекта - построение и сохранение списка избранных данных
 class FavoriteLogic {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
-    private var datesList: MutableList<FavoriteData> = mutableListOf()
+    private var datesList: MutableList<Favorite> = mutableListOf()
     //endregion
 
     //region МЕТОДЫ ДОБАВЛЕНИЯ ДАННЫХ В СПИСОК ИЗБРАННЫХ ДАННЫХ
-    fun addFavoriteData(newFavoriteData: FavoriteData): Int {
+    fun addFavoriteData(newFavorite: Favorite): Int {
         var indexSimilarData: Int = -1
-        for(counter in 0 until datesList.size) {
-            if (datesList[counter].getTypeSource() == newFavoriteData.getTypeSource()) {
-                if ((datesList[counter].getLinkSource() == newFavoriteData.getLinkSource())
-                    && (datesList[counter].getTitle() == newFavoriteData.getTitle())
-                    && (datesList[counter].getDescription() == newFavoriteData.getDescription())
-                    && (datesList[counter].getSearchRequest() == newFavoriteData.getSearchRequest())
-                    && (datesList[counter].getLinkImage() == newFavoriteData.getLinkImage())) {
-                        indexSimilarData = counter
-                        break
-                    }
+        for (counter in 0 until datesList.size) {
+            if (datesList[counter].getTypeSource() == newFavorite.getTypeSource()) {
+                if ((datesList[counter].getLinkSource() == newFavorite.getLinkSource())
+                    && (datesList[counter].getTitle() == newFavorite.getTitle())
+                    && (datesList[counter].getDescription() == newFavorite.getDescription())
+                    && (datesList[counter].getSearchRequest() == newFavorite.getSearchRequest())
+                    && (datesList[counter].getLinkImage() == newFavorite.getLinkImage())
+                ) {
+                    indexSimilarData = counter
+                    break
                 }
+            }
         }
-        if (indexSimilarData == -1) datesList.add(newFavoriteData)
+        if (indexSimilarData == -1) datesList.add(newFavorite)
         return indexSimilarData
     }
     //endregion
@@ -57,4 +58,9 @@ class FavoriteLogic {
         }
     }
     //endregion
+
+    // Получение списка избранных данных
+    fun getDatesList(): MutableList<Favorite> {
+        return datesList
+    }
 }

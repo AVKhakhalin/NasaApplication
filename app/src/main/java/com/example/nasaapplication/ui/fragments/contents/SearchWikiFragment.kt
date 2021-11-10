@@ -62,20 +62,20 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = (context as MainActivity)
-        // Обнуление данных для списка "Избранное"
-        mainActivity.setListFavoriteEmptyData()
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
         navigationDialogs = mainActivity.getNavigationDialogs()
         navigationContent = mainActivity.getNavigationContent()
         //endregion
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
+    override fun onResume() {
+        // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
+        mainActivity.setListFavoriteEmptyData()
+        if (mainActivity.getIsFavorite()) mainActivity.changeHeartIconState(mainActivity)
+        // Метод проверки наличия текущей информации в списке "Избранное"
+        // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+        // TODO: ДОДЕЛАТЬ
+        super.onResume()
     }
 
     //region МЕТОДЫ РАБОТЫ С BottomSheet

@@ -1,13 +1,15 @@
 package com.example.nasaapplication.domain.logic
 
-class FavoriteData(
+class Favorite(
 ) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Индекс фрагментов во ViewPager2
     // Расшифровка содержится в файле ConstantsController.kt
+    // (0 - самый маленький приоритет, 1 - средний приоритеты, 3 - высокий приоритет)
     private var typeSource: Int = -1
     // Приоритет информации
-    // (0 - самый маленький приоритет, 1 - средний приоритеты, 3 - высокий приоритет)
+    // Расшифровка содержится в файле ConstantsUi.kt
+    // (0 - самый маленький приоритет, 1 - средний приоритет, 3 - высокий приоритет)
     private var priority: Int = -1
     // Ссылка на источник размещения информации
     private var linkSource: String = ""

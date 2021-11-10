@@ -24,7 +24,6 @@ import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialo
 import com.example.nasaapplication.controller.observers.viewmodels.POD.PODData
 import com.example.nasaapplication.controller.observers.viewmodels.POD.PODViewModel
 import com.example.nasaapplication.databinding.FragmentDayPhotoBinding
-import com.example.nasaapplication.domain.logic.FavoriteData
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
@@ -70,12 +69,20 @@ class DayPhotoFragment:
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = (context as MainActivity)
-        // Обнуление данных для списка "Избранное"
-        mainActivity.setListFavoriteEmptyData()
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
         navigationDialogs = mainActivity.getNavigationDialogs()
         navigationContent = mainActivity.getNavigationContent()
         //endregion
+    }
+
+    override fun onResume() {
+        // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
+        mainActivity.setListFavoriteEmptyData()
+        if (mainActivity.getIsFavorite()) mainActivity.changeHeartIconState(mainActivity)
+        // Метод проверки наличия текущей информации в списке "Избранное"
+        // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+        // TODO: ДОДЕЛАТЬ
+        super.onResume()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

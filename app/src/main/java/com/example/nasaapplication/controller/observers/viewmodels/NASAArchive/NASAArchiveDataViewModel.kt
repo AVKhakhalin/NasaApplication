@@ -9,7 +9,6 @@ import com.example.nasaapplication.repository.facadeuser.NASAArchive.NASAArchive
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.net.URLEncoder
 
 class NASAArchiveDataViewModel (
     private val liveDataForViewToObserve: MutableLiveData<NASAArchiveData> = MutableLiveData(),
@@ -22,7 +21,6 @@ class NASAArchiveDataViewModel (
 
     private fun sendServerRequest(request: String) {
         liveDataForViewToObserve.value = NASAArchiveData.Loading(null)
-//        retrofitImpl.getRetrofitImpl().getNASAArchive("mars%2021", "image").enqueue(object:
         retrofitImpl.getRetrofitImpl().getNASAArchive(request, "image").enqueue(object:
             Callback<NASAArchiveServerResponseWelcome> {
             override fun onResponse(

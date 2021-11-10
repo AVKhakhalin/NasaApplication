@@ -12,7 +12,6 @@ import com.example.nasaapplication.controller.navigation.contents.NavigationCont
 import com.example.nasaapplication.databinding.BottomNavigationLayoutBinding
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.tabs.TabLayout
 
 class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
@@ -75,12 +74,10 @@ class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
 
     fun hideShowDismissElements() {
         // Установка настроек видимости элементов макета
-        requireActivity().findViewById<ViewPager2>(R.id.view_pager).visibility =
-            View.VISIBLE
-        requireActivity().findViewById<TabLayout>(R.id.tab_layout).visibility =
-            View.VISIBLE
         requireActivity().findViewById<FrameLayout>(R.id.activity_fragments_container)
             .visibility = View.INVISIBLE
+        requireActivity().findViewById<FrameLayout>(R.id.transparent_background)
+            .visibility = View.VISIBLE
         dismiss()
     }
 

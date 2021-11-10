@@ -1,4 +1,4 @@
-package com.example.nasaapplication.ui.fragments.contents
+package com.example.nasaapplication.controller.recyclers
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.nasaapplication.R
+import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragment
 
 class SearchNASAArchiveFragmentAdapter(
     private val newNASAArchiveEntityList: MutableList<String> = mutableListOf(),
@@ -41,7 +42,7 @@ class SearchNASAArchiveFragmentAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): SearchNASAArchiveFragmentAdapter.SearchNASAArchiveFragmentViewHolder {
+    ): SearchNASAArchiveFragmentViewHolder {
         val newNASAArchiveItemView =
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.fragment_search_in_nasa_archive_recycler_item,
@@ -49,7 +50,7 @@ class SearchNASAArchiveFragmentAdapter(
         return SearchNASAArchiveFragmentViewHolder(newNASAArchiveItemView)
     }
     override fun onBindViewHolder(
-        holder: SearchNASAArchiveFragmentAdapter.SearchNASAArchiveFragmentViewHolder,
+        holder: SearchNASAArchiveFragmentViewHolder,
         position: Int
     ) {
         holder.newNASAArchiveEntityTextView?.let {

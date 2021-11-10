@@ -16,7 +16,9 @@ import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.chip.Chip
 
-class SettingsFragment:
+class SettingsFragment(
+    private val mainActivity: MainActivity
+):
     ViewBindingFragment<FragmentSettingsBinding>(FragmentSettingsBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
@@ -25,36 +27,24 @@ class SettingsFragment:
     // Buttons (Chip)
     private lateinit var buttonStyleChooseDay: Chip
     private lateinit var buttonStyleChooseNight: Chip
-    // MainActivity
-    private lateinit var mainActivity: MainActivity
     //endregion
 
     companion object {
-        fun newInstance() = SettingsFragment()
+        fun newInstance(mainActivity: MainActivity) = SettingsFragment(mainActivity)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mainActivity = (context as MainActivity)
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
         navigationDialogs = mainActivity.getNavigationDialogs()
         navigationContent = mainActivity.getNavigationContent()
         //endregion
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    //region МЕТОДЫ ДЛЯ РАБОТЫ С BOTTOM NAVIGATION MENU
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Изменение вида Bottom Navigation Menu
-        mainActivity.setSsMain(true)
+        mainActivity.setIsMain(true)
         mainActivity.switchBottomAppBar(mainActivity)
 
         // Установка слушателей на кнопки выбора тем
