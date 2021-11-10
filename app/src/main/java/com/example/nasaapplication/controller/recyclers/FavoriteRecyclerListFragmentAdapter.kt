@@ -135,56 +135,6 @@ class FavoriteRecyclerListFragmentAdapter (
         }
     }
 
-    inner class SearchInNASAArchiveViewHolder(view: View):RecyclerView.ViewHolder(view) {
-        fun bind(itemFavoriteData: Favorite, position: Int) {
-            FavoriteListRecyclerItemSearchInNasaBinding.bind(itemView).apply {
-                recyclerItemSearchInNasaItemTitle.text = itemFavoriteData.getTitle()
-                // Загрузка информации по выбранному элементу
-                // на странице фрагмента поиска в архиве NASA
-                recyclerItemSearchInNasaTypeImage.setOnClickListener {
-                    onListItemClickListener.onItemClick(itemFavoriteData)
-                }
-                //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
-                recyclerItemSearchInNasaPriorityHigh.setOnClickListener {
-                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_HIGH)
-                    changePhotoOfDayItemImageOnPriority(
-                        itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                }
-                recyclerItemSearchInNasaPriorityNormal.setOnClickListener {
-                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
-                    changePhotoOfDayItemImageOnPriority(
-                        itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                }
-                recyclerItemSearchInNasaPriorityLow.setOnClickListener {
-                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
-                    changePhotoOfDayItemImageOnPriority(
-                        itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                }
-                //endregion
-                // Изменение картинки элемента в зависимости от его приоритета
-                changePhotoOfDayItemImageOnPriority(
-                    itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                // МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
-                recyclerItemSearchInNasaArrowUp.setOnClickListener {
-                    layoutPosition.takeIf {it > 0}?.also {
-                        favoriteData.removeAt(it).apply {
-                            favoriteData.add(it - 1, this)
-                        }
-                        notifyItemMoved(it, it - 1)
-                    }
-                }
-                recyclerItemSearchInNasaArrowDown.setOnClickListener {
-                    layoutPosition.takeIf {it < itemCount - 1}?.also {
-                        favoriteData.removeAt(it).apply {
-                            favoriteData.add(it + 1, this)
-                        }
-                        notifyItemMoved(it, it + 1)
-                    }
-                }
-            }
-        }
-    }
-
     inner class SearchInWikiViewHolder(view: View):RecyclerView.ViewHolder(view) {
         fun bind(itemFavoriteData: Favorite, position: Int) {
             FavoriteListRecyclerItemSearchInWikiBinding.bind(itemView).apply {
@@ -197,22 +147,22 @@ class FavoriteRecyclerListFragmentAdapter (
                 //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
                 recyclerItemSearchInWikiPriorityHigh.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_HIGH)
-                    changePhotoOfDayItemImageOnPriority(
+                    changeSearchInWikiItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
                 }
                 recyclerItemSearchInWikiPriorityNormal.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
-                    changePhotoOfDayItemImageOnPriority(
+                    changeSearchInWikiItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
                 }
                 recyclerItemSearchInWikiPriorityLow.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
-                    changePhotoOfDayItemImageOnPriority(
+                    changeSearchInWikiItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
                 }
                 //endregion
                 // Изменение картинки элемента в зависимости от его приоритета
-                changePhotoOfDayItemImageOnPriority(
+                changeSearchInWikiItemImageOnPriority(
                     itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
                 //region МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
                 recyclerItemSearchInWikiArrowUp.setOnClickListener {
@@ -232,6 +182,56 @@ class FavoriteRecyclerListFragmentAdapter (
                     }
                 }
                 //endregion
+            }
+        }
+    }
+
+    inner class SearchInNASAArchiveViewHolder(view: View):RecyclerView.ViewHolder(view) {
+        fun bind(itemFavoriteData: Favorite, position: Int) {
+            FavoriteListRecyclerItemSearchInNasaBinding.bind(itemView).apply {
+                recyclerItemSearchInNasaItemTitle.text = itemFavoriteData.getTitle()
+                // Загрузка информации по выбранному элементу
+                // на странице фрагмента поиска в архиве NASA
+                recyclerItemSearchInNasaTypeImage.setOnClickListener {
+                    onListItemClickListener.onItemClick(itemFavoriteData)
+                }
+                //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
+                recyclerItemSearchInNasaPriorityHigh.setOnClickListener {
+                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_HIGH)
+                    changeSearchInNASAArchiveImageOnPriority(
+                        itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
+                }
+                recyclerItemSearchInNasaPriorityNormal.setOnClickListener {
+                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
+                    changeSearchInNASAArchiveImageOnPriority(
+                        itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
+                }
+                recyclerItemSearchInNasaPriorityLow.setOnClickListener {
+                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
+                    changeSearchInNASAArchiveImageOnPriority(
+                        itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
+                }
+                //endregion
+                // Изменение картинки элемента в зависимости от его приоритета
+                changeSearchInNASAArchiveImageOnPriority(
+                    itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
+                // МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
+                recyclerItemSearchInNasaArrowUp.setOnClickListener {
+                    layoutPosition.takeIf {it > 0}?.also {
+                        favoriteData.removeAt(it).apply {
+                            favoriteData.add(it - 1, this)
+                        }
+                        notifyItemMoved(it, it - 1)
+                    }
+                }
+                recyclerItemSearchInNasaArrowDown.setOnClickListener {
+                    layoutPosition.takeIf {it < itemCount - 1}?.also {
+                        favoriteData.removeAt(it).apply {
+                            favoriteData.add(it + 1, this)
+                        }
+                        notifyItemMoved(it, it + 1)
+                    }
+                }
             }
         }
     }
