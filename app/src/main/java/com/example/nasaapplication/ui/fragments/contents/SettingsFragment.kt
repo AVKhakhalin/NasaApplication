@@ -3,9 +3,7 @@ package com.example.nasaapplication.ui.fragments.contents
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent

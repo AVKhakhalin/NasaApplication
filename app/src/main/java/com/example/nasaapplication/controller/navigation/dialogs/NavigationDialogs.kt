@@ -1,8 +1,6 @@
 package com.example.nasaapplication.controller.navigation.dialogs
 
-import android.content.Context
 import androidx.fragment.app.FragmentActivity
-import androidx.viewpager.widget.ViewPager
 import com.example.nasaapplication.ui.fragments.dialogs.BottomNavigationDrawerDialogFragment
 
 class NavigationDialogs {
