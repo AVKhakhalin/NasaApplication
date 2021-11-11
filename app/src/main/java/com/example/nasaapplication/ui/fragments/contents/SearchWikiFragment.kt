@@ -146,7 +146,8 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
             } else {
                 // Сохранение результата запроса в "Избранное"
                 mainActivity.setListFavoriteDataDescription(
-                    resources.getString(R.string.error_wiki_empty_request))
+                    resources.getString(R.string.error_wiki_empty_request)
+                        .replace("<Br><Br>"," "))
                 // Отображение сообщения об отсутствии результата по запросу
                 val handler = Handler(Looper.getMainLooper())
                 handler.post {

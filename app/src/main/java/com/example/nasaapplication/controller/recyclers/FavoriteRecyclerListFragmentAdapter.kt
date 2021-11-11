@@ -21,6 +21,7 @@ class FavoriteRecyclerListFragmentAdapter (
     private var favoriteData: MutableList<Favorite>,
     private var mainActivity: MainActivity
 ): RecyclerView.Adapter<BaseViewHolder>() {
+    //region БАЗОВЫЕ МЕТОДЫ ДЛЯ РАБОТЫ АДАПТЕРА
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when(viewType){
             ConstantsController.DAY_PHOTO_FRAGMENT_INDEX -> {
@@ -49,7 +50,6 @@ class FavoriteRecyclerListFragmentAdapter (
             }
         }
     }
-
     override fun getItemViewType(position: Int): Int {
         return when {
             favoriteData[position].getTypeSource() ==
@@ -64,19 +64,19 @@ class FavoriteRecyclerListFragmentAdapter (
             else -> ConstantsController.DAY_PHOTO_FRAGMENT_INDEX
         }
     }
-
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         (holder).bind(favoriteData[position])
     }
-
     override fun getItemCount(): Int {
         return favoriteData.size
     }
+    //endregion
 
     inner class PhotoOfDayViewHolder(view: View): BaseViewHolder(view) {
         override fun bind(itemFavoriteData: Favorite) {
             FavoriteListRecyclerItemPhotoOfDayBinding.bind(itemView).apply {
                 recyclerItemPhotoOfDayItemTitle.text = itemFavoriteData.getTitle()
+                recyclerItemPhotoOfDayItemDescription.text = itemFavoriteData.getDescription()
                 // Загрузка информации по выбранному элементу на странице фрагмента "Картинка дня"
                 recyclerItemPhotoOfDayTypeImage.setOnClickListener {
                     onListItemClickListener.onItemClick(itemFavoriteData)
@@ -101,7 +101,7 @@ class FavoriteRecyclerListFragmentAdapter (
                 // Изменение картинки элемента в зависимости от его приоритета
                 changePhotoOfDayItemImageOnPriority(
                     itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
-                // МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
+                //region МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
                 recyclerItemPhotoOfDayArrowUp.setOnClickListener {
                     layoutPosition.takeIf {it > 0}?.also {
                         favoriteData.removeAt(it).apply {
@@ -120,6 +120,13 @@ class FavoriteRecyclerListFragmentAdapter (
                         }
                     }
                 }
+                //endregion
+                // Отображение описания элемента при нажатии на его заголовок (Title)
+                recyclerItemPhotoOfDayItemTitle.setOnClickListener {
+                    itemFavoriteData.setIsShowDescription(!itemFavoriteData.getIsShowDescription())
+                    recyclerItemPhotoOfDayItemDescription.visibility =
+                        if (itemFavoriteData.getIsShowDescription()) View.VISIBLE else View.GONE
+                }
             }
         }
     }
@@ -128,6 +135,7 @@ class FavoriteRecyclerListFragmentAdapter (
         override fun bind(itemFavoriteData: Favorite) {
             FavoriteListRecyclerItemSearchInWikiBinding.bind(itemView).apply {
                 recyclerItemSearchInWikiItemTitle.text = itemFavoriteData.getTitle()
+                recyclerItemSearchInWikiItemDescription.text = itemFavoriteData.getDescription()
                 // Загрузка информации по выбранному элементу
                 // на странице фрагмента с поиском в Википедии
                 recyclerItemSearchInWikiTypeImage.setOnClickListener {
@@ -171,6 +179,12 @@ class FavoriteRecyclerListFragmentAdapter (
                     }
                 }
                 //endregion
+                // Отображение описания элемента при нажатии на его заголовок (Title)
+                recyclerItemSearchInWikiItemTitle.setOnClickListener {
+                    itemFavoriteData.setIsShowDescription(!itemFavoriteData.getIsShowDescription())
+                    recyclerItemSearchInWikiItemDescription.visibility =
+                        if (itemFavoriteData.getIsShowDescription()) View.VISIBLE else View.GONE
+                }
             }
         }
     }
@@ -179,6 +193,7 @@ class FavoriteRecyclerListFragmentAdapter (
         override fun bind(itemFavoriteData: Favorite) {
             FavoriteListRecyclerItemSearchInNasaBinding.bind(itemView).apply {
                 recyclerItemSearchInNasaItemTitle.text = itemFavoriteData.getTitle()
+                recyclerItemSearchInNasaItemDescription.text = itemFavoriteData.getDescription()
                 // Загрузка информации по выбранному элементу
                 // на странице фрагмента поиска в архиве NASA
                 recyclerItemSearchInNasaTypeImage.setOnClickListener {
@@ -204,7 +219,7 @@ class FavoriteRecyclerListFragmentAdapter (
                 // Изменение картинки элемента в зависимости от его приоритета
                 changeSearchInNASAArchiveImageOnPriority(
                     itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                // МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
+                //region МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
                 recyclerItemSearchInNasaArrowUp.setOnClickListener {
                     layoutPosition.takeIf {it > 0}?.also {
                         favoriteData.removeAt(it).apply {
@@ -220,6 +235,13 @@ class FavoriteRecyclerListFragmentAdapter (
                         }
                         notifyItemMoved(it, it + 1)
                     }
+                }
+                //endregion
+                // Отображение описания элемента при нажатии на его заголовок (Title)
+                recyclerItemSearchInNasaItemTitle.setOnClickListener {
+                    itemFavoriteData.setIsShowDescription(!itemFavoriteData.getIsShowDescription())
+                    recyclerItemSearchInNasaItemDescription.visibility =
+                        if (itemFavoriteData.getIsShowDescription()) View.VISIBLE else View.GONE
                 }
             }
         }

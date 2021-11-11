@@ -11,8 +11,8 @@
         android:layout_width="@dimen/recycler_item_photo_of_day_arrows_container_width"
         android:layout_height="@dimen/recycler_item_photo_of_day_arrows_container_height"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" >
+        app:layout_constraintTop_toTopOf="@id/recycler_item_photo_of_day_type_image"
+        app:layout_constraintBottom_toBottomOf="@id/recycler_item_photo_of_day_type_image" >
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/recycler_item_photo_of_day_arrow_up"
@@ -45,8 +45,8 @@
         android:layout_height="@dimen/recycler_item_photo_of_day_priority_high_height"
         android:layout_marginEnd="@dimen/recycler_item_photo_of_day_priority_high_margin_end"
         app:layout_constraintEnd_toStartOf="@id/recycler_item_photo_of_day_arrows_container"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/recycler_item_photo_of_day_type_image"
+        app:layout_constraintBottom_toBottomOf="@id/recycler_item_photo_of_day_type_image"
         app:srcCompat="@drawable/ic_circle_red_high" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -55,8 +55,8 @@
         android:layout_height="@dimen/recycler_item_photo_of_day_priority_normal_height"
         android:layout_marginEnd="@dimen/recycler_item_photo_of_day_priority_normal_margin_end"
         app:layout_constraintEnd_toStartOf="@id/recycler_item_photo_of_day_priority_high"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/recycler_item_photo_of_day_type_image"
+        app:layout_constraintBottom_toBottomOf="@id/recycler_item_photo_of_day_type_image"
         app:srcCompat="@drawable/ic_circle_green_normal" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -65,34 +65,35 @@
         android:layout_height="@dimen/recycler_item_photo_of_day_priority_low_height"
         android:layout_marginEnd="@dimen/recycler_item_photo_of_day_priority_low_margin_end"
         app:layout_constraintEnd_toStartOf="@id/recycler_item_photo_of_day_priority_normal"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/recycler_item_photo_of_day_type_image"
+        app:layout_constraintBottom_toBottomOf="@id/recycler_item_photo_of_day_type_image"
         app:srcCompat="@drawable/ic_circle_white_low" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/recycler_item_photo_of_day_type_image"
         android:layout_width="@dimen/recycler_item_photo_of_day_type_image_width"
         android:layout_height="@dimen/recycler_item_photo_of_day_type_image_height"
+        android:layout_marginTop="@dimen/recycler_item_photo_of_day_type_image_margin_top"
         android:layout_marginEnd="@dimen/recycler_item_photo_of_day_type_image_margin_end"
         android:background="?attr/colorOnBackground"
         app:layout_constraintEnd_toStartOf="@id/recycler_item_photo_of_day_priority_low"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@drawable/ic_telescope" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/recycler_item_photo_of_day_item_title"
         android:layout_width="@dimen/recycler_item_photo_of_day_item_title_width"
-        android:layout_height="match_parent"
+        android:layout_height="?attr/actionBarSize"
         android:text="@string/recycler_item_photo_of_day_item_title_text"
         android:textColor="?attr/color"
+        android:paddingTop="@dimen/recycler_item_photo_of_day_item_title_padding_top"
         android:textSize="@dimen/recycler_item_photo_of_day_item_title_text_size"
         android:layout_marginStart="@dimen/recycler_item_photo_of_day_item_title_margin_start"
         android:layout_marginEnd="@dimen/recycler_item_photo_of_day_item_title_margin_end"
         app:layout_constraintEnd_toStartOf="@+id/recycler_item_photo_of_day_type_image"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="@id/recycler_item_photo_of_day_type_image"
+        app:layout_constraintBottom_toBottomOf="@id/recycler_item_photo_of_day_type_image" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/recycler_item_photo_of_day_item_description"
@@ -101,6 +102,10 @@
         android:text="@string/recycler_item_photo_of_day_item_description_text"
         android:textColor="?attr/color"
         android:textSize="@dimen/recycler_item_photo_of_day_item_description_text_size"
+        android:layout_marginStart="@dimen/recycler_item_photo_of_day_item_description_margin_start"
+        android:layout_marginEnd="@dimen/recycler_item_photo_of_day_item_description_margin_end"
+        android:layout_marginTop="@dimen/recycler_item_photo_of_day_item_description_margin_top"
+        android:layout_marginBottom="@dimen/recycler_item_photo_of_day_item_description_margin_bottom"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recycler_item_photo_of_day_type_image"
         android:visibility="gone"/>

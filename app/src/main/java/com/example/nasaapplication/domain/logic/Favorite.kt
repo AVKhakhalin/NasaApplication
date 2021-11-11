@@ -17,6 +17,8 @@ class Favorite(
     private var title: String = ""
     // Описание информации
     private var description: String = ""
+    // Признак отображения информации в элементе списка "Избранное"
+    private var isShowDescription: Boolean = false
     // Поисковый запрос в WebView или в архиве NASA
     private var searchRequest: String = ""
     // Ссылка на картнику
@@ -71,6 +73,12 @@ class Favorite(
     }
     fun getDescription(): String {
         return description
+    }
+    fun setIsShowDescription(isShowDescription: Boolean) {
+        this.isShowDescription = isShowDescription
+    }
+    fun getIsShowDescription(): Boolean {
+        return isShowDescription
     }
     fun setSearchRequest(searchRequest: String) {
         this.searchRequest = searchRequest

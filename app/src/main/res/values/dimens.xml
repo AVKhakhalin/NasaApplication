@@ -86,6 +86,12 @@
     <dimen name="recycler_item_photo_of_day_item_title_margin_end">10dp</dimen>
     <dimen name="recycler_item_photo_of_day_item_description_text_size">20sp</dimen>
     <dimen name="recycler_item_photo_of_day_item_title_margin_start">10dp</dimen>
+    <dimen name="recycler_item_photo_of_day_type_image_margin_top">5dp</dimen>
+    <dimen name="recycler_item_photo_of_day_item_description_margin_top">10dp</dimen>
+    <dimen name="recycler_item_photo_of_day_item_title_padding_top">5dp</dimen>
+    <dimen name="recycler_item_photo_of_day_item_description_margin_start">10dp</dimen>
+    <dimen name="recycler_item_photo_of_day_item_description_margin_end">10dp</dimen>
+    <dimen name="recycler_item_photo_of_day_item_description_margin_bottom">10dp</dimen>
     <dimen name="recycler_item_search_in_nasa_priority_high_width">15dp</dimen>
     <dimen name="recycler_item_search_in_nasa_priority_high_height">15dp</dimen>
     <dimen name="recycler_item_search_in_nasa_priority_normal_width">15dp</dimen>
@@ -114,6 +120,12 @@
     <dimen name="recycler_item_search_in_nasa_item_title_margin_end">10dp</dimen>
     <dimen name="recycler_item_search_in_nasa_item_description_text_size">20sp</dimen>
     <dimen name="recycler_item_search_in_nasa_item_title_margin_start">10dp</dimen>
+    <dimen name="recycler_item_search_in_nasa_type_image_margin_top">5dp</dimen>
+    <dimen name="recycler_item_search_in_nasa_item_description_margin_top">10dp</dimen>
+    <dimen name="recycler_item_search_in_nasa_item_title_padding_top">5dp</dimen>
+    <dimen name="recycler_item_search_in_nasa_item_description_margin_start">10dp</dimen>
+    <dimen name="recycler_item_search_in_nasa_item_description_margin_end">10dp</dimen>
+    <dimen name="recycler_item_search_in_nasa_item_description_margin_bottom">10dp</dimen>
     <dimen name="recycler_item_search_in_wiki_priority_high_width">15dp</dimen>
     <dimen name="recycler_item_search_in_wiki_priority_high_height">15dp</dimen>
     <dimen name="recycler_item_search_in_wiki_priority_normal_width">15dp</dimen>
@@ -142,4 +154,10 @@
     <dimen name="recycler_item_search_in_wiki_item_title_margin_end">10dp</dimen>
     <dimen name="recycler_item_search_in_wiki_item_description_text_size">20sp</dimen>
     <dimen name="recycler_item_search_in_wiki_item_title_margin_start">10dp</dimen>
+    <dimen name="recycler_item_search_in_wiki_type_image_margin_top">5dp</dimen>
+    <dimen name="recycler_item_search_in_wiki_item_description_margin_top">10dp</dimen>
+    <dimen name="recycler_item_search_in_wiki_item_title_padding_top">5dp</dimen>
+    <dimen name="recycler_item_search_in_wiki_item_description_margin_start">10dp</dimen>
+    <dimen name="recycler_item_search_in_wiki_item_description_margin_end">10dp</dimen>
+    <dimen name="recycler_item_search_in_wiki_item_description_margin_bottom">10dp</dimen>
 </resources>
