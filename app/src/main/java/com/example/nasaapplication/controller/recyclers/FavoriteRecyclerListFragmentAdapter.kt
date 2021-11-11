@@ -1,5 +1,8 @@
 package com.example.nasaapplication.controller.recyclers
 
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.controller.recyclers.utils.BaseViewHolder
+import com.example.nasaapplication.controller.recyclers.utils.ItemTouchHelperAdapter
+import com.example.nasaapplication.controller.recyclers.utils.ItemTouchHelperViewHolder
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemPhotoOfDayBinding
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemSearchInNasaBinding
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemSearchInWikiBinding
@@ -20,7 +25,7 @@ class FavoriteRecyclerListFragmentAdapter (
     private var onListItemClickListener: FavoriteRecyclerListFragmentOnItemClickListener,
     private var favoriteData: MutableList<Favorite>,
     private var mainActivity: MainActivity
-): RecyclerView.Adapter<BaseViewHolder>() {
+): RecyclerView.Adapter<BaseViewHolder>(), ItemTouchHelperAdapter {
     //region БАЗОВЫЕ МЕТОДЫ ДЛЯ РАБОТЫ АДАПТЕРА
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when(viewType){
@@ -72,7 +77,7 @@ class FavoriteRecyclerListFragmentAdapter (
     }
     //endregion
 
-    inner class PhotoOfDayViewHolder(view: View): BaseViewHolder(view) {
+    inner class PhotoOfDayViewHolder(view: View): BaseViewHolder(view), ItemTouchHelperViewHolder {
         override fun bind(itemFavoriteData: Favorite) {
             FavoriteListRecyclerItemPhotoOfDayBinding.bind(itemView).apply {
                 recyclerItemPhotoOfDayItemTitle.text = itemFavoriteData.getTitle()
@@ -129,9 +134,17 @@ class FavoriteRecyclerListFragmentAdapter (
                 }
             }
         }
+        //region МЕТОДЫ ItemTouchHelperViewHolder ДЛЯ РАБОТЫ СО СМАХИВАНИЕМ (ВЫДЕЛЕНИЕ И ОЧИСТКА)
+        override fun onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY)
+        }
+        override fun onItemClear() {
+            itemView.setBackgroundColor(0)
+        }
+        //endregion
     }
 
-    inner class SearchInWikiViewHolder(view: View):BaseViewHolder(view) {
+    inner class SearchInWikiViewHolder(view: View):BaseViewHolder(view), ItemTouchHelperViewHolder {
         override fun bind(itemFavoriteData: Favorite) {
             FavoriteListRecyclerItemSearchInWikiBinding.bind(itemView).apply {
                 recyclerItemSearchInWikiItemTitle.text = itemFavoriteData.getTitle()
@@ -187,9 +200,18 @@ class FavoriteRecyclerListFragmentAdapter (
                 }
             }
         }
+        //region МЕТОДЫ ItemTouchHelperViewHolder ДЛЯ РАБОТЫ СО СМАХИВАНИЕМ (ВЫДЕЛЕНИЕ И ОЧИСТКА)
+        override fun onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY)
+        }
+        override fun onItemClear() {
+            itemView.setBackgroundColor(0)
+        }
+        //endregion
     }
 
-    inner class SearchInNASAArchiveViewHolder(view: View):BaseViewHolder(view) {
+    inner class SearchInNASAArchiveViewHolder(view: View):BaseViewHolder(view),
+        ItemTouchHelperViewHolder  {
         override fun bind(itemFavoriteData: Favorite) {
             FavoriteListRecyclerItemSearchInNasaBinding.bind(itemView).apply {
                 recyclerItemSearchInNasaItemTitle.text = itemFavoriteData.getTitle()
@@ -245,6 +267,19 @@ class FavoriteRecyclerListFragmentAdapter (
                 }
             }
         }
+        //region МЕТОДЫ ItemTouchHelperViewHolder ДЛЯ РАБОТЫ СО СМАХИВАНИЕМ (ВЫДЕЛЕНИЕ И ОЧИСТКА)
+        override fun onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY)
+        }
+        @SuppressLint("ResourceType")
+        override fun onItemClear() {
+            itemView.setBackgroundColor(0)
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+//                itemView.setBackgroundColor(mainActivity.resources
+//                    .getColor(android.R.attr.colorSecondary, null))
+//            }
+        }
+        //endregion
     }
 
     //region МЕТОДЫ ИЗМЕНЕНИЯ КАРТИНКИ ЭЛЕМЕНТОВ В ЗАВИСИМОСТИ ОТ ИХ ПРИОРИТЕТОВ
@@ -297,6 +332,20 @@ class FavoriteRecyclerListFragmentAdapter (
         } else
             currentImageView.setImageDrawable(
                 ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive))
+    }
+    //endregion
+
+    //region БАЗОВЫЕ МЕТОДЫ ДЛЯ РЕАЛИЗАЦИИ СМАХИВАНИЯ (УДАЛЕНИЯ) ЭЛЕМЕНТОВ
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        favoriteData.removeAt(fromPosition).apply {
+            favoriteData.add(
+                if (toPosition > fromPosition) toPosition - 1 else toPosition, this)
+        }
+        notifyItemMoved(fromPosition, toPosition)
+    }
+    override fun onItemDismiss(position: Int) {
+        favoriteData.removeAt(position)
+        notifyItemRemoved(position)
     }
     //endregion
 }
