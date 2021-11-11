@@ -4,12 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.ConstantsController
+import com.example.nasaapplication.controller.recyclers.utils.BaseViewHolder
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemPhotoOfDayBinding
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemSearchInNasaBinding
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemSearchInWikiBinding
@@ -21,8 +20,8 @@ class FavoriteRecyclerListFragmentAdapter (
     private var onListItemClickListener: FavoriteRecyclerListFragmentOnItemClickListener,
     private var favoriteData: MutableList<Favorite>,
     private var mainActivity: MainActivity
-): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+): RecyclerView.Adapter<BaseViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when(viewType){
             ConstantsController.DAY_PHOTO_FRAGMENT_INDEX -> {
                 val binding: FavoriteListRecyclerItemPhotoOfDayBinding =
@@ -66,26 +65,16 @@ class FavoriteRecyclerListFragmentAdapter (
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(getItemViewType(position)) {
-            ConstantsController.DAY_PHOTO_FRAGMENT_INDEX  -> {
-                (holder as PhotoOfDayViewHolder).bind(favoriteData[position])
-            }
-            ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX -> {
-                (holder as SearchInNASAArchiveViewHolder).bind(favoriteData[position], position)
-            }
-            ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX -> {
-                (holder as SearchInWikiViewHolder).bind(favoriteData[position], position)
-            }
-        }
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+        (holder).bind(favoriteData[position])
     }
 
     override fun getItemCount(): Int {
         return favoriteData.size
     }
 
-    inner class PhotoOfDayViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        fun bind(itemFavoriteData: Favorite) {
+    inner class PhotoOfDayViewHolder(view: View): BaseViewHolder(view) {
+        override fun bind(itemFavoriteData: Favorite) {
             FavoriteListRecyclerItemPhotoOfDayBinding.bind(itemView).apply {
                 recyclerItemPhotoOfDayItemTitle.text = itemFavoriteData.getTitle()
                 // Загрузка информации по выбранному элементу на странице фрагмента "Картинка дня"
@@ -122,7 +111,7 @@ class FavoriteRecyclerListFragmentAdapter (
                     }
                 }
                 recyclerItemPhotoOfDayArrowDown.setOnClickListener {
-                    if (position < favoriteData.size - 1) {
+                    if (layoutPosition < favoriteData.size - 1) {
                         layoutPosition.takeIf {it < itemCount - 1}?.also {
                             favoriteData.removeAt(it).apply {
                                 favoriteData.add(it + 1, this)
@@ -135,8 +124,8 @@ class FavoriteRecyclerListFragmentAdapter (
         }
     }
 
-    inner class SearchInWikiViewHolder(view: View):RecyclerView.ViewHolder(view) {
-        fun bind(itemFavoriteData: Favorite, position: Int) {
+    inner class SearchInWikiViewHolder(view: View):BaseViewHolder(view) {
+        override fun bind(itemFavoriteData: Favorite) {
             FavoriteListRecyclerItemSearchInWikiBinding.bind(itemView).apply {
                 recyclerItemSearchInWikiItemTitle.text = itemFavoriteData.getTitle()
                 // Загрузка информации по выбранному элементу
@@ -186,8 +175,8 @@ class FavoriteRecyclerListFragmentAdapter (
         }
     }
 
-    inner class SearchInNASAArchiveViewHolder(view: View):RecyclerView.ViewHolder(view) {
-        fun bind(itemFavoriteData: Favorite, position: Int) {
+    inner class SearchInNASAArchiveViewHolder(view: View):BaseViewHolder(view) {
+        override fun bind(itemFavoriteData: Favorite) {
             FavoriteListRecyclerItemSearchInNasaBinding.bind(itemView).apply {
                 recyclerItemSearchInNasaItemTitle.text = itemFavoriteData.getTitle()
                 // Загрузка информации по выбранному элементу
