@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nasaapplication.R
@@ -335,7 +336,9 @@ class FavoriteRecyclerListFragmentAdapter (
             favoriteData.add(
                 if (toPosition > fromPosition) toPosition - 1 else toPosition, this)
         }
-        notifyItemMoved(fromPosition, toPosition)
+        if (toPosition > fromPosition) notifyItemMoved(fromPosition, toPosition - 1)
+        else notifyItemMoved(fromPosition, toPosition)
+        Toast.makeText(mainActivity, "$fromPosition $toPosition", Toast.LENGTH_SHORT).show()
     }
     override fun onItemDismiss(position: Int) {
         favoriteData.removeAt(position)
