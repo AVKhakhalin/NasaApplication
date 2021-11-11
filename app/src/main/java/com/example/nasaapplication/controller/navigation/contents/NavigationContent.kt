@@ -24,8 +24,8 @@ class NavigationContent(
     fun showSettingsFragment(useBackStack: Boolean) {
         settingsFragment = SettingsFragment.newInstance(mainActivity)
         // Открыть транзакцию
-        fragmentManager?.let {
-            if (settingsFragment != null) {
+        if (settingsFragment != null) {
+            fragmentManager?.let {
                 val fragmentTransaction = it.beginTransaction()
                 fragmentTransaction.replace(
                     R.id.activity_fragments_container, settingsFragment!!
@@ -43,8 +43,8 @@ class NavigationContent(
     fun showFavoriteRecyclerListFragment(useBackStack: Boolean) {
         favoriteRecyclerListFragment = FavoriteRecyclerListFragment.newInstance(mainActivity)
         // Открыть транзакцию
-        fragmentManager?.let {
-            if (favoriteRecyclerListFragment != null) {
+        if (favoriteRecyclerListFragment != null) {
+            fragmentManager?.let {
                 val fragmentTransaction = it.beginTransaction()
                 fragmentTransaction.replace(
                     R.id.activity_fragments_container, favoriteRecyclerListFragment!!

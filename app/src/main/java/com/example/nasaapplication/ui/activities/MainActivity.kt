@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.*
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -64,12 +65,19 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Данные для сохранения в "Избранное"
     private var newFavorite: Favorite = Favorite()
     private var favoriteListData: FavoriteLogic = FavoriteLogic()
+    // Цвета из аттрибутов темы
+    private val colorSecondaryTypedValue: TypedValue = TypedValue()
+    private val colorTypedValue: TypedValue = TypedValue()
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Считывание системных настроек, применение темы к приложению
         readSettingsAndSetupApplication(savedInstanceState)
+
+        // Установка цветов из аттрибутов темы
+        theme.resolveAttribute(R.attr.colorSecondary, colorSecondaryTypedValue, true)
+        theme.resolveAttribute(R.attr.color, colorTypedValue, true)
 
         // Подключение Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -204,19 +212,21 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             // Получение поискового поля для ввода и редактирования текста поискового
             val searchedEditText =
                 searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
-            // Установка фона для поискового поля
+            // Установка цветов фона и текста для поискового поля
             searchedEditText.setBackgroundResource(R.drawable.search_view_shape)
-            if (isThemeDay) {
-                searchedEditText.setTextColor(resources.getColor(
-                    R.color.bottom_sheet_background_color_night_description_text_day))
-                searchedEditText.setHintTextColor(resources.getColor(
-                    R.color.bottom_sheet_background_color_night_description_text_day))
-            } else {
-                searchedEditText.setTextColor(resources.getColor(
-                    R.color.bottom_sheet_background_color_night_description_text_night))
-                searchedEditText.setHintTextColor(resources.getColor(
-                    R.color.bottom_sheet_background_color_night_description_text_night))
-            }
+            searchedEditText.setTextColor(colorTypedValue.data)
+            searchedEditText.setHintTextColor(colorTypedValue.data)
+//            if (isThemeDay) {
+//                searchedEditText.setTextColor(resources.getColor(
+//                    R.color.bottom_sheet_background_color_night_description_text_day))
+//                searchedEditText.setHintTextColor(resources.getColor(
+//                    R.color.bottom_sheet_background_color_night_description_text_day))
+//            } else {
+//                searchedEditText.setTextColor(resources.getColor(
+//                    R.color.bottom_sheet_background_color_night_description_text_night))
+//                searchedEditText.setHintTextColor(resources.getColor(
+//                    R.color.bottom_sheet_background_color_night_description_text_night))
+//            }
             // Установка размера поискового текста
             searchedEditText.setTextSize(ConstantsUi.SEARCH_FIELD_TEXT_SIZE)
             // Установка значка поиска внутри editText (без исчезновения)
@@ -614,7 +624,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 setTheme(R.style.Theme_NasaApplication_Night)
             }
         } else {
-            // Применение тёмной темы при первом запуске приложения на девайсах на 10+ Android
+            // Применение тёмной темы при первом запуске приложения
+            // на мобильных устройствах с версией Android 10+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 setTheme(R.style.Theme_NasaApplication_Night)
             }
@@ -707,4 +718,12 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         return favoriteListData.getDatesList()
     }
 
+    //region МЕТОДЫ ПОЛУЧЕНИЯ ЦВЕТОВ ИЗ АТТРИБУТОВ ТЕМЫ
+    fun getColorSecondary(): TypedValue {
+        return colorSecondaryTypedValue
+    }
+    fun getColor(): TypedValue {
+        return colorTypedValue
+    }
+    //endregion
 }

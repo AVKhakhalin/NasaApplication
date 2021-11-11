@@ -1,8 +1,6 @@
 package com.example.nasaapplication.controller.recyclers
 
-import android.annotation.SuppressLint
 import android.graphics.Color
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,10 +19,11 @@ import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 
+
 class FavoriteRecyclerListFragmentAdapter (
     private var onListItemClickListener: FavoriteRecyclerListFragmentOnItemClickListener,
     private var favoriteData: MutableList<Favorite>,
-    private var mainActivity: MainActivity
+    private var mainActivity: MainActivity,
 ): RecyclerView.Adapter<BaseViewHolder>(), ItemTouchHelperAdapter {
     //region БАЗОВЫЕ МЕТОДЫ ДЛЯ РАБОТЫ АДАПТЕРА
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -139,7 +138,7 @@ class FavoriteRecyclerListFragmentAdapter (
             itemView.setBackgroundColor(Color.LTGRAY)
         }
         override fun onItemClear() {
-            itemView.setBackgroundColor(0)
+            itemView.setBackgroundColor(mainActivity.getColorSecondary().data)
         }
         //endregion
     }
@@ -205,7 +204,7 @@ class FavoriteRecyclerListFragmentAdapter (
             itemView.setBackgroundColor(Color.LTGRAY)
         }
         override fun onItemClear() {
-            itemView.setBackgroundColor(0)
+            itemView.setBackgroundColor(mainActivity.getColorSecondary().data)
         }
         //endregion
     }
@@ -271,13 +270,8 @@ class FavoriteRecyclerListFragmentAdapter (
         override fun onItemSelected() {
             itemView.setBackgroundColor(Color.LTGRAY)
         }
-        @SuppressLint("ResourceType")
         override fun onItemClear() {
-            itemView.setBackgroundColor(0)
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-//                itemView.setBackgroundColor(mainActivity.resources
-//                    .getColor(android.R.attr.colorSecondary, null))
-//            }
+            itemView.setBackgroundColor(mainActivity.getColorSecondary().data)
         }
         //endregion
     }
