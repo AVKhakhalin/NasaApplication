@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
@@ -26,6 +27,7 @@ import com.example.nasaapplication.controller.observers.viewmodels.NASAArchive.N
 import com.example.nasaapplication.controller.observers.viewmodels.NASAArchive.NASAArchiveDataViewModel
 import com.example.nasaapplication.controller.recyclers.SearchNASAArchiveFragmentAdapter
 import com.example.nasaapplication.databinding.FragmentSearchInNasaArchiveBinding
+import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.repository.ConstantsRepository
 import com.example.nasaapplication.repository.facadeuser.NASAArchive.NASAArchiveServerResponseItems
 import com.example.nasaapplication.ui.ConstantsUi
@@ -110,7 +112,7 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
             // Отображение контейнера с результатами отображения Recycler View списка найденной
             // в архиве NASA информации
             binding.nasaArchiveEntityListContainer.visibility = View.VISIBLE
-            showRecyclerViewWindowWithResults()
+            showRecyclerViewWindowWithResults(false)
         }
         recyclerView?.adapter?.notifyDataSetChanged()
     }
@@ -120,7 +122,7 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     //endregion
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // Установка слушателя при нажатии на кнопку поиска в "Википедии"
+        // Установка слушателя при нажатии на кнопку поиска в архиве NASA
         binding.inputNasaField.setEndIconOnClickListener {
             if (!mainActivity.getIsBlockingOtherFABButtons()) {
                 if ((binding.inputNasaFieldText.text != null) &&
@@ -156,7 +158,8 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
 
         // Настройка кнопки отображения Recycler View списка найденной в архиве NASA информации
         binding.nasaArchiveEntityListContainerTouchableBorder.setOnClickListener {
-            if (!mainActivity.getIsBlockingOtherFABButtons()) showRecyclerViewWindowWithResults()
+            if (!mainActivity.getIsBlockingOtherFABButtons())
+                showRecyclerViewWindowWithResults(false)
         }
 
         // Установка слушателя на картинку для изменения её размеров по желанию пользователя
@@ -195,7 +198,8 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
         super.onViewCreated(view, savedInstanceState)
     }
 
-    private fun showRecyclerViewWindowWithResults() {
+    private fun showRecyclerViewWindowWithResults(forceHideWindow: Boolean) {
+        if (forceHideWindow) isRecyclerViewWindowHide = false
         val constraintLayout = binding.nasaArchiveEntityListContainer
         val timeLayoutParams: (ConstraintLayout.LayoutParams) =
             constraintLayout.layoutParams as ConstraintLayout.LayoutParams
@@ -203,14 +207,13 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
         isRecyclerViewWindowHide = !isRecyclerViewWindowHide
         if (isRecyclerViewWindowHide) {
             binding.fragmentSearchInNasaArchiveGroupElements.visibility = View.VISIBLE
-            binding.searchInNasaArchiveLoadingLayout.visibility = View.INVISIBLE
         } else {
             binding.fragmentSearchInNasaArchiveGroupElements.visibility = View.INVISIBLE
-            binding.searchInNasaArchiveLoadingLayout.visibility = View.INVISIBLE
         }
         constraintLayout.layoutParams = timeLayoutParams
+        binding.searchInNasaArchiveLoadingLayout.visibility = View.INVISIBLE
         binding.fragmentSearchInNasaArchiveRecyclerView.visibility = View.VISIBLE
-        // Анимация появления списка с результатам поиска в архиве NASA
+        // Анимация появления списка с результатами поиска в архиве NASA
         binding.nasaArchiveEntityListContainer.alpha = transparientValue
         binding.nasaArchiveEntityListContainer.animate()
             .alpha(notTransparientValue)
@@ -258,7 +261,7 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                     binding.searchInNasaArchiveTitleTextView.text =
                         ConstantsController.ERROR_EMPTY_DOWNLOAD_DATES
                     binding.searchInNasaArchiveTitleTextView.visibility = View.VISIBLE
-                    // Сохранение в "Избранное" ответ об отсутствии информации на сервере NASA
+                    // Сохранение в "Избранное" ответа об отсутствии информации на сервере NASA
                     mainActivity.setListFavoriteDataDescription(
                         ConstantsController.ERROR_EMPTY_DOWNLOAD_DATES)
                 }
@@ -310,5 +313,60 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     // Передача MainActivity
     fun getMainActivity(): MainActivity {
         return mainActivity
+    }
+
+    // Метод установки элемента из списка "Избранное" для просмотра в данном фрагменте
+    fun setAndShowFavoriteData(favoriteData: Favorite) {
+        favoriteData?.let {
+            // Скрытие контейнера с результатами отображения Recycler View списка найденной
+            // в архиве NASA информации
+            showRecyclerViewWindowWithResults(true)
+
+            // Анимированное появление найденной картинки по запросу в архиве NASA
+            binding.searchInNasaArchiveImageView.alpha = transparientValue
+            binding.searchInNasaArchiveImageView
+                .load(it.getLinkImage()) {
+                    lifecycle(this@SearchNASAArchiveFragment)
+                    error(R.drawable.ic_load_error_vector)
+                    // Анимация появления картинки
+                    binding.searchInNasaArchiveImageView.animate()
+                        .alpha(notTransparientValue)
+                        .setDuration(durationAnimation)
+                        .setListener(object: AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                binding.searchInNasaArchiveImageView.isClickable = true
+                            }
+                        })
+                }
+
+            // Анимационный показ заголовка и описания фотографии по запрошенному событию
+            binding.searchInNasaArchiveTitleTextView.alpha = transparientValue
+            binding.searchInNasaArchiveTitleTextView.text = it.getTitle()
+            binding.searchInNasaArchiveDescriptionTextView.alpha = transparientValue
+            binding.searchInNasaArchiveDescriptionTextView.text = it.getDescription()
+            // Анимация появления заголовка картинки
+            binding.searchInNasaArchiveTitleTextView.animate()
+                .alpha(notTransparientValue)
+                .setDuration(durationAnimation)
+                .setListener(object: AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        binding.searchInNasaArchiveTitleTextView.isClickable = true
+                    }
+                })
+            // Анимация появления описания картинки
+            binding.searchInNasaArchiveDescriptionTextView
+                .animate()
+                .alpha(notTransparientValue)
+                .setDuration(durationAnimation)
+                .setListener(object: AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        binding.searchInNasaArchiveDescriptionTextView.isClickable = true
+                    }
+                })
+
+            // Отобразить элементы View для вывода полученной информации
+            binding.fragmentSearchInNasaArchiveGroupElements.visibility = View.VISIBLE
+            binding.searchInNasaArchiveLoadingLayout.visibility = View.INVISIBLE
+        }
     }
 }

@@ -8,9 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -23,6 +21,7 @@ import com.example.nasaapplication.controller.navigation.contents.NavigationCont
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.observers.viewmodels.POD.PODViewModel
 import com.example.nasaapplication.databinding.FragmentSearchInWikiBinding
+import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
@@ -178,5 +177,13 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
                     binding.webViewContainer.isClickable = true
                 }
             })
+    }
+
+    // Метод установки элемента из списка "Избранное" для просмотра в данном фрагменте
+    fun setAndShowFavoriteData(favoriteData: Favorite) {
+        favoriteData?.let {
+            binding.inputWikiFieldText.setText(it.getSearchRequest())
+            showUrlInWiki(it.getLinkSource())
+        }
     }
 }

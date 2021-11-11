@@ -2,11 +2,13 @@ package com.example.nasaapplication.controller.navigation.contents
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.viewbinding.ViewBinding
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.ui.fragments.contents.DayPhotoFragment
 import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragment
 import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
+import com.example.nasaapplication.ui.utils.ViewBindingFragment
 
 class ViewPagerAdapter(
     private val fragmentActivity: FragmentActivity,
@@ -35,4 +37,9 @@ class ViewPagerAdapter(
         }
     }
     //endregion
+
+    // Получение фрагментов
+    fun getFragments(): Array<ViewBindingFragment <out ViewBinding>> {
+        return fragments
+    }
 }

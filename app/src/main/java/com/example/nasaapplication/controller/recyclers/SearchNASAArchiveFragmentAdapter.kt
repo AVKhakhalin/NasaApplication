@@ -10,6 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.nasaapplication.R
+import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragment
 
 class SearchNASAArchiveFragmentAdapter(
@@ -60,6 +61,9 @@ class SearchNASAArchiveFragmentAdapter(
             it.setOnClickListener {
                 if (!searchNASAArchiveFragment.getIsBlockingOtherFABButtons()) {
                     // Сохранение ссылки на картинку, заголовка и описания в "Избранное"
+                    searchNASAArchiveFragment.getMainActivity()
+                        .setListFavoriteDataTypeSource(
+                            ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
                     searchNASAArchiveFragment.getMainActivity()
                         .setListFavoriteDataLinkImage(entitiesLinks[position])
                     searchNASAArchiveFragment.getMainActivity()

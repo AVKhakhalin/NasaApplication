@@ -24,6 +24,7 @@ import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialo
 import com.example.nasaapplication.controller.observers.viewmodels.POD.PODData
 import com.example.nasaapplication.controller.observers.viewmodels.POD.PODViewModel
 import com.example.nasaapplication.databinding.FragmentDayPhotoBinding
+import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
@@ -79,6 +80,7 @@ class DayPhotoFragment:
         // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
         mainActivity.setListFavoriteEmptyData()
         if (mainActivity.getIsFavorite()) mainActivity.changeHeartIconState(mainActivity)
+
         // Метод проверки наличия текущей информации в списке "Избранное"
         // и отрисовка соответствующего значка сердца (контурная или с заливкой)
         // TODO: ДОДЕЛАТЬ
@@ -165,14 +167,6 @@ class DayPhotoFragment:
                 toast(data.error.message)
             }
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     //region МЕТОДЫ РАБОТЫ С BottomSheet
@@ -279,6 +273,22 @@ class DayPhotoFragment:
         Toast.makeText(context, string, Toast.LENGTH_SHORT).apply {
             setGravity(Gravity.BOTTOM, 0, 250)
             show()
+        }
+    }
+
+    // Метод установки элемента из списка "Избранное" для просмотра в данном фрагменте
+    fun setAndShowFavoriteData(favoriteData: Favorite) {
+        // Отображение элемента из списка "Избранное" для просмотра в данном фрагменте
+        favoriteData?.let { favoriteData ->
+            if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                currentDateTextView?.let {
+                    it.text = "${ConstantsUi.DAY_PHOTO_TEXT} ${favoriteData.getSearchRequest()}"
+                }
+                viewModel.getData(favoriteData.getSearchRequest())
+                    .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
+                // Сохранение запроса в "Избранное"
+                mainActivity.setListFavoriteDataSearchRequest(curDate)
+            }
         }
     }
 }

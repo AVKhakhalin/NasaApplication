@@ -3,8 +3,12 @@ package com.example.nasaapplication.ui.fragments.contents
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.get
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.nasaapplication.R
+import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.controller.recyclers.FavoriteRecyclerListFragmentAdapter
 import com.example.nasaapplication.controller.recyclers.FavoriteRecyclerListFragmentOnItemClickListener
 import com.example.nasaapplication.controller.recyclers.utils.ItemTouchHelperViewHolder
@@ -32,8 +36,41 @@ class FavoriteRecyclerListFragment(
         val adapter = FavoriteRecyclerListFragmentAdapter(
         object: FavoriteRecyclerListFragmentOnItemClickListener {
             override fun onItemClick(favoriteData: Favorite) {
-                Toast.makeText(requireContext(), favoriteData.getTitle(),
-                    Toast.LENGTH_SHORT).show()
+                // Открытие данных во фрагментах
+                when(favoriteData.getTypeSource()) {
+                    ConstantsController.DAY_PHOTO_FRAGMENT_INDEX -> {
+                        mainActivity.getViewPager().currentItem =
+                            ConstantsController.DAY_PHOTO_FRAGMENT_INDEX
+                        (mainActivity.getViewPagerAdapter()
+                            .getFragments()[ConstantsController.DAY_PHOTO_FRAGMENT_INDEX]
+                                as DayPhotoFragment).setAndShowFavoriteData(favoriteData)
+                        mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
+                        mainActivity.binding.transparentBackground.visibility = View.VISIBLE
+                    }
+                    ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX -> {
+                        mainActivity.getViewPager().currentItem =
+                            ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX
+                        (mainActivity.getViewPagerAdapter()
+                            .getFragments()[ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX]
+                                as SearchWikiFragment).setAndShowFavoriteData(favoriteData)
+                        mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
+                        mainActivity.binding.transparentBackground.visibility = View.VISIBLE
+                    }
+                    ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX -> {
+                        mainActivity.getViewPager().currentItem =
+                            ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
+                        (mainActivity.getViewPagerAdapter()
+                            .getFragments()[ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
+                                as SearchNASAArchiveFragment).setAndShowFavoriteData(favoriteData)
+                        mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
+                        mainActivity.binding.transparentBackground.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        Toast.makeText(context, "${getString(R.string.error)}: ${
+                            getString(R.string.unknown_type_source_favorite_data)}",
+                            Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         }, mainActivity.getFavoriteDataList(), mainActivity)
         binding.favoriteRecyclerListView.adapter = adapter

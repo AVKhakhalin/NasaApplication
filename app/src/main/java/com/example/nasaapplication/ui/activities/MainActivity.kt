@@ -549,7 +549,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             binding.fabButtonsGroup.visibility = View.INVISIBLE
             hideAndShowFragmentsContainersAndDismissDialogs()
             isFABButtonsGroupView = false
-            binding.viewPager.currentItem = 0
+            binding.viewPager.currentItem = ConstantsController.DAY_PHOTO_FRAGMENT_INDEX
             // Проба анимации кнопки
 //            TransitionManager.beginDelayedTransition(binding.fabButtonsContainer, Slide(Gravity.END))
 //            binding.fabButtonDayPhoto.visibility = View.GONE
@@ -568,7 +568,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 binding.fabButtonsGroup.visibility = View.INVISIBLE
                 hideAndShowFragmentsContainersAndDismissDialogs()
                 isFABButtonsGroupView = false
-                binding.viewPager.currentItem = 1
+                binding.viewPager.currentItem = ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX
                 isBlockingOtherFABButtons = false
                 // Установка анимационного просветления фона
                 setHideShowBackgroundAnimation(
@@ -584,7 +584,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 binding.fabButtonsGroup.visibility = View.INVISIBLE
                 hideAndShowFragmentsContainersAndDismissDialogs()
                 isFABButtonsGroupView = false
-                binding.viewPager.currentItem = 2
+                binding.viewPager.currentItem =
+                    ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
                 isBlockingOtherFABButtons = false
                 // Установка анимационного просветления фона
                 setHideShowBackgroundAnimation(
@@ -726,4 +727,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         return colorTypedValue
     }
     //endregion
+
+    // Получение viewPagerAdapter
+    fun getViewPagerAdapter(): ViewPagerAdapter {
+        return viewPagerAdapter
+    }
 }
