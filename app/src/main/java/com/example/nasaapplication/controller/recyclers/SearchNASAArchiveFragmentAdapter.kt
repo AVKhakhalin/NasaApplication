@@ -44,8 +44,7 @@ class SearchNASAArchiveFragmentAdapter(
         parent: ViewGroup,
         viewType: Int
     ): SearchNASAArchiveFragmentViewHolder {
-        val newNASAArchiveItemView =
-            LayoutInflater.from(parent.context)
+        val newNASAArchiveItemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.fragment_search_in_nasa_archive_recycler_item,
                     parent, false)
         return SearchNASAArchiveFragmentViewHolder(newNASAArchiveItemView)
@@ -77,6 +76,22 @@ class SearchNASAArchiveFragmentAdapter(
                         .setListFavoriteDataTitle(newNASAArchiveEntityList[position])
                     searchNASAArchiveFragment.getMainActivity()
                         .setListFavoriteDataDescription(entitiesTexts[position])
+                    searchNASAArchiveFragment.getMainActivity()
+                        .setListFavoriteDataLinkSource(
+                    searchNASAArchiveFragment.getDataViewModel().getRequestUrl())
+                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite().setSearchRequest(
+                        "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}")
+                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite()
+                        .setTypeSource(ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
+                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite()
+                        .setLinkImage(entitiesLinks[position])
+                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite()
+                        .setTitle(newNASAArchiveEntityList[position])
+                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite()
+                        .setDescription(entitiesTexts[position])
+                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite()
+                        .setLinkSource(
+                    searchNASAArchiveFragment.getDataViewModel().getRequestUrl())
                     // Анимированное появление найденной картинки по запросу в архиве NASA
                     searchNASAArchiveFragment.binding.searchInNasaArchiveImageView.alpha =
                         transparientValue

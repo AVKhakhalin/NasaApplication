@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.*
+import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
@@ -165,7 +166,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         }
     }
     // Переключение режима нижней навигационной кнопки BottomAppBar
-    // с центрального на крайнее левое положение и обратно
+    // с центрального на крайнее правое положение и обратно
     fun switchBottomAppBar(context: MainActivity) {
         // Отключение блокировки всех кнопок, кроме кнопок, появившихся из FAB
         isBlockingOtherFABButtons = false
@@ -216,17 +217,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             searchedEditText.setBackgroundResource(R.drawable.search_view_shape)
             searchedEditText.setTextColor(colorTypedValue.data)
             searchedEditText.setHintTextColor(colorTypedValue.data)
-//            if (isThemeDay) {
-//                searchedEditText.setTextColor(resources.getColor(
-//                    R.color.bottom_sheet_background_color_night_description_text_day))
-//                searchedEditText.setHintTextColor(resources.getColor(
-//                    R.color.bottom_sheet_background_color_night_description_text_day))
-//            } else {
-//                searchedEditText.setTextColor(resources.getColor(
-//                    R.color.bottom_sheet_background_color_night_description_text_night))
-//                searchedEditText.setHintTextColor(resources.getColor(
-//                    R.color.bottom_sheet_background_color_night_description_text_night))
-//            }
             // Установка размера поискового текста
             searchedEditText.setTextSize(ConstantsUi.SEARCH_FIELD_TEXT_SIZE)
             // Установка значка поиска внутри editText (без исчезновения)
@@ -249,6 +239,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 ContextCompat.getDrawable(context, R.drawable.ic_plus_fab)
             )
             binding.bottomNavigationMenu.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
+            // Изменение вида иконки сердца
+            changeHeartIconState(this, false, false)
         }
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -738,7 +730,14 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         return favoriteListData.getDatesList()
     }
     // Проверка на то, что новые данные уже есть в списке "Избранное"
-    fun checkSimilarFavoriteData(newFavorite: Favorite): Boolean {
+    fun checkSimilarFavoriteData(): Boolean {
+        Log.d("mylogs",
+            "\n\nMainActivity:\n${newFavorite.getLinkImage()}" +
+                    "\n${newFavorite.getLinkSource()}" +
+                    "\n${newFavorite.getSearchRequest()}" +
+                    "\n${newFavorite.getTypeSource()}" +
+                    "\n${newFavorite.getDescription()}" +
+                    "\n${newFavorite.getTitle()}\n")
         return favoriteListData.checkSimilarFavoriteData(newFavorite)
     }
     //endregion

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.nasaapplication.controller.ConstantsController
+import com.example.nasaapplication.repository.ConstantsRepository
 import com.example.nasaapplication.repository.facadeuser.NASAArchive.NASAArchiveRetrofitImpl
 import com.example.nasaapplication.repository.facadeuser.NASAArchive.NASAArchiveServerResponseWelcome
 import retrofit2.Call
@@ -14,6 +15,16 @@ class NASAArchiveDataViewModel (
     private val liveDataForViewToObserve: MutableLiveData<NASAArchiveData> = MutableLiveData(),
     private val retrofitImpl: NASAArchiveRetrofitImpl = NASAArchiveRetrofitImpl()
 ): ViewModel() {
+    // ЗАДАНИЕ ПЕРЕМЕННЫХ
+    // Ссылка запроса для сохранения в списке "Избранное"
+    private var baseUrl: String = "${ConstantsRepository.NASA_ARCHIVE_BASE_URL}search?q="
+    private var requestUrl: String = ""
+    //endregion
+
+    fun getRequestUrl(): String {
+        return requestUrl
+    }
+
     fun getData(request: String): LiveData<NASAArchiveData> {
         sendServerRequest(request)
         return liveDataForViewToObserve
@@ -27,6 +38,9 @@ class NASAArchiveDataViewModel (
                 call: Call<NASAArchiveServerResponseWelcome>,
                 response: Response<NASAArchiveServerResponseWelcome>
             ) {
+                // Сохранение ссылки запроса
+                requestUrl = "$baseUrl$request&media_type=image"
+                // Выполнение запроса
                 if (response.isSuccessful && response.body() != null) {
                     liveDataForViewToObserve.value =
                         NASAArchiveData.Success(response.body()!!)

@@ -27,45 +27,6 @@ class FavoriteLogic {
             }
         }
         if (indexSimilarData == -1) datesList.add(newFavorite)
-        if (datesList.size == 5) {
-            Log.d("mylogs",
-                "\n\n${datesList[0].getLinkImage()}" +
-                        "\n${datesList[0].getLinkSource()}" +
-                        "\n${datesList[0].getSearchRequest()}" +
-                        "\n${datesList[0].getTypeSource()}" +
-                        "\n${datesList[0].getDescription()}" +
-                        "\n${datesList[0].getTitle()}" +
-                        "\n" +
-                        "\n${datesList[1].getLinkImage()}" +
-                        "\n${datesList[1].getLinkSource()}" +
-                        "\n${datesList[1].getSearchRequest()}" +
-                        "\n${datesList[1].getTypeSource()}" +
-                        "\n${datesList[1].getDescription()}" +
-                        "\n${datesList[1].getTitle()}" +
-                        "\n" +
-                        "\n${datesList[2].getLinkImage()}" +
-                        "\n${datesList[2].getLinkSource()}" +
-                        "\n${datesList[2].getSearchRequest()}" +
-                        "\n${datesList[2].getTypeSource()}" +
-                        "\n${datesList[2].getDescription()}" +
-                        "\n${datesList[2].getTitle()}" +
-                        "\n" +
-                        "\n${datesList[3].getLinkImage()}" +
-                        "\n${datesList[3].getLinkSource()}" +
-                        "\n${datesList[3].getSearchRequest()}" +
-                        "\n${datesList[3].getTypeSource()}" +
-                        "\n${datesList[3].getDescription()}" +
-                        "\n${datesList[3].getTitle()}" +
-                        "\n" +
-                        "\n${datesList[4].getLinkImage()}" +
-                        "\n${datesList[4].getLinkSource()}" +
-                        "\n${datesList[4].getSearchRequest()}" +
-                        "\n${datesList[4].getTypeSource()}" +
-                        "\n${datesList[4].getDescription()}" +
-                        "\n${datesList[4].getTitle()}" +
-                        "\n" +
-                        "\n$indexSimilarData")
-        }
         return indexSimilarData
     }
     //endregion

@@ -8,6 +8,7 @@ import android.transition.ChangeBounds
 import android.transition.ChangeImageTransform
 import android.transition.TransitionManager
 import android.transition.TransitionSet
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
@@ -61,6 +62,8 @@ class DayPhotoFragment:
     private val durationAnimation: Long = 800
     private val transparientValue: Float = 0f
     private val notTransparientValue: Float = 1f
+    // Данные для списка "Избранное"
+    private var dayPhotoFavorite: Favorite = Favorite()
     //endregion
 
     companion object {
@@ -78,14 +81,17 @@ class DayPhotoFragment:
 
     override fun onResume() {
         // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
-        mainActivity.setListFavoriteEmptyData()
-        // Изменение вида иконки сердца на контурное
-        if (mainActivity.getIsFavorite()) mainActivity
-            .changeHeartIconState(mainActivity, false, true)
+        mainActivity.setListFavoriteDataTypeSource(dayPhotoFavorite.getTypeSource())
+        mainActivity.setListFavoriteDataTitle(dayPhotoFavorite.getTitle())
+        mainActivity.setListFavoriteDataDescription(dayPhotoFavorite.getDescription())
+        mainActivity.setListFavoriteDataLinkSource(dayPhotoFavorite.getLinkSource())
+        mainActivity.setListFavoriteDataPriority(dayPhotoFavorite.getPriority())
+        mainActivity.setListFavoriteDataSearchRequest(dayPhotoFavorite.getSearchRequest())
+        mainActivity.setListFavoriteDataLinkImage(dayPhotoFavorite.getLinkImage())
 
         // Метод проверки наличия текущей информации в списке "Избранное"
         // и отрисовка соответствующего значка сердца (контурная или с заливкой)
-        // TODO: ДОДЕЛАТЬ
+        checkAndChangeHeartIconState()
         super.onResume()
     }
 
@@ -116,6 +122,14 @@ class DayPhotoFragment:
                     mainActivity.setListFavoriteDataTypeSource(
                         ConstantsController.DAY_PHOTO_FRAGMENT_INDEX)
                     mainActivity.setListFavoriteDataPriority(ConstantsUi.PRIORITY_LOW)
+                    dayPhotoFavorite.setSearchRequest(curDate)
+                    dayPhotoFavorite.setLinkSource(viewModel.getRequestUrl())
+                    dayPhotoFavorite.setTitle(serverResponseData.title ?: "")
+                    dayPhotoFavorite.setDescription(serverResponseData.explanation ?: "")
+                    dayPhotoFavorite.setLinkImage(url)
+                    dayPhotoFavorite.setTypeSource(ConstantsController.DAY_PHOTO_FRAGMENT_INDEX)
+                    dayPhotoFavorite.setPriority(ConstantsUi.PRIORITY_LOW)
+
                     // Отображение результатов запроса
                     binding.pODImageView.alpha = transparientValue
                     binding.pODImageView.load(url) {
@@ -159,6 +173,10 @@ class DayPhotoFragment:
 
                     // Сброс типа анимации для изменения размера фотографии
                     typeChangeImage = 0
+
+                    // Метод проверки наличия текущей информации в списке "Избранное"
+                    // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+                    checkAndChangeHeartIconState()
                 }
             }
             is PODData.Loading -> {
@@ -204,6 +222,7 @@ class DayPhotoFragment:
                             .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
                         // Сохранение запроса в "Избранное"
                         mainActivity.setListFavoriteDataSearchRequest(curDate)
+                        dayPhotoFavorite.setSearchRequest(curDate)
                     }
                 }
             }
@@ -222,6 +241,7 @@ class DayPhotoFragment:
                             .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
                         // Сохранение запроса в "Избранное"
                         mainActivity.setListFavoriteDataSearchRequest(curDate)
+                        dayPhotoFavorite.setSearchRequest(curDate)
                     }
                 }
             }
@@ -240,6 +260,7 @@ class DayPhotoFragment:
                             .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
                         // Сохранение запроса в "Избранное"
                         mainActivity.setListFavoriteDataSearchRequest(curDate)
+                        dayPhotoFavorite.setSearchRequest(curDate)
                     }
                 }
             }
@@ -309,7 +330,17 @@ class DayPhotoFragment:
                     .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
                 // Сохранение запроса в "Избранное"
                 mainActivity.setListFavoriteDataSearchRequest(favoriteData.getSearchRequest())
+                dayPhotoFavorite.setSearchRequest(favoriteData.getSearchRequest())
             }
         }
+    }
+
+    // Метод проверки наличия текущей информации в списке "Избранное"
+    // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+    private fun checkAndChangeHeartIconState() {
+        if (mainActivity.checkSimilarFavoriteData())
+            mainActivity.changeHeartIconState(mainActivity, true, false)
+        else
+            mainActivity.changeHeartIconState(mainActivity, false, true)
     }
 }

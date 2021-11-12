@@ -77,8 +77,7 @@ class FavoriteRecyclerListFragment(
                     }
                     else -> {
                         Toast.makeText(context, "${getString(R.string.error)}: ${
-                            getString(R.string.unknown_type_source_favorite_data)}",
-                            Toast.LENGTH_LONG).show()
+                            getString(R.string.unknown_type_source_favorite_data)}", Toast.LENGTH_LONG).show()
                     }
                 }
             }

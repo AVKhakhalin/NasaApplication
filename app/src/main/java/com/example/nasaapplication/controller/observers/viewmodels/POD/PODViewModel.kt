@@ -19,7 +19,7 @@ class PODViewModel (
 
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     private var curDate: String = ""
-    // Ссылка запроса для сохранения в избранных данных
+    // Ссылка запроса для сохранения в списке "Избранное"
     private var baseUrl: String = "${ConstantsRepository.POD_BASE_URL}planetary/apod?date="
     private var requestUrl: String = ""
     //endregion

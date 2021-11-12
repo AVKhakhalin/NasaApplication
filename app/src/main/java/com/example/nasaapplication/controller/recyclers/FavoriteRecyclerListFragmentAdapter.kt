@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nasaapplication.R
@@ -20,7 +19,6 @@ import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 
-
 class FavoriteRecyclerListFragmentAdapter (
     private var onListItemClickListener: FavoriteRecyclerListFragmentOnItemClickListener,
     private var favoriteData: MutableList<Favorite>,
@@ -28,7 +26,7 @@ class FavoriteRecyclerListFragmentAdapter (
 ): RecyclerView.Adapter<BaseViewHolder>(), ItemTouchHelperAdapter {
     //region БАЗОВЫЕ МЕТОДЫ ДЛЯ РАБОТЫ АДАПТЕРА
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        return when(viewType){
+        return when(viewType) {
             ConstantsController.DAY_PHOTO_FRAGMENT_INDEX -> {
                 val binding: FavoriteListRecyclerItemPhotoOfDayBinding =
                     FavoriteListRecyclerItemPhotoOfDayBinding
@@ -85,6 +83,10 @@ class FavoriteRecyclerListFragmentAdapter (
                 // Загрузка информации по выбранному элементу на странице фрагмента "Картинка дня"
                 recyclerItemPhotoOfDayTypeImage.setOnClickListener {
                     onListItemClickListener.onItemClick(itemFavoriteData)
+                    // Переключение режима нижней навигационной кнопки BottomAppBar
+                    // с крайнего правого положения в центральное
+                    mainActivity.setIsMain(false)
+                    mainActivity.switchBottomAppBar(mainActivity)
                 }
                 //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
                 recyclerItemPhotoOfDayPriorityHigh.setOnClickListener {
@@ -153,6 +155,10 @@ class FavoriteRecyclerListFragmentAdapter (
                 // на странице фрагмента с поиском в Википедии
                 recyclerItemSearchInWikiTypeImage.setOnClickListener {
                     onListItemClickListener.onItemClick(itemFavoriteData)
+                    // Переключение режима нижней навигационной кнопки BottomAppBar
+                    // с крайнего правого положения в центральное
+                    mainActivity.setIsMain(false)
+                    mainActivity.switchBottomAppBar(mainActivity)
                 }
                 //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
                 recyclerItemSearchInWikiPriorityHigh.setOnClickListener {
@@ -220,6 +226,10 @@ class FavoriteRecyclerListFragmentAdapter (
                 // на странице фрагмента поиска в архиве NASA
                 recyclerItemSearchInNasaTypeImage.setOnClickListener {
                     onListItemClickListener.onItemClick(itemFavoriteData)
+                    // Переключение режима нижней навигационной кнопки BottomAppBar
+                    // с крайнего правого положения в центральное
+                    mainActivity.setIsMain(false)
+                    mainActivity.switchBottomAppBar(mainActivity)
                 }
                 //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
                 recyclerItemSearchInNasaPriorityHigh.setOnClickListener {

@@ -8,6 +8,7 @@ import android.transition.ChangeBounds
 import android.transition.ChangeImageTransform
 import android.transition.TransitionManager
 import android.transition.TransitionSet
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
@@ -61,6 +62,8 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     private val durationAnimation: Long = 800
     private val transparientValue: Float = 0f
     private val notTransparientValue: Float = 1f
+    // Данные для списка "Избранное"
+    private var searchNASAArchiveFavorite: Favorite = Favorite()
     //endregion
 
     companion object {
@@ -78,13 +81,28 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
 
     override fun onResume() {
         // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
-        mainActivity.setListFavoriteEmptyData()
-        // Изменение вида иконки сердца на контурное
-        if (mainActivity.getIsFavorite()) mainActivity
-            .changeHeartIconState(mainActivity, false, true)
+        mainActivity.setListFavoriteDataTypeSource(searchNASAArchiveFavorite.getTypeSource())
+        mainActivity.setListFavoriteDataTitle(searchNASAArchiveFavorite.getTitle())
+        mainActivity.setListFavoriteDataDescription(searchNASAArchiveFavorite.getDescription())
+        mainActivity.setListFavoriteDataLinkSource(searchNASAArchiveFavorite.getLinkSource())
+        mainActivity.setListFavoriteDataPriority(searchNASAArchiveFavorite.getPriority())
+        mainActivity.setListFavoriteDataSearchRequest(searchNASAArchiveFavorite.getSearchRequest())
+        mainActivity.setListFavoriteDataLinkImage(searchNASAArchiveFavorite.getLinkImage())
+
+        Log.d("mylogs",
+            "\n\n${searchNASAArchiveFavorite.getLinkImage()}" +
+                    "\n${searchNASAArchiveFavorite.getLinkSource()}" +
+                    "\n${searchNASAArchiveFavorite.getSearchRequest()}" +
+                    "\n${searchNASAArchiveFavorite.getTypeSource()}" +
+                    "\n${searchNASAArchiveFavorite.getDescription()}" +
+                    "\n${searchNASAArchiveFavorite.getTitle()}\n")
+
         // Метод проверки наличия текущей информации в списке "Избранное"
         // и отрисовка соответствующего значка сердца (контурная или с заливкой)
-        // TODO: ДОДЕЛАТЬ
+        if (mainActivity.checkSimilarFavoriteData())
+            mainActivity.changeHeartIconState(mainActivity, true, false)
+        else
+            mainActivity.changeHeartIconState(mainActivity, false, true)
         super.onResume()
     }
 
@@ -245,6 +263,7 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                             tempDescription += "$it\n"
                         }
                         mainActivity.setListFavoriteDataDescription(tempDescription)
+                        searchNASAArchiveFavorite.setDescription(tempDescription)
                     }
                 } else {
                     // Скрытие неиспользуемых полей
@@ -258,6 +277,8 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                     binding.searchInNasaArchiveTitleTextView.visibility = View.VISIBLE
                     // Сохранение в "Избранное" ответа об отсутствии информации на сервере NASA
                     mainActivity.setListFavoriteDataDescription(
+                        ConstantsController.ERROR_EMPTY_DOWNLOAD_DATES)
+                    searchNASAArchiveFavorite.setDescription(
                         ConstantsController.ERROR_EMPTY_DOWNLOAD_DATES)
                 }
             }
@@ -363,5 +384,16 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
             binding.fragmentSearchInNasaArchiveGroupElements.visibility = View.VISIBLE
             binding.searchInNasaArchiveLoadingLayout.visibility = View.INVISIBLE
         }
+    }
+
+    // Получение текущих данных для "Избранное" на фрагменте с поиском в архиве NASA
+    fun getSearchNASAArchiveFavorite(): Favorite {
+        return searchNASAArchiveFavorite
+    }
+
+    // Получение dataViewModel
+    @JvmName("getDataViewModel1")
+    fun getDataViewModel(): NASAArchiveDataViewModel {
+        return dataViewModel
     }
 }

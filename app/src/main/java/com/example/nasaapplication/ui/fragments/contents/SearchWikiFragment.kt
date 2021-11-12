@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -32,7 +33,6 @@ import java.net.URL
 import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
-
 class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     FragmentSearchInWikiBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
@@ -51,6 +51,8 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     private val durationAnimation: Long = 1000
     private val transparientValue: Float = 0f
     private val notTransparientValue: Float = 1f
+    // Данные для списка "Избранное"
+    private var searchWikiFavorite: Favorite = Favorite()
     //endregion
 
     companion object {
@@ -68,13 +70,16 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
 
     override fun onResume() {
         // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
-        mainActivity.setListFavoriteEmptyData()
-        // Изменение вида иконки сердца на контурное
-        if (mainActivity.getIsFavorite()) mainActivity
-            .changeHeartIconState(mainActivity, false, true)
+        mainActivity.setListFavoriteDataTypeSource(searchWikiFavorite.getTypeSource())
+        mainActivity.setListFavoriteDataTitle(searchWikiFavorite.getTitle())
+        mainActivity.setListFavoriteDataDescription(searchWikiFavorite.getDescription())
+        mainActivity.setListFavoriteDataLinkSource(searchWikiFavorite.getLinkSource())
+        mainActivity.setListFavoriteDataPriority(searchWikiFavorite.getPriority())
+        mainActivity.setListFavoriteDataSearchRequest(searchWikiFavorite.getSearchRequest())
+        mainActivity.setListFavoriteDataLinkImage(searchWikiFavorite.getLinkImage())
         // Метод проверки наличия текущей информации в списке "Избранное"
         // и отрисовка соответствующего значка сердца (контурная или с заливкой)
-        // TODO: ДОДЕЛАТЬ
+        checkAndChangeHeartIconState()
         super.onResume()
     }
 
@@ -82,7 +87,7 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Установка прозрачного фона для элемента Webview
+        // Установка прозрачного фона для элемента WebView
         binding.webViewContainer.setBackgroundColor(Color.TRANSPARENT)
         // Установка слушателя при нажатии на кнопку поиска в "Википедии"
         binding.inputWikiField.setEndIconOnClickListener {
@@ -98,16 +103,6 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
                     showUrlInWiki(
                         "${ConstantsUi.WIKI_URL}${
                             binding.inputWikiFieldText.text.toString()}")
-                    // Сохранение запроса в "Избранное"
-                    mainActivity.setListFavoriteDataSearchRequest(
-                        "${binding.inputWikiFieldText.text.toString()}")
-                    mainActivity.setListFavoriteDataTypeSource(
-                        ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX)
-                    mainActivity.setListFavoriteDataPriority(ConstantsUi.PRIORITY_LOW)
-                    mainActivity.setListFavoriteDataLinkSource("${ConstantsUi.WIKI_URL}${
-                        binding.inputWikiFieldText.text.toString()}")
-                    mainActivity.setListFavoriteDataTitle(
-                        "${binding.inputWikiFieldText.text.toString()}")
                 }
             }
         }
@@ -116,14 +111,37 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
             override fun onPageFinished(view: WebView, url: String) {
                 // Анимация появления Web View с результатами поиска
                 animatedShowWebView()
+                // Метод проверки наличия текущей информации в списке "Избранное"
+                // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+                checkAndChangeHeartIconState()
             }
         }
     }
 
     fun showUrlInWiki(urlString: String){
+        // Сохранение запроса в "Избранное"
+        mainActivity.setListFavoriteDataSearchRequest(
+            "${binding.inputWikiFieldText.text.toString()}")
+        mainActivity.setListFavoriteDataTypeSource(
+            ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX)
+        mainActivity.setListFavoriteDataPriority(ConstantsUi.PRIORITY_LOW)
+        mainActivity.setListFavoriteDataLinkSource("${ConstantsUi.WIKI_URL}${
+            binding.inputWikiFieldText.text.toString()}")
+        mainActivity.setListFavoriteDataTitle(
+            "${binding.inputWikiFieldText.text.toString()}")
+        searchWikiFavorite.setSearchRequest(
+            "${binding.inputWikiFieldText.text.toString()}")
+        searchWikiFavorite.setTypeSource(
+            ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX)
+        searchWikiFavorite.setPriority(ConstantsUi.PRIORITY_LOW)
+        searchWikiFavorite.setLinkSource("${ConstantsUi.WIKI_URL}${
+            binding.inputWikiFieldText.text.toString()}")
+        searchWikiFavorite.setTitle(
+            "${binding.inputWikiFieldText.text.toString()}")
+        // Отображение результата запроса
         val url = URL(urlString)
         binding.webViewContainer.alpha = transparientValue
-        Thread{
+        Thread {
             val urlConnection = url.openConnection() as HttpsURLConnection
             urlConnection.requestMethod = ConstantsUi.SHOWURLINWIKI_METHOD_NAME
             urlConnection.readTimeout = ConstantsUi.SHOWURLINWIKI_READ_TIME_OUT
@@ -137,6 +155,7 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
                 val result = getLines(reader)
                 // Сохранение результата запроса в "Избранное"
                 mainActivity.setListFavoriteDataDescription(result)
+                searchWikiFavorite.setDescription(result)
                 // Отображение результата запроса
                 val handler = Handler(Looper.getMainLooper())
                 handler.post {
@@ -151,6 +170,9 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
             } else {
                 // Сохранение результата запроса в "Избранное"
                 mainActivity.setListFavoriteDataDescription(
+                    resources.getString(R.string.error_wiki_empty_request)
+                        .replace("<Br><Br>"," "))
+                searchWikiFavorite.setDescription(
                     resources.getString(R.string.error_wiki_empty_request)
                         .replace("<Br><Br>"," "))
                 // Отображение сообщения об отсутствии результата по запросу
@@ -191,5 +213,14 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
             binding.inputWikiFieldText.setText(it.getSearchRequest())
             showUrlInWiki(it.getLinkSource())
         }
+    }
+
+    // Метод проверки наличия текущей информации в списке "Избранное"
+    // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+    private fun checkAndChangeHeartIconState() {
+        if (mainActivity.checkSimilarFavoriteData())
+            mainActivity.changeHeartIconState(mainActivity, true, false)
+        else
+            mainActivity.changeHeartIconState(mainActivity, false, true)
     }
 }
