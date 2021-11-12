@@ -69,7 +69,9 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     override fun onResume() {
         // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
         mainActivity.setListFavoriteEmptyData()
-        if (mainActivity.getIsFavorite()) mainActivity.changeHeartIconState(mainActivity)
+        // Изменение вида иконки сердца на контурное
+        if (mainActivity.getIsFavorite()) mainActivity
+            .changeHeartIconState(mainActivity, false, true)
         // Метод проверки наличия текущей информации в списке "Избранное"
         // и отрисовка соответствующего значка сердца (контурная или с заливкой)
         // TODO: ДОДЕЛАТЬ
@@ -85,6 +87,11 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
         // Установка слушателя при нажатии на кнопку поиска в "Википедии"
         binding.inputWikiField.setEndIconOnClickListener {
             if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                // Очистка текущей информации для добавления в список "Избранное"
+                mainActivity.setListFavoriteEmptyData()
+                // Изменение вида иконки сердца на контурное
+                mainActivity.changeHeartIconState(mainActivity, false, true)
+                // Получение новой информации из "Википедии"
                 if ((binding.inputWikiFieldText.text != null) &&
                 (binding.inputWikiFieldText.text!!.length <=
                         binding.inputWikiField.counterMaxLength)) {

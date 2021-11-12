@@ -336,9 +336,12 @@ class FavoriteRecyclerListFragmentAdapter (
             favoriteData.add(
                 if (toPosition > fromPosition) toPosition - 1 else toPosition, this)
         }
-        if (toPosition > fromPosition) notifyItemMoved(fromPosition, toPosition - 1)
-        else notifyItemMoved(fromPosition, toPosition)
-        Toast.makeText(mainActivity, "$fromPosition $toPosition", Toast.LENGTH_SHORT).show()
+        if (toPosition > fromPosition) {
+            notifyItemMoved(fromPosition, toPosition) // Удивительно, но в этом случае все работает
+        }
+        else {
+            notifyItemMoved(fromPosition, toPosition) // Удивительно, но в этом случае все работает
+        }
     }
     override fun onItemDismiss(position: Int) {
         favoriteData.removeAt(position)

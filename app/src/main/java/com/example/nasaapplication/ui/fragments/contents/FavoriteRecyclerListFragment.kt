@@ -37,6 +37,10 @@ class FavoriteRecyclerListFragment(
                 // Открытие данных во фрагментах
                 when(favoriteData.getTypeSource()) {
                     ConstantsController.DAY_PHOTO_FRAGMENT_INDEX -> {
+                        // Очистка текущей информации для списка "Избранное"
+                        // при переключении на фрагмент "Картинка дня"
+                        mainActivity.setListFavoriteEmptyData()
+                        // Открытие выбранной информации во фрагменте "Картинка дня"
                         mainActivity.getViewPager().currentItem =
                             ConstantsController.DAY_PHOTO_FRAGMENT_INDEX
                         (mainActivity.getViewPagerAdapter()
@@ -46,6 +50,10 @@ class FavoriteRecyclerListFragment(
                         mainActivity.binding.transparentBackground.visibility = View.VISIBLE
                     }
                     ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX -> {
+                        // Очистка текущей информации для списка "Избранное"
+                        // при переключении на фрагмент с поиском в Википедии
+                        mainActivity.setListFavoriteEmptyData()
+                        // Открытие выбранной информации во фрагменте с поиском в Википедии
                         mainActivity.getViewPager().currentItem =
                             ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX
                         (mainActivity.getViewPagerAdapter()
@@ -55,6 +63,10 @@ class FavoriteRecyclerListFragment(
                         mainActivity.binding.transparentBackground.visibility = View.VISIBLE
                     }
                     ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX -> {
+                        // Очистка текущей информации для списка "Избранное"
+                        // при переключении на фрагмент с поиском в архиве NASA
+                        mainActivity.setListFavoriteEmptyData()
+                        // Открытие выбранной информации во фрагменте с поиском в архиве NASA
                         mainActivity.getViewPager().currentItem =
                             ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
                         (mainActivity.getViewPagerAdapter()

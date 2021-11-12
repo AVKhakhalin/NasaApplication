@@ -20,7 +20,8 @@ class PODViewModel (
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     private var curDate: String = ""
     // Ссылка запроса для сохранения в избранных данных
-    private var requestUrl: String = "${ConstantsRepository.POD_BASE_URL}planetary/apod?date="
+    private var baseUrl: String = "${ConstantsRepository.POD_BASE_URL}planetary/apod?date="
+    private var requestUrl: String = ""
     //endregion
 
     fun getRequestUrl(): String {
@@ -39,7 +40,7 @@ class PODViewModel (
             PODData.Error(Throwable(ConstantsController.ERROR_NO_API_KEY))
         } else {
             // Сохранение ссылки запроса
-            requestUrl += "${getCurDate()}&api_key=${ConstantsController.API_KEY}"
+            requestUrl = "$baseUrl${getCurDate()}&api_key=${ConstantsController.API_KEY}"
             // Выполнение запроса
             retrofitImpl.getRetrofitImpl().getPictureOfTheDay(getCurDate(),
                 ConstantsController.API_KEY).enqueue(object:

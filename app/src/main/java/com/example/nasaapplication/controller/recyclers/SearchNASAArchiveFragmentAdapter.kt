@@ -60,7 +60,14 @@ class SearchNASAArchiveFragmentAdapter(
         holder.newNASAArchiveEntityTextViewContainer?.let {
             it.setOnClickListener {
                 if (!searchNASAArchiveFragment.getIsBlockingOtherFABButtons()) {
-                    // Сохранение ссылки на картинку, заголовка и описания в "Избранное"
+                    // Очистка текущей информации для добавления в список "Избранное"
+                    searchNASAArchiveFragment.getMainActivity().setListFavoriteEmptyData()
+                    // Изменение вида иконки сердца на контурное
+                    searchNASAArchiveFragment.getMainActivity().changeHeartIconState(
+                        searchNASAArchiveFragment.getMainActivity(), false, true)
+                    // Сохранение запроса, ссылки на картинку, заголовка и описания в "Избранное"
+                    searchNASAArchiveFragment.getMainActivity().setListFavoriteDataSearchRequest(
+                        "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}")
                     searchNASAArchiveFragment.getMainActivity()
                         .setListFavoriteDataTypeSource(
                             ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)

@@ -1,10 +1,5 @@
 package com.example.nasaapplication.ui
 
-import android.os.Handler
-import android.os.Looper
-import java.io.BufferedReader
-import java.io.InputStreamReader
-
 // Класс с константами для Ui
 class ConstantsUi {
     companion object {

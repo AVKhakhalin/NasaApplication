@@ -268,6 +268,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 }
             R.id.action_bottom_bar_open_favorite_list ->
                 if (!isBlockingOtherFABButtons) {
+                    // Очистка текущей информации для добавления в список "Избранное"
+                    setListFavoriteEmptyData()
                     // Отображение фрагмента со списком "Избранное"
                     showFavoriteRecyclerListFragment()
                 }
@@ -277,7 +279,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     val indexSimilarData: Int = favoriteListData.addFavoriteData(newFavorite)
                     if (indexSimilarData == -1) {
                         // Изменение вида иконки сердца
-                        changeHeartIconState(this)
+                        changeHeartIconState(this, true, false)
                         // Уведомление пользователя о добавлении новой записи в список "Избранное"
                         Toast.makeText(this, "${
                             resources.getString(R.string.info_added_item_in_favorite_list)}:\n\"${
@@ -287,7 +289,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                         // Удаление понравившегося содержимого из списка "Избранное"
                         favoriteListData.removeFavoriteData(indexSimilarData)
                         // Изменение вида иконки сердца
-                        changeHeartIconState(this)
+                        changeHeartIconState(this, false, true)
                         // Уведомление пользователя о добавлении новой записи в список "Избранное"
                         Toast.makeText(this, "${resources.getString(
                             R.string.info_deleted_item_from_favorite_list)}\n\"${
@@ -692,17 +694,19 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
 
     //region МЕТОДЫ ДЛЯ ИЗМЕНЕНИЯ ВИДА ИКОНКИ СЕРДЦА
     // Изменение вида иконки сердца
-    fun changeHeartIconState(mainActivity: MainActivity) {
+    fun changeHeartIconState(mainActivity: MainActivity, forceOn: Boolean, forceOff: Boolean) {
+        if (forceOn) isFavorite = true
+        if (forceOff) isFavorite = false
         mainActivity.getBottomMenu()?.let {
             if (it.size() > 0) {
-                if (!isFavorite) {
+                if (isFavorite) {
                     it.getItem(ConstantsUi.INDEX_ADD_FAVORITE_MENU_ITEM)
                         .setIcon(R.drawable.ic_favourite_on)
                 } else {
                     it.getItem(ConstantsUi.INDEX_ADD_FAVORITE_MENU_ITEM)
                         .setIcon(R.drawable.ic_favourite)
                 }
-                isFavorite = !isFavorite
+//                isFavorite = !isFavorite
             }
         }
     }
@@ -713,11 +717,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         return isFavorite
     }
     //endregion
-
-    // Получение списка избранных данных
-    fun getFavoriteDataList(): MutableList<Favorite> {
-        return favoriteListData.getDatesList()
-    }
 
     //region МЕТОДЫ ПОЛУЧЕНИЯ ЦВЕТОВ ИЗ АТТРИБУТОВ ТЕМЫ
     fun getColorSecondary(): TypedValue {
@@ -732,4 +731,15 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     fun getViewPagerAdapter(): ViewPagerAdapter {
         return viewPagerAdapter
     }
+
+    //region МЕТОДЫ ФАСАДА ЛОГИКИ ПРОЕКТА (РАБОТА С ЛОГИКОЙ, КЛАССОМ FavoriteLogic)
+    // Получение списка избранных данных
+    fun getFavoriteDataList(): MutableList<Favorite> {
+        return favoriteListData.getDatesList()
+    }
+    // Проверка на то, что новые данные уже есть в списке "Избранное"
+    fun checkSimilarFavoriteData(newFavorite: Favorite): Boolean {
+        return favoriteListData.checkSimilarFavoriteData(newFavorite)
+    }
+    //endregion
 }

@@ -79,7 +79,9 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     override fun onResume() {
         // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
         mainActivity.setListFavoriteEmptyData()
-        if (mainActivity.getIsFavorite()) mainActivity.changeHeartIconState(mainActivity)
+        // Изменение вида иконки сердца на контурное
+        if (mainActivity.getIsFavorite()) mainActivity
+            .changeHeartIconState(mainActivity, false, true)
         // Метод проверки наличия текущей информации в списке "Избранное"
         // и отрисовка соответствующего значка сердца (контурная или с заливкой)
         // TODO: ДОДЕЛАТЬ
@@ -125,22 +127,15 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
         // Установка слушателя при нажатии на кнопку поиска в архиве NASA
         binding.inputNasaField.setEndIconOnClickListener {
             if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                // Очистка текущей информации для добавления в список "Избранное"
+                mainActivity.setListFavoriteEmptyData()
+                // Изменение вида иконки сердца на контурное
+                mainActivity.changeHeartIconState(mainActivity, false, true)
+                // Получение информации из архива NASA
                 if ((binding.inputNasaFieldText.text != null) &&
                 (binding.inputNasaFieldText.text!!.length <=
                         binding.inputNasaField.counterMaxLength)) {
-                    val finalRequest: String =
                     sendRequestToNASAArchive("${binding.inputNasaFieldText.text}")
-                    // Сохранение запроса в "Избранное"
-                    mainActivity.setListFavoriteDataTypeSource(
-                        ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
-                    mainActivity.setListFavoriteDataPriority(ConstantsUi.PRIORITY_LOW)
-                    mainActivity.setListFavoriteDataSearchRequest(
-                        "${binding.inputNasaFieldText.text}")
-                    mainActivity.setListFavoriteDataTitle(
-                        "${binding.inputNasaFieldText.text}")
-                    mainActivity.setListFavoriteDataLinkSource(
-                        "${ConstantsRepository.NASA_ARCHIVE_BASE_URL
-                        }?q=$finalRequest&media_type=image")
                 }
             }
         }

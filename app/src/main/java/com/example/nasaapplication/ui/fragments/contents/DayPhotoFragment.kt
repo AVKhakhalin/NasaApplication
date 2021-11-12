@@ -79,7 +79,9 @@ class DayPhotoFragment:
     override fun onResume() {
         // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
         mainActivity.setListFavoriteEmptyData()
-        if (mainActivity.getIsFavorite()) mainActivity.changeHeartIconState(mainActivity)
+        // Изменение вида иконки сердца на контурное
+        if (mainActivity.getIsFavorite()) mainActivity
+            .changeHeartIconState(mainActivity, false, true)
 
         // Метод проверки наличия текущей информации в списке "Избранное"
         // и отрисовка соответствующего значка сердца (контурная или с заливкой)
@@ -89,6 +91,7 @@ class DayPhotoFragment:
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        getDate(0)
         viewModel.getData(curDate)
             .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
     }
@@ -104,6 +107,7 @@ class DayPhotoFragment:
                 } else {
                     //showSuccess()
                     // Сохранение данных для списка "Избранное"
+                    mainActivity.setListFavoriteDataSearchRequest(curDate)
                     mainActivity.setListFavoriteDataLinkSource(viewModel.getRequestUrl())
                     mainActivity.setListFavoriteDataTitle(serverResponseData.title ?: "")
                     mainActivity.setListFavoriteDataDescription(
@@ -189,6 +193,11 @@ class DayPhotoFragment:
             buttonChipToday?.let {
                 it.setOnClickListener {
                     if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                        // Очистка текущей информации для добавления в "Избранное"
+                        mainActivity.setListFavoriteEmptyData()
+                        // Изменение вида иконки сердца на контурное
+                        mainActivity.changeHeartIconState(mainActivity, false, true)
+                        // Получение данных о картинке сегодняшего дня
                         currentDateTextView!!.text =
                             "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(0)}"
                         viewModel.getData(curDate)
@@ -202,6 +211,11 @@ class DayPhotoFragment:
             buttonChipYesterday?.let {
                 it.setOnClickListener {
                     if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                        // Очистка текущей информации для добавления в "Избранное"
+                        mainActivity.setListFavoriteEmptyData()
+                        // Изменение вида иконки сердца на контурное
+                        mainActivity.changeHeartIconState(mainActivity, false, true)
+                        // Получение данных о картинке вчерашнего дня
                         currentDateTextView!!.text =
                             "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-1)}"
                         viewModel.getData(curDate)
@@ -215,6 +229,11 @@ class DayPhotoFragment:
             buttonChipBeforeYesterday?.let {
                 it.setOnClickListener {
                     if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                        // Очистка текущей информации для добавления в "Избранное"
+                        mainActivity.setListFavoriteEmptyData()
+                        // Изменение вида иконки сердца на контурное
+                        mainActivity.changeHeartIconState(mainActivity, false, true)
+                        // Получение данных о картинке позавчерашнего дня
                         currentDateTextView!!.text =
                             "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-2)}"
                         viewModel.getData(curDate)
@@ -281,13 +300,15 @@ class DayPhotoFragment:
         // Отображение элемента из списка "Избранное" для просмотра в данном фрагменте
         favoriteData?.let { favoriteData ->
             if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                curDate = favoriteData.getSearchRequest()
                 currentDateTextView?.let {
-                    it.text = "${ConstantsUi.DAY_PHOTO_TEXT} ${favoriteData.getSearchRequest()}"
+                    it.text = "${ConstantsUi.DAY_PHOTO_TEXT} ${curDate.substring(8, 10)}.${
+                        curDate.substring(5, 7)}.${curDate.substring(0, 4)}"
                 }
                 viewModel.getData(favoriteData.getSearchRequest())
                     .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
                 // Сохранение запроса в "Избранное"
-                mainActivity.setListFavoriteDataSearchRequest(curDate)
+                mainActivity.setListFavoriteDataSearchRequest(favoriteData.getSearchRequest())
             }
         }
     }
