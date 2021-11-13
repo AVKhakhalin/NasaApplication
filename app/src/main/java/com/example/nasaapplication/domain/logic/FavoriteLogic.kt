@@ -1,5 +1,8 @@
 package com.example.nasaapplication.domain.logic
 
+import android.util.Log
+import android.widget.Toast
+
 // Класс с логикой проекта - построение и сохранение списка избранных данных
 class FavoriteLogic {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
@@ -40,6 +43,18 @@ class FavoriteLogic {
             }
         }
     }
+    fun removeFavoriteDataByCorrectedData(indexRemovedFavoriteCorrectedData: Int) {
+        fullDatesList.remove(correctedDatesList[indexRemovedFavoriteCorrectedData])
+    }
+    fun removeAndAddFavoriteDataByCorrectedData(indexRemovedFavoriteCorrectedData: Int,
+                                                indexAddedFavoriteCorrectedData: Int) {
+        fullDatesList.remove(correctedDatesList[indexRemovedFavoriteCorrectedData])
+        var addedIndex: Int =
+            searchElementInCorrectedDatesList(correctedDatesList[indexAddedFavoriteCorrectedData])
+        if (addedIndex > -1) {
+            fullDatesList.add(addedIndex, correctedDatesList[indexRemovedFavoriteCorrectedData])
+        }
+    }
     //endregion
     
     //region МЕТОДЫ РЕДАКТИРОВАНИЯ ИЗБРАННЫХ ДАННЫХ
@@ -66,7 +81,7 @@ class FavoriteLogic {
         correctedDatesList = mutableListOf()
         if (filterWord.isNotEmpty()) {
             fullDatesList.forEach {
-                if (it.getTitle().lowercase().indexOf(filterWord.lowercase()) > 0)
+                if (it.getTitle().lowercase().indexOf(filterWord.lowercase()) > -1)
                     correctedDatesList.add(it)
             }
         } else {
@@ -97,5 +112,27 @@ class FavoriteLogic {
     // Установка фильтра для выбора нужной информации из списка "Избранное"
     fun setFilterWord(newFilterWord: String) {
         this.filterWord = newFilterWord
+    }
+
+    // Поиск элемента в списке correctedDatesList
+    fun searchElementInCorrectedDatesList(searchedFavoriteData: Favorite): Int {
+        for (counter in 0 until correctedDatesList.size) {
+            if (fullDatesList[counter].getTypeSource() == searchedFavoriteData.getTypeSource()) {
+                if ((fullDatesList[counter].getLinkSource() ==
+                            searchedFavoriteData.getLinkSource())
+                    && (fullDatesList[counter].getTitle() ==
+                            searchedFavoriteData.getTitle())
+                    && (fullDatesList[counter].getDescription() ==
+                            searchedFavoriteData.getDescription())
+                    && (fullDatesList[counter].getSearchRequest() ==
+                            searchedFavoriteData.getSearchRequest())
+                    && (fullDatesList[counter].getLinkImage() ==
+                            searchedFavoriteData.getLinkImage())
+                ) {
+                    return counter
+                }
+            }
+        }
+        return -1 // Элемент не найден
     }
 }

@@ -33,7 +33,9 @@ import java.net.URL
 import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
-class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
+class SearchWikiFragment(
+    private val mainActivity: MainActivity
+): ViewBindingFragment<FragmentSearchInWikiBinding>(
     FragmentSearchInWikiBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
@@ -45,8 +47,6 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     }
     // BottomSheet
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    // MainActivity
-    private lateinit var mainActivity: MainActivity
     // Анимация появления результирующих данных
     private val durationAnimation: Long = 1000
     private val transparientValue: Float = 0f
@@ -56,12 +56,11 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     //endregion
 
     companion object {
-        fun newInstance() = SearchWikiFragment()
+        fun newInstance(mainActivity: MainActivity) = SearchWikiFragment(mainActivity)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mainActivity = (context as MainActivity)
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
         navigationDialogs = mainActivity.getNavigationDialogs()
         navigationContent = mainActivity.getNavigationContent()
@@ -69,17 +68,9 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     }
 
     override fun onResume() {
-        // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
-        mainActivity.setListFavoriteDataTypeSource(searchWikiFavorite.getTypeSource())
-        mainActivity.setListFavoriteDataTitle(searchWikiFavorite.getTitle())
-        mainActivity.setListFavoriteDataDescription(searchWikiFavorite.getDescription())
-        mainActivity.setListFavoriteDataLinkSource(searchWikiFavorite.getLinkSource())
-        mainActivity.setListFavoriteDataPriority(searchWikiFavorite.getPriority())
-        mainActivity.setListFavoriteDataSearchRequest(searchWikiFavorite.getSearchRequest())
-        mainActivity.setListFavoriteDataLinkImage(searchWikiFavorite.getLinkImage())
-        // Метод проверки наличия текущей информации в списке "Избранное"
-        // и отрисовка соответствующего значка сердца (контурная или с заливкой)
-        checkAndChangeHeartIconState()
+        // Начальная настройка фрагмента
+        initialSettingFragment()
+
         super.onResume()
     }
 
@@ -222,5 +213,20 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
             mainActivity.changeHeartIconState(mainActivity, true, false)
         else
             mainActivity.changeHeartIconState(mainActivity, false, true)
+    }
+
+    // Метод с начальной настройкой фрагмента
+    fun initialSettingFragment() {
+        // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
+        mainActivity.setListFavoriteDataTypeSource(searchWikiFavorite.getTypeSource())
+        mainActivity.setListFavoriteDataTitle(searchWikiFavorite.getTitle())
+        mainActivity.setListFavoriteDataDescription(searchWikiFavorite.getDescription())
+        mainActivity.setListFavoriteDataLinkSource(searchWikiFavorite.getLinkSource())
+        mainActivity.setListFavoriteDataPriority(searchWikiFavorite.getPriority())
+        mainActivity.setListFavoriteDataSearchRequest(searchWikiFavorite.getSearchRequest())
+        mainActivity.setListFavoriteDataLinkImage(searchWikiFavorite.getLinkImage())
+        // Метод проверки наличия текущей информации в списке "Избранное"
+        // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+        checkAndChangeHeartIconState()
     }
 }

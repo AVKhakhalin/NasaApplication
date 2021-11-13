@@ -36,7 +36,9 @@ import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchiveBinding>(
+class SearchNASAArchiveFragment(
+    private var mainActivity: MainActivity
+): ViewBindingFragment<FragmentSearchInNasaArchiveBinding>(
     FragmentSearchInNasaArchiveBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
@@ -48,8 +50,6 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     }
     // BottomSheet
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    // MainActivity
-    private lateinit var mainActivity: MainActivity
     // Recycler View
     private var recyclerView: RecyclerView? = null
     private var newNASAArchiveEntityList: MutableList<String> = mutableListOf()
@@ -67,12 +67,11 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     //endregion
 
     companion object {
-        fun newInstance() = SearchNASAArchiveFragment()
+        fun newInstance(mainActivity: MainActivity) = SearchNASAArchiveFragment(mainActivity)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mainActivity = (context as MainActivity)
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
         navigationDialogs = mainActivity.getNavigationDialogs()
         navigationContent = mainActivity.getNavigationContent()
@@ -80,15 +79,8 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     }
 
     override fun onResume() {
-        // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
-        mainActivity.setListFavoriteDataTypeSource(searchNASAArchiveFavorite.getTypeSource())
-        mainActivity.setListFavoriteDataTitle(searchNASAArchiveFavorite.getTitle())
-        mainActivity.setListFavoriteDataDescription(searchNASAArchiveFavorite.getDescription())
-        mainActivity.setListFavoriteDataLinkSource(searchNASAArchiveFavorite.getLinkSource())
-        mainActivity.setListFavoriteDataPriority(searchNASAArchiveFavorite.getPriority())
-        mainActivity.setListFavoriteDataSearchRequest(searchNASAArchiveFavorite.getSearchRequest())
-        mainActivity.setListFavoriteDataLinkImage(searchNASAArchiveFavorite.getLinkImage())
-
+        // Начальная настройка фрагмента
+        initialSettingFragment()
         Log.d("mylogs",
             "\n\n${searchNASAArchiveFavorite.getLinkImage()}" +
                     "\n${searchNASAArchiveFavorite.getLinkSource()}" +
@@ -96,13 +88,6 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                     "\n${searchNASAArchiveFavorite.getTypeSource()}" +
                     "\n${searchNASAArchiveFavorite.getDescription()}" +
                     "\n${searchNASAArchiveFavorite.getTitle()}\n")
-
-        // Метод проверки наличия текущей информации в списке "Избранное"
-        // и отрисовка соответствующего значка сердца (контурная или с заливкой)
-        if (mainActivity.checkSimilarFavoriteData())
-            mainActivity.changeHeartIconState(mainActivity, true, false)
-        else
-            mainActivity.changeHeartIconState(mainActivity, false, true)
         super.onResume()
     }
 
@@ -395,5 +380,29 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     @JvmName("getDataViewModel1")
     fun getDataViewModel(): NASAArchiveDataViewModel {
         return dataViewModel
+    }
+
+    // Метод проверки наличия текущей информации в списке "Избранное"
+    // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+    private fun checkAndChangeHeartIconState() {
+        if (mainActivity.checkSimilarFavoriteData())
+            mainActivity.changeHeartIconState(mainActivity, true, false)
+        else
+            mainActivity.changeHeartIconState(mainActivity, false, true)
+    }
+
+    // Метод с начальной настройкой фрагмента
+    fun initialSettingFragment() {
+        // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
+        mainActivity.setListFavoriteDataTypeSource(searchNASAArchiveFavorite.getTypeSource())
+        mainActivity.setListFavoriteDataTitle(searchNASAArchiveFavorite.getTitle())
+        mainActivity.setListFavoriteDataDescription(searchNASAArchiveFavorite.getDescription())
+        mainActivity.setListFavoriteDataLinkSource(searchNASAArchiveFavorite.getLinkSource())
+        mainActivity.setListFavoriteDataPriority(searchNASAArchiveFavorite.getPriority())
+        mainActivity.setListFavoriteDataSearchRequest(searchNASAArchiveFavorite.getSearchRequest())
+        mainActivity.setListFavoriteDataLinkImage(searchNASAArchiveFavorite.getLinkImage())
+        // Метод проверки наличия текущей информации в списке "Избранное"
+        // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+        checkAndChangeHeartIconState()
     }
 }

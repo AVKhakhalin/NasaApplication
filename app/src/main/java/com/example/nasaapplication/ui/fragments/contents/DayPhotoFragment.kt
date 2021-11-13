@@ -8,7 +8,6 @@ import android.transition.ChangeBounds
 import android.transition.ChangeImageTransform
 import android.transition.TransitionManager
 import android.transition.TransitionSet
-import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
@@ -33,7 +32,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import java.util.*
 
-class DayPhotoFragment:
+class DayPhotoFragment(
+    private val mainActivity: MainActivity
+):
     ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDayPhotoBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Navigations
@@ -54,8 +55,6 @@ class DayPhotoFragment:
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var bottomSheetDescriptionTitle: TextView
     private lateinit var bottomSheetDescriptionText: TextView
-    // MainActivity
-    private lateinit var mainActivity: MainActivity
     // Анимация изменения размеров картики
     private var typeChangeImage: Int = 0
     // Анимация появления результирующих данных
@@ -67,12 +66,11 @@ class DayPhotoFragment:
     //endregion
 
     companion object {
-        fun newInstance() = DayPhotoFragment()
+        fun newInstance(mainActivity: MainActivity) = DayPhotoFragment(mainActivity)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mainActivity = (context as MainActivity)
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
         navigationDialogs = mainActivity.getNavigationDialogs()
         navigationContent = mainActivity.getNavigationContent()
@@ -80,18 +78,8 @@ class DayPhotoFragment:
     }
 
     override fun onResume() {
-        // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
-        mainActivity.setListFavoriteDataTypeSource(dayPhotoFavorite.getTypeSource())
-        mainActivity.setListFavoriteDataTitle(dayPhotoFavorite.getTitle())
-        mainActivity.setListFavoriteDataDescription(dayPhotoFavorite.getDescription())
-        mainActivity.setListFavoriteDataLinkSource(dayPhotoFavorite.getLinkSource())
-        mainActivity.setListFavoriteDataPriority(dayPhotoFavorite.getPriority())
-        mainActivity.setListFavoriteDataSearchRequest(dayPhotoFavorite.getSearchRequest())
-        mainActivity.setListFavoriteDataLinkImage(dayPhotoFavorite.getLinkImage())
-
-        // Метод проверки наличия текущей информации в списке "Избранное"
-        // и отрисовка соответствующего значка сердца (контурная или с заливкой)
-        checkAndChangeHeartIconState()
+        // Начальная настройка фрагмента
+        initialSettingFragment()
         super.onResume()
     }
 
@@ -342,5 +330,20 @@ class DayPhotoFragment:
             mainActivity.changeHeartIconState(mainActivity, true, false)
         else
             mainActivity.changeHeartIconState(mainActivity, false, true)
+    }
+
+    // Метод с начальной настройкой фрагмента
+    fun initialSettingFragment() {
+        // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
+        mainActivity.setListFavoriteDataTypeSource(dayPhotoFavorite.getTypeSource())
+        mainActivity.setListFavoriteDataTitle(dayPhotoFavorite.getTitle())
+        mainActivity.setListFavoriteDataDescription(dayPhotoFavorite.getDescription())
+        mainActivity.setListFavoriteDataLinkSource(dayPhotoFavorite.getLinkSource())
+        mainActivity.setListFavoriteDataPriority(dayPhotoFavorite.getPriority())
+        mainActivity.setListFavoriteDataSearchRequest(dayPhotoFavorite.getSearchRequest())
+        mainActivity.setListFavoriteDataLinkImage(dayPhotoFavorite.getLinkImage())
+        // Метод проверки наличия текущей информации в списке "Избранное"
+        // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+        checkAndChangeHeartIconState()
     }
 }

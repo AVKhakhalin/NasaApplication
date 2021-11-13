@@ -111,6 +111,7 @@ class FavoriteRecyclerListFragmentAdapter (
                 //region МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
                 recyclerItemPhotoOfDayArrowUp.setOnClickListener {
                     layoutPosition.takeIf {it > 0}?.also {
+                        removeAtAndAddInFullDatesList(it, it - 1)
                         favoriteData.removeAt(it).apply {
                             favoriteData.add(it - 1, this)
                         }
@@ -120,6 +121,7 @@ class FavoriteRecyclerListFragmentAdapter (
                 recyclerItemPhotoOfDayArrowDown.setOnClickListener {
                     if (layoutPosition < favoriteData.size - 1) {
                         layoutPosition.takeIf {it < itemCount - 1}?.also {
+                            removeAtAndAddInFullDatesList(it, it + 1)
                             favoriteData.removeAt(it).apply {
                                 favoriteData.add(it + 1, this)
                             }
@@ -183,6 +185,7 @@ class FavoriteRecyclerListFragmentAdapter (
                 //region МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
                 recyclerItemSearchInWikiArrowUp.setOnClickListener {
                     layoutPosition.takeIf {it > 0}?.also {
+                        removeAtAndAddInFullDatesList(it, it - 1)
                         favoriteData.removeAt(it).apply {
                             favoriteData.add(it - 1, this)
                         }
@@ -191,6 +194,7 @@ class FavoriteRecyclerListFragmentAdapter (
                 }
                 recyclerItemSearchInWikiArrowDown.setOnClickListener {
                     layoutPosition.takeIf {it < itemCount - 1}?.also {
+                        removeAtAndAddInFullDatesList(it, it + 1)
                         favoriteData.removeAt(it).apply {
                             favoriteData.add(it + 1, this)
                         }
@@ -254,6 +258,7 @@ class FavoriteRecyclerListFragmentAdapter (
                 //region МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
                 recyclerItemSearchInNasaArrowUp.setOnClickListener {
                     layoutPosition.takeIf {it > 0}?.also {
+                        removeAtAndAddInFullDatesList(it, it - 1)
                         favoriteData.removeAt(it).apply {
                             favoriteData.add(it - 1, this)
                         }
@@ -262,6 +267,7 @@ class FavoriteRecyclerListFragmentAdapter (
                 }
                 recyclerItemSearchInNasaArrowDown.setOnClickListener {
                     layoutPosition.takeIf {it < itemCount - 1}?.also {
+                        removeAtAndAddInFullDatesList(it, it + 1)
                         favoriteData.removeAt(it).apply {
                             favoriteData.add(it + 1, this)
                         }
@@ -347,6 +353,8 @@ class FavoriteRecyclerListFragmentAdapter (
 
     //region БАЗОВЫЕ МЕТОДЫ ДЛЯ РЕАЛИЗАЦИИ СМАХИВАНИЯ (УДАЛЕНИЯ) ЭЛЕМЕНТОВ
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        removeAtAndAddInFullDatesList(fromPosition,
+            if (toPosition > fromPosition) toPosition - 1 else toPosition)
         favoriteData.removeAt(fromPosition).apply {
             favoriteData.add(
                 if (toPosition > fromPosition) toPosition - 1 else toPosition, this)
@@ -359,8 +367,18 @@ class FavoriteRecyclerListFragmentAdapter (
         }
     }
     override fun onItemDismiss(position: Int) {
+        removeAtInFullDatesList(position)
         favoriteData.removeAt(position)
         notifyItemRemoved(position)
+    }
+    //endregion
+
+    //region МЕТОДЫ ДЛЯ УДАЛЕНИЯ И ДОБАВЛЕНИЯ ЭЛЕМЕНТОВ В ОСНОВНОМ СПИСКЕ
+    private fun removeAtInFullDatesList(removedElementIndex: Int) {
+        mainActivity.removeFavoriteDataByCorrectedData(removedElementIndex)
+    }
+    private fun removeAtAndAddInFullDatesList(removedElementIndex: Int, addedElementIndex: Int) {
+        mainActivity.removeAndAddFavoriteDataByCorrectedData(removedElementIndex, addedElementIndex)
     }
     //endregion
 }

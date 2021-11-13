@@ -30,6 +30,9 @@ import com.example.nasaapplication.databinding.ActivityMainBinding
 import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.domain.logic.FavoriteLogic
 import com.example.nasaapplication.ui.ConstantsUi
+import com.example.nasaapplication.ui.fragments.contents.DayPhotoFragment
+import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragment
+import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.tabs.TabLayoutMediator
 import okhttp3.internal.notifyAll
@@ -51,14 +54,15 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Bottom navigation menu
     private var isMain: Boolean = false
     private var isFABButtonsGroupView: Boolean = false
-    // Признак блокировки кнопок во всем приложении, при появления меню из нижней FAB
+    // Признак блокировки кнопок во всем приложении, при появлении меню из нижней FAB
     private var isBlockingOtherFABButtons: Boolean = false
     // Переменные для анимации фона
     private val durationAnimation: Long = 300
     private val transparientValue: Float = 1f
     private val notTransparientValue: Float = 0.2f
     // ViewPager2
-    private val viewPagerAdapter: ViewPagerAdapter = ViewPagerAdapter(this)
+    private val viewPagerAdapter: ViewPagerAdapter =
+        ViewPagerAdapter(this, this)
     private var textTabLayouts: List<String> = listOf()
     private var touchableListTabLayot: ArrayList<View> = arrayListOf()
     // Menu
@@ -583,6 +587,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             binding.viewPager.setUserInputEnabled(true)
             // Разблокировка кликов по закладкам во View Pager 2
             touchableListTabLayot.forEach { it.isEnabled = true }
+            // Начальная настройка фрагмента "Картинка дня"
+            (getViewPagerAdapter().getFragments()[ConstantsController.DAY_PHOTO_FRAGMENT_INDEX]
+                    as DayPhotoFragment).initialSettingFragment()
         }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в Википедии
         binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_wiki)
@@ -599,6 +606,10 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 binding.viewPager.setUserInputEnabled(true)
                 // Разблокировка кликов по закладкам во View Pager 2
                 touchableListTabLayot.forEach { it.isEnabled = true }
+                // Начальная настройка фрагмента "Поиск в Википедии"
+                (getViewPagerAdapter()
+                    .getFragments()[ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX]
+                        as SearchWikiFragment).initialSettingFragment()
             }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в архиве NASA
         binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_nasa_archive)
@@ -616,6 +627,10 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 binding.viewPager.setUserInputEnabled(true)
                 // Разблокировка кликов по закладкам во View Pager 2
                 touchableListTabLayot.forEach { it.isEnabled = true }
+                // Начальная настройка фрагмента "Поиск в архиве NASA"
+                (getViewPagerAdapter()
+                    .getFragments()[ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
+                        as SearchNASAArchiveFragment).initialSettingFragment()
             }
         // Установка слушателя на нажатие кнопки вызова настроек приложения
         binding.fabButtonsContainer.getViewById(R.id.fab_button_settings).setOnClickListener {
@@ -771,6 +786,16 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Установка фильтра для выбора нужной информации из списка "Избранное"
     private fun setFilterWord(newFilterWord: String) {
         favoriteListData.setFilterWord(newFilterWord)
+    }
+    // Удаление данных в списке FullDates
+    fun removeFavoriteDataByCorrectedData(indexRemovedFavoriteCorrectedData: Int) {
+        favoriteListData.removeFavoriteDataByCorrectedData(indexRemovedFavoriteCorrectedData)
+    }
+    // Удаление и добавление данных в списке FullDates
+    fun removeAndAddFavoriteDataByCorrectedData(indexRemovedFavoriteCorrectedData: Int,
+                                                indexAddedFavoriteCorrectedData: Int) {
+        favoriteListData.removeAndAddFavoriteDataByCorrectedData(
+            indexRemovedFavoriteCorrectedData, indexAddedFavoriteCorrectedData)
     }
     //endregion
 }
