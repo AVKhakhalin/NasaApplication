@@ -93,16 +93,25 @@ class FavoriteRecyclerListFragmentAdapter (
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_HIGH)
                     changePhotoOfDayItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
+                    mainActivity.priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getFavoriteDataList()
+                    notifyDataSetChanged()
                 }
                 recyclerItemPhotoOfDayPriorityNormal.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
                     changePhotoOfDayItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
+                    mainActivity.priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getFavoriteDataList()
+                    notifyDataSetChanged()
                 }
                 recyclerItemPhotoOfDayPriorityLow.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
                     changePhotoOfDayItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
+                    mainActivity.priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getFavoriteDataList()
+                    notifyDataSetChanged()
                 }
                 //endregion
                 // Изменение картинки элемента в зависимости от его приоритета
@@ -167,16 +176,25 @@ class FavoriteRecyclerListFragmentAdapter (
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_HIGH)
                     changeSearchInWikiItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
+                    mainActivity.priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getFavoriteDataList()
+                    notifyDataSetChanged()
                 }
                 recyclerItemSearchInWikiPriorityNormal.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
                     changeSearchInWikiItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
+                    mainActivity.priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getFavoriteDataList()
+                    notifyDataSetChanged()
                 }
                 recyclerItemSearchInWikiPriorityLow.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
                     changeSearchInWikiItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
+                    mainActivity.priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getFavoriteDataList()
+                    notifyDataSetChanged()
                 }
                 //endregion
                 // Изменение картинки элемента в зависимости от его приоритета
@@ -240,16 +258,25 @@ class FavoriteRecyclerListFragmentAdapter (
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_HIGH)
                     changeSearchInNASAArchiveImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
+                    mainActivity.priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getFavoriteDataList()
+                    notifyDataSetChanged()
                 }
                 recyclerItemSearchInNasaPriorityNormal.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
                     changeSearchInNASAArchiveImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
+                    mainActivity.priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getFavoriteDataList()
+                    notifyDataSetChanged()
                 }
                 recyclerItemSearchInNasaPriorityLow.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
                     changeSearchInNASAArchiveImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
+                    mainActivity.priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getFavoriteDataList()
+                    notifyDataSetChanged()
                 }
                 //endregion
                 // Изменение картинки элемента в зависимости от его приоритета

@@ -35,7 +35,6 @@ import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragme
 import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.tabs.TabLayoutMediator
-import okhttp3.internal.notifyAll
 import java.lang.Thread.sleep
 import java.util.*
 import kotlin.math.round
@@ -798,4 +797,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             indexRemovedFavoriteCorrectedData, indexAddedFavoriteCorrectedData)
     }
     //endregion
+
+    // Ранжирование списка fullDatesList по приоритетам
+    fun priorityRangeFullDatesList() {
+        favoriteListData.priorityRangeFullDatesList()
+    }
 }
