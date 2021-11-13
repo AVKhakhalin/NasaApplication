@@ -15,9 +15,14 @@ class NavigationContent(
     private var favoriteRecyclerListFragment: FavoriteRecyclerListFragment? = null
     //endregion
 
-    // Получение settingsFragment
+    // Получение SettingsFragment
     fun getSettingsFragment(): SettingsFragment? {
         return settingsFragment
+    }
+
+    // Получение FavoriteRecyclerListFragment
+    fun getFavoriteRecyclerListFragment(): FavoriteRecyclerListFragment? {
+        return favoriteRecyclerListFragment
     }
 
     // Отображение фрагмента с настройками приложения

@@ -287,6 +287,11 @@ class FavoriteRecyclerListFragmentAdapter (
         //endregion
     }
 
+    // Установка favoriteData
+    fun setFavoriteData(newFavoriteData: MutableList<Favorite>) {
+        this.favoriteData = newFavoriteData
+    }
+
     //region МЕТОДЫ ИЗМЕНЕНИЯ КАРТИНКИ ЭЛЕМЕНТОВ В ЗАВИСИМОСТИ ОТ ИХ ПРИОРИТЕТОВ
     // Смена картинки информации с фрагмента "Картинка дня" в зависимости от приоритета
     private fun changePhotoOfDayItemImageOnPriority(

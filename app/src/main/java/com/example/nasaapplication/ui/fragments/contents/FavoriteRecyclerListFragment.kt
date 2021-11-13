@@ -17,8 +17,17 @@ import com.example.nasaapplication.ui.utils.ViewBindingFragment
 
 class FavoriteRecyclerListFragment(
     private val mainActivity: MainActivity
-):
-    ViewBindingFragment<FavoriteListRecyclerBinding>(FavoriteListRecyclerBinding::inflate) {
+): ViewBindingFragment<FavoriteListRecyclerBinding>(FavoriteListRecyclerBinding::inflate) {
+
+    //region ЗАДАНИЕ ПЕРЕМЕННЫХ
+    var adapter: FavoriteRecyclerListFragmentAdapter? = null
+    //endregion
+
+    // Передача адаптера
+    @JvmName("getAdapter1")
+    fun getAdapter(): FavoriteRecyclerListFragmentAdapter? {
+        return adapter
+    }
 
     companion object {
         fun newInstance(mainActivity: MainActivity) = FavoriteRecyclerListFragment(mainActivity)
@@ -31,7 +40,7 @@ class FavoriteRecyclerListFragment(
         mainActivity.switchBottomAppBar(mainActivity)
 
         // Recycler
-        val adapter = FavoriteRecyclerListFragmentAdapter(
+        adapter = FavoriteRecyclerListFragmentAdapter(
         object: FavoriteRecyclerListFragmentOnItemClickListener {
             override fun onItemClick(favoriteData: Favorite) {
                 // Открытие данных во фрагментах
@@ -83,8 +92,8 @@ class FavoriteRecyclerListFragment(
             }
         }, mainActivity.getFavoriteDataList(), mainActivity)
         binding.favoriteRecyclerListView.adapter = adapter
-        ItemTouchHelper(ItemTouchHelperCallback(adapter))
-            .attachToRecyclerView(binding.favoriteRecyclerListView)
+        adapter?.let { ItemTouchHelper(ItemTouchHelperCallback(it))
+            .attachToRecyclerView(binding.favoriteRecyclerListView) }
     }
 }
 //region КЛАСС С МЕТОДАМИ ДЛЯ ДОБАВЛЕНИЯ ВОЗМОЖНОСТИ СМАХИВАНИЯ ЭЛЕМЕНТОВ СПИСКА "ИЗБРАННОЕ"

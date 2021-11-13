@@ -32,6 +32,7 @@ import com.example.nasaapplication.domain.logic.FavoriteLogic
 import com.example.nasaapplication.ui.ConstantsUi
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.tabs.TabLayoutMediator
+import okhttp3.internal.notifyAll
 import java.lang.Thread.sleep
 import java.util.*
 import kotlin.math.round
@@ -199,17 +200,44 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             val searchViewActionView = binding.bottomNavigationMenu.bottomAppBar.menu
                 .findItem(R.id.action_bottom_bar_search_request_form).actionView
             val searchView = searchViewActionView as SearchView
+            // Событие установки поискового запроса
             searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     // Отображение полученного поискового запроса
-                    Toast.makeText(this@MainActivity, query, Toast.LENGTH_SHORT).show()
+                    setFilterWord(query)
+                    navigationContent.getFavoriteRecyclerListFragment()?.let {
+                        it.getAdapter()?.let { adapter ->
+                            adapter.setFavoriteData(getFavoriteDataList())
+                            adapter.notifyDataSetChanged()
+                        }
+                    }
                     return false
                 }
                 // Отслеживание появления каждого символа
                 override fun onQueryTextChange(newText: String): Boolean {
+                    // Отображение полученного поискового запроса
+                    setFilterWord(newText)
+                    navigationContent.getFavoriteRecyclerListFragment()?.let {
+                        it.getAdapter()?.let { adapter ->
+                            adapter.setFavoriteData(getFavoriteDataList())
+                            adapter.notifyDataSetChanged()
+                        }
+                    }
                     return false
                 }
             })
+            // Событие на закрытие поискового окна (обнуление фильтра)
+            searchView.setOnCloseListener {
+                // Отображение полученного поискового запроса
+                setFilterWord("")
+                navigationContent.getFavoriteRecyclerListFragment()?.let {
+                    it.getAdapter()?.let {adapter ->
+                        adapter.setFavoriteData(getFavoriteDataList())
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+                true
+            }
             // Получение поискового поля для ввода и редактирования текста поискового
             val searchedEditText =
                 searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
@@ -739,6 +767,10 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     "\n${newFavorite.getDescription()}" +
                     "\n${newFavorite.getTitle()}\n")
         return favoriteListData.checkSimilarFavoriteData(newFavorite)
+    }
+    // Установка фильтра для выбора нужной информации из списка "Избранное"
+    private fun setFilterWord(newFilterWord: String) {
+        favoriteListData.setFilterWord(newFilterWord)
     }
     //endregion
 }
