@@ -4,11 +4,11 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -77,7 +77,6 @@ class SearchWikiFragment(
     //region МЕТОДЫ РАБОТЫ С BottomSheet
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // Установка прозрачного фона для элемента WebView
         binding.webViewContainer.setBackgroundColor(Color.TRANSPARENT)
         // Установка слушателя при нажатии на кнопку поиска в "Википедии"
@@ -143,10 +142,12 @@ class SearchWikiFragment(
                 urlConnection.disconnect()
             }
             if (reader != null) {
-                val result = getLines(reader)
+                val result = "${ConstantsUi.WEBVIEW_TEXT_HEADER_SUCCESS}${getLines(reader)}${
+                    ConstantsUi.WEBVIEW_TEXT_FOOTER}"
                 // Сохранение результата запроса в "Избранное"
                 mainActivity.setListFavoriteDataDescription(result)
                 searchWikiFavorite.setDescription(result)
+
                 // Отображение результата запроса
                 val handler = Handler(Looper.getMainLooper())
                 handler.post {
@@ -157,7 +158,6 @@ class SearchWikiFragment(
                         ConstantsUi.SHOWURLINWIKI_ENCODING,
                         null)
                 }
-
             } else {
                 // Сохранение результата запроса в "Избранное"
                 mainActivity.setListFavoriteDataDescription(
@@ -168,10 +168,13 @@ class SearchWikiFragment(
                         .replace("<Br><Br>"," "))
                 // Отображение сообщения об отсутствии результата по запросу
                 val handler = Handler(Looper.getMainLooper())
+                val result = "${ConstantsUi.WEBVIEW_TEXT_HEADER_NOTSUCCESS}${
+                    resources.getString(R.string.error_wiki_empty_request)}${
+                    ConstantsUi.WEBVIEW_TEXT_FOOTER}"
                 handler.post {
                     binding.webViewContainer.loadDataWithBaseURL(
                         null,
-                        resources.getString(R.string.error_wiki_empty_request),
+                        result,
                         ConstantsUi.SHOWURLINWIKI_TEXT_CHARSER,
                         ConstantsUi.SHOWURLINWIKI_ENCODING,
                         null)

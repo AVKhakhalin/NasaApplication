@@ -160,4 +160,6 @@
     <dimen name="recycler_item_search_in_wiki_item_description_margin_start">10dp</dimen>
     <dimen name="recycler_item_search_in_wiki_item_description_margin_end">10dp</dimen>
     <dimen name="recycler_item_search_in_wiki_item_description_margin_bottom">10dp</dimen>
+    <dimen name="bottom_sheet_description_title_text_size">17sp</dimen>
+    <dimen name="bottom_sheet_description_text_text_size">17sp</dimen>
 </resources>

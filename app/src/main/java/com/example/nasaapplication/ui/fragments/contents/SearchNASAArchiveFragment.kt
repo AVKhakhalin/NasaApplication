@@ -3,6 +3,7 @@ package com.example.nasaapplication.ui.fragments.contents
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.transition.ChangeBounds
 import android.transition.ChangeImageTransform
@@ -167,9 +168,7 @@ class SearchNASAArchiveFragment(
                     .addTransition(ChangeBounds())
                     .addTransition(ChangeImageTransform())
                 TransitionManager.beginDelayedTransition(
-                    binding.searchInNasaArchiveResultContainer,
-                    set
-                )
+                    binding.searchInNasaArchiveResultContainer, set)
                 when (typeChangeImage++) {
                     0 -> binding.searchInNasaArchiveImageView.scaleType =
                         ImageView.ScaleType.CENTER_CROP
@@ -193,6 +192,10 @@ class SearchNASAArchiveFragment(
                 if (typeChangeImage > 7) typeChangeImage = 0
             }
         }
+        // Программная установка нового шрифта для описания найденной информации
+        binding.searchInNasaArchiveDescriptionTextView.typeface =
+            Typeface.createFromAsset(mainActivity.assets, "font/RobotoFlex_Regular.ttf")
+
         super.onViewCreated(view, savedInstanceState)
     }
 

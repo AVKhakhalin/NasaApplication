@@ -3,6 +3,7 @@ package com.example.nasaapplication.ui.fragments.contents
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.transition.ChangeBounds
 import android.transition.ChangeImageTransform
@@ -185,6 +186,9 @@ class DayPhotoFragment(
         setBottomSheetBehavior(view.findViewById(R.id.bottom_sheet_container))
         bottomSheetDescriptionTitle = view.findViewById(R.id.bottom_sheet_description_title)
         bottomSheetDescriptionText = view.findViewById(R.id.bottom_sheet_description_text)
+        // Программная установка нового шрифта для описания новости
+        bottomSheetDescriptionText.typeface =
+            Typeface.createFromAsset(mainActivity.assets, "font/RobotoFlex_Regular.ttf")
 
         // Установка текущей даты в заголовке над фотографией
         binding.fragmentDayPhotoCurrentDateTextView.text =

@@ -13,6 +13,12 @@ class ConstantsUi {
         val SHARED_PREFERENCES_KEY: String = "Shared Preferences"
         @JvmField
         val SHARED_PREFERENCES_THEME_KEY: String = "Shared Preferences Is Theme Day"
+        @JvmField
+        val WEBVIEW_TEXT_HEADER_SUCCESS: String = "<html><head><style type=\"text/css\">@font-face {font-family: MyFont;src: url(\"file:///android_asset/font/RobotoFlex_Regular.ttf\")}body {font-family: MyFont;font-size: 17;text-align: justify;}</style></head><body>"
+        @JvmField
+        val WEBVIEW_TEXT_HEADER_NOTSUCCESS: String = "<html><head><style type=\"text/css\">@font-face {font-family: MyFont;src: url(\"file:///android_asset/font/RobotoFlex_Regular.ttf\")}body {font-family: MyFont;font-size: 17;text-align: left;}</style></head><body>"
+        @JvmField
+        val WEBVIEW_TEXT_FOOTER: String = "</body></html>"
 
         // Сообщения об ошибках
         @JvmField

@@ -11,7 +11,7 @@
     <string name="error">Ошибка</string>
     <string name="error_need_api_key">Вам нужен API-ключ.</string>
     <string name="error_unknown">Неизвестная ошибка.</string>
-    <string name="error_wiki_empty_request">\u003cBr>\u003cBr>Информацию найти не удалось.\u003cBr>\u003cBr>Попробуйте переформулировать ваш запрос.</string>
+    <string name="error_wiki_empty_request">\u003cBr>\u003cBr>Информацию найти не удалось.\u003cBr>\u003cBr>Попробуйте переформулировать Ваш запрос.</string>
     <string name="unknown_type_source_favorite_data">Не правильный тип данных.</string>
 
 
