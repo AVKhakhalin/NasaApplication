@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
 import android.transition.ChangeBounds
 import android.transition.ChangeImageTransform
 import android.transition.TransitionManager
@@ -28,9 +30,11 @@ import com.example.nasaapplication.databinding.FragmentDayPhotoBinding
 import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
+import com.example.nasaapplication.ui.utils.ColorUnderlineSpan
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
+import java.lang.Exception
 import java.util.*
 
 class DayPhotoFragment(
@@ -138,7 +142,23 @@ class DayPhotoFragment(
 
                     // Анимированное появление заголовка фотографии дня
                     bottomSheetDescriptionTitle.alpha = transparientValue
-                    bottomSheetDescriptionTitle.text = serverResponseData.title
+                    // Создание текста с красным подчёркиванием
+                    serverResponseData.title?.let {
+                        try {
+                            val spannable = SpannableString(serverResponseData.title)
+                            spannable.setSpan(ColorUnderlineSpan(mainActivity,
+                                    mainActivity.getSecondaryVariantTypedValue().data,0,
+                                    it.length),0, it.length,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            bottomSheetDescriptionTitle.text = spannable
+                        } catch (errorMessage: Exception) {
+                            bottomSheetDescriptionTitle.text = serverResponseData.title
+                            Toast.makeText(mainActivity.applicationContext,
+                                "${mainActivity.resources.getString(R.string.error)}: ${
+                                mainActivity.resources.getString(R.string.
+                                error_underline_creation_for_title)}", Toast.LENGTH_LONG).show()
+                        }
+                    }
                     bottomSheetDescriptionTitle.animate()
                         .alpha(notTransparientValue)
                         .setDuration(durationAnimation)

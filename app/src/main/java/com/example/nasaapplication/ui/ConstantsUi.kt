@@ -1,5 +1,10 @@
 package com.example.nasaapplication.ui
 
+import android.os.Bundle
+import android.util.TypedValue
+import com.example.nasaapplication.R
+import com.example.nasaapplication.ui.activities.MainActivity
+
 // Класс с константами для Ui
 class ConstantsUi {
     companion object {
@@ -14,11 +19,17 @@ class ConstantsUi {
         @JvmField
         val SHARED_PREFERENCES_THEME_KEY: String = "Shared Preferences Is Theme Day"
         @JvmField
-        val WEBVIEW_TEXT_HEADER_SUCCESS: String = "<html><head><style type=\"text/css\">@font-face {font-family: MyFont;src: url(\"file:///android_asset/font/RobotoFlex_Regular.ttf\")}body {font-family: MyFont;font-size: 17;text-align: justify;}</style></head><body>"
+        val WEBVIEW_TEXT_HEADER_SUCCESS_BEGIN: String = "<html><head><style type=\"text/css\">@font-face {font-family: MyFont;src: url(\"file:///android_asset/font/RobotoFlex_Regular.ttf\")}body {color: #"
         @JvmField
-        val WEBVIEW_TEXT_HEADER_NOTSUCCESS: String = "<html><head><style type=\"text/css\">@font-face {font-family: MyFont;src: url(\"file:///android_asset/font/RobotoFlex_Regular.ttf\")}body {font-family: MyFont;font-size: 17;text-align: left;}</style></head><body>"
+        val WEBVIEW_TEXT_HEADER_SUCCESS_END: String = ";font-family: MyFont;font-size: 17;text-align: justify;}</style></head><body>"
         @JvmField
-        val WEBVIEW_TEXT_FOOTER: String = "</body></html>"
+        val WEBVIEW_TEXT_HEADER_NOTSUCCESS_BEGIN: String = "<html><head><style type=\"text/css\">@font-face {font-family: MyFont;src: url(\"file:///android_asset/font/RobotoFlex_Regular.ttf\")}body {color: #"
+        @JvmField
+        val WEBVIEW_TEXT_HEADER_NOTSUCCESS_END: String = ";font-family: MyFont;font-size: 17;text-align: left;}</style></head><body><strong>"
+        @JvmField
+        val WEBVIEW_TEXT_FOOTER: String = "</strong></body></html>"
+        private val colorSecondaryVariantValue: TypedValue = TypedValue()
+        //endregion
 
         // Сообщения об ошибках
         @JvmField

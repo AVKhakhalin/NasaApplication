@@ -27,8 +27,8 @@
     <dimen name="tablayout_search_in_nasa_archive_drawable_padding">5dp</dimen>
     <dimen name="tablayout_search_in_nasa_archive_text_size">20sp</dimen>
     <dimen name="input_nasa_field_width">0dp</dimen>
-    <dimen name="search_in_nasa_archive_title_text_view_text_size">15sp</dimen>
-    <dimen name="search_in_nasa_archive_description_text_view_text_size">15sp</dimen>
+    <dimen name="search_in_nasa_archive_title_text_view_text_size">17sp</dimen>
+    <dimen name="search_in_nasa_archive_description_text_view_text_size">17sp</dimen>
     <dimen name="search_in_nasa_archive_title_text_view_padding_top">10dp</dimen>
     <dimen name="nested_scroll_view_zero_width">0dp</dimen>
     <dimen name="search_in_nasa_archive_image_view_zero_width">0dp</dimen>

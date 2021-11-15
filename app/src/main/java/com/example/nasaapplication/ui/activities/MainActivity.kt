@@ -35,6 +35,7 @@ import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragme
 import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.tabs.TabLayoutMediator
+import okhttp3.internal.toHexString
 import java.lang.Thread.sleep
 import java.util.*
 import kotlin.math.round
@@ -73,6 +74,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Цвета из аттрибутов темы
     private val colorSecondaryTypedValue: TypedValue = TypedValue()
     private val colorTypedValue: TypedValue = TypedValue()
+    private val colorSecondaryVariantTypedValue: TypedValue = TypedValue()
+    private val colorPrimaryVariantTypedValue: TypedValue = TypedValue()
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,6 +86,10 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         // Установка цветов из аттрибутов темы
         theme.resolveAttribute(R.attr.colorSecondary, colorSecondaryTypedValue, true)
         theme.resolveAttribute(R.attr.color, colorTypedValue, true)
+        theme.resolveAttribute(
+            R.attr.colorSecondaryVariant, colorSecondaryVariantTypedValue, true)
+        theme.resolveAttribute(
+            R.attr.colorPrimaryVariant, colorPrimaryVariantTypedValue, true)
 
         // Подключение Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -756,8 +763,11 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     fun getColorSecondary(): TypedValue {
         return colorSecondaryTypedValue
     }
-    fun getColor(): TypedValue {
-        return colorTypedValue
+    fun getSecondaryVariantTypedValue(): TypedValue {
+        return colorSecondaryVariantTypedValue
+    }
+    fun getColorPrimaryVariantTypedValue(): TypedValue {
+        return colorPrimaryVariantTypedValue
     }
     //endregion
 

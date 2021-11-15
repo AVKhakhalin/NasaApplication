@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -26,6 +25,7 @@ import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import okhttp3.internal.toHexString
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.InputStreamReader
@@ -142,8 +142,10 @@ class SearchWikiFragment(
                 urlConnection.disconnect()
             }
             if (reader != null) {
-                val result = "${ConstantsUi.WEBVIEW_TEXT_HEADER_SUCCESS}${getLines(reader)}${
-                    ConstantsUi.WEBVIEW_TEXT_FOOTER}"
+                val result = "${ConstantsUi.WEBVIEW_TEXT_HEADER_SUCCESS_BEGIN}${
+                    mainActivity.getColorPrimaryVariantTypedValue().data.toHexString()
+                        .subSequence(2, 8)}${ConstantsUi.WEBVIEW_TEXT_HEADER_SUCCESS_END}${
+                            getLines(reader)}${ConstantsUi.WEBVIEW_TEXT_FOOTER}"
                 // Сохранение результата запроса в "Избранное"
                 mainActivity.setListFavoriteDataDescription(result)
                 searchWikiFavorite.setDescription(result)
@@ -168,9 +170,11 @@ class SearchWikiFragment(
                         .replace("<Br><Br>"," "))
                 // Отображение сообщения об отсутствии результата по запросу
                 val handler = Handler(Looper.getMainLooper())
-                val result = "${ConstantsUi.WEBVIEW_TEXT_HEADER_NOTSUCCESS}${
-                    resources.getString(R.string.error_wiki_empty_request)}${
-                    ConstantsUi.WEBVIEW_TEXT_FOOTER}"
+                val result = "${ConstantsUi.WEBVIEW_TEXT_HEADER_NOTSUCCESS_BEGIN}${
+                    mainActivity.getColorPrimaryVariantTypedValue().data.toHexString()
+                        .subSequence(2, 8)}${ConstantsUi.WEBVIEW_TEXT_HEADER_NOTSUCCESS_END}${
+                            resources.getString(R.string.error_wiki_empty_request)}${
+                                ConstantsUi.WEBVIEW_TEXT_FOOTER}"
                 handler.post {
                     binding.webViewContainer.loadDataWithBaseURL(
                         null,
