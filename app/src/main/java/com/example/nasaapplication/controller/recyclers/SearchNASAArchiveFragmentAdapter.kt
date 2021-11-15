@@ -59,26 +59,25 @@ class SearchNASAArchiveFragmentAdapter(
         holder.newNASAArchiveEntityTextViewContainer?.let {
             it.setOnClickListener {
                 if (!searchNASAArchiveFragment.getIsBlockingOtherFABButtons()) {
-                    // Очистка текущей информации для добавления в список "Избранное"
-                    searchNASAArchiveFragment.getMainActivity().setListFavoriteEmptyData()
-                    // Изменение вида иконки сердца на контурное
-                    searchNASAArchiveFragment.getMainActivity().changeHeartIconState(
-                        searchNASAArchiveFragment.getMainActivity(), false, true)
-                    // Сохранение запроса, ссылки на картинку, заголовка и описания в "Избранное"
-                    searchNASAArchiveFragment.getMainActivity().setListFavoriteDataSearchRequest(
-                        "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}")
-                    searchNASAArchiveFragment.getMainActivity()
-                        .setListFavoriteDataTypeSource(
-                            ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
-                    searchNASAArchiveFragment.getMainActivity()
-                        .setListFavoriteDataLinkImage(entitiesLinks[position])
-                    searchNASAArchiveFragment.getMainActivity()
-                        .setListFavoriteDataTitle(newNASAArchiveEntityList[position])
-                    searchNASAArchiveFragment.getMainActivity()
-                        .setListFavoriteDataDescription(entitiesTexts[position])
-                    searchNASAArchiveFragment.getMainActivity()
-                        .setListFavoriteDataLinkSource(
-                    searchNASAArchiveFragment.getDataViewModel().getRequestUrl())
+                    searchNASAArchiveFragment.getMainActivity()?.let { mainActivity ->
+                        // Очистка текущей информации для добавления в список "Избранное"
+                        mainActivity.setListFavoriteEmptyData()
+                        // Изменение вида иконки сердца на контурное
+                        mainActivity.changeHeartIconState(mainActivity, false, true)
+                        // Сохранение запроса, ссылки на картинку, заголовка и описания в "Избранное"
+                        mainActivity.setListFavoriteDataSearchRequest(
+                                "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}"
+                            )
+                        mainActivity.setListFavoriteDataTypeSource(
+                                ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
+                            )
+                        mainActivity.setListFavoriteDataLinkImage(entitiesLinks[position])
+                        mainActivity.setListFavoriteDataTitle(newNASAArchiveEntityList[position])
+                        mainActivity.setListFavoriteDataDescription(entitiesTexts[position])
+                        mainActivity.setListFavoriteDataLinkSource(
+                                searchNASAArchiveFragment.getDataViewModel().getRequestUrl()
+                            )
+                    }
                     searchNASAArchiveFragment.getSearchNASAArchiveFavorite().setSearchRequest(
                         "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}")
                     searchNASAArchiveFragment.getSearchNASAArchiveFavorite()

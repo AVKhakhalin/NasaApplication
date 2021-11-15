@@ -7,8 +7,7 @@ import com.example.nasaapplication.ui.fragments.contents.FavoriteRecyclerListFra
 import com.example.nasaapplication.ui.fragments.contents.SettingsFragment
 
 class NavigationContent(
-    private val fragmentManager: FragmentManager,
-    private val mainActivity: MainActivity
+    private val fragmentManager: FragmentManager
 ) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     private var settingsFragment: SettingsFragment? = null
@@ -27,7 +26,7 @@ class NavigationContent(
 
     // Отображение фрагмента с настройками приложения
     fun showSettingsFragment(useBackStack: Boolean) {
-        settingsFragment = SettingsFragment.newInstance(mainActivity)
+        settingsFragment = SettingsFragment.newInstance()
         // Открыть транзакцию
         if (settingsFragment != null) {
             fragmentManager?.let {
@@ -46,7 +45,7 @@ class NavigationContent(
 
     // Отображение фрагмента со списком "Избранное"
     fun showFavoriteRecyclerListFragment(useBackStack: Boolean) {
-        favoriteRecyclerListFragment = FavoriteRecyclerListFragment.newInstance(mainActivity)
+        favoriteRecyclerListFragment = FavoriteRecyclerListFragment.newInstance()
         // Открыть транзакцию
         if (favoriteRecyclerListFragment != null) {
             fragmentManager?.let {

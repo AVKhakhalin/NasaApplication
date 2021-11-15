@@ -5,21 +5,19 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewbinding.ViewBinding
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.nasaapplication.controller.ConstantsController
-import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.fragments.contents.DayPhotoFragment
 import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragment
 import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
 
 class ViewPagerAdapter(
-    private val fragmentActivity: FragmentActivity,
-    private val mainActivity: MainActivity
+    private val fragmentActivity: FragmentActivity
 ): FragmentStateAdapter(fragmentActivity) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     private var fragments = arrayOf(
-        DayPhotoFragment(mainActivity),
-        SearchWikiFragment(mainActivity),
-        SearchNASAArchiveFragment(mainActivity)
+        DayPhotoFragment(),
+        SearchWikiFragment(),
+        SearchNASAArchiveFragment()
     )
     //endregion
 
