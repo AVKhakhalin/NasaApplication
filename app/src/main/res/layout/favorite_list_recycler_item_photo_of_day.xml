@@ -85,7 +85,7 @@
         android:layout_width="@dimen/recycler_item_photo_of_day_item_title_width"
         android:layout_height="?attr/actionBarSize"
         android:text="@string/recycler_item_photo_of_day_item_title_text"
-        android:textColor="?attr/colorPrimaryVariant"
+        android:textColor="?attr/color"
         android:paddingTop="@dimen/recycler_item_photo_of_day_item_title_padding_top"
         android:textSize="@dimen/recycler_item_photo_of_day_item_title_text_size"
         android:layout_marginStart="@dimen/recycler_item_photo_of_day_item_title_margin_start"

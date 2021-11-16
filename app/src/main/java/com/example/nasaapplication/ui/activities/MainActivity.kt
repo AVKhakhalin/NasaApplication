@@ -75,6 +75,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     private val colorTypedValue: TypedValue = TypedValue()
     private val colorSecondaryVariantTypedValue: TypedValue = TypedValue()
     private val colorPrimaryVariantTypedValue: TypedValue = TypedValue()
+    private val colorPrimaryTypedValue: TypedValue = TypedValue()
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,6 +90,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             R.attr.colorSecondaryVariant, colorSecondaryVariantTypedValue, true)
         theme.resolveAttribute(
             R.attr.colorPrimaryVariant, colorPrimaryVariantTypedValue, true)
+        theme.resolveAttribute(
+            R.attr.colorPrimary, colorPrimaryTypedValue, true)
 
         // Подключение Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -303,7 +306,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     showFavoriteRecyclerListFragment()
                 }
             R.id.action_bottom_bar_add_to_favorite ->
-                if ((!isBlockingOtherFABButtons) && (newFavorite.getTitle().isNotEmpty())) {
+                if ((!isBlockingOtherFABButtons) && (newFavorite != Favorite()) &&
+                    (newFavorite.getTitle().isNotEmpty())) {
                     // Добавление понравившегося содержимого в список "Избранное"
                     val indexSimilarData: Int = favoriteListData.addFavoriteData(newFavorite)
                     if (indexSimilarData == -1) {
@@ -759,7 +763,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     //endregion
 
     //region МЕТОДЫ ПОЛУЧЕНИЯ ЦВЕТОВ ИЗ АТТРИБУТОВ ТЕМЫ
-    fun getColorSecondary(): TypedValue {
+    fun getColorSecondaryTypedValue(): TypedValue {
         return colorSecondaryTypedValue
     }
     fun getSecondaryVariantTypedValue(): TypedValue {
@@ -767,6 +771,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     }
     fun getColorPrimaryVariantTypedValue(): TypedValue {
         return colorPrimaryVariantTypedValue
+    }
+    fun getColorPrimaryTypedValue(): TypedValue {
+        return colorPrimaryTypedValue
     }
     //endregion
 

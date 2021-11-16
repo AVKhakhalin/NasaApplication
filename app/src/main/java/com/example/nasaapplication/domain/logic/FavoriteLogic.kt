@@ -1,5 +1,7 @@
 package com.example.nasaapplication.domain.logic
 
+import android.util.Log
+import android.widget.Toast
 import com.example.nasaapplication.ui.ConstantsUi
 
 // Класс с логикой проекта - построение и сохранение списка избранных данных
@@ -26,7 +28,18 @@ class FavoriteLogic {
                 }
             }
         }
-        if (indexSimilarData == -1) fullDatesList.add(newFavorite)
+        if (indexSimilarData == -1) {
+            fullDatesList.add(Favorite())
+            val lastIndex: Int = fullDatesList.size - 1
+            fullDatesList[lastIndex].setLinkSource(newFavorite.getLinkSource())
+            fullDatesList[lastIndex].setDescription(newFavorite.getDescription())
+            fullDatesList[lastIndex].setTitle(newFavorite.getTitle())
+            fullDatesList[lastIndex].setLinkImage(newFavorite.getLinkImage())
+            fullDatesList[lastIndex].setTypeSource(newFavorite.getTypeSource())
+            fullDatesList[lastIndex].setSearchRequest(newFavorite.getSearchRequest())
+            fullDatesList[lastIndex].setPriority(newFavorite.getPriority())
+            fullDatesList[lastIndex].setIsShowDescription(newFavorite.getIsShowDescription())
+        }
         return indexSimilarData
     }
     //endregion
@@ -47,24 +60,28 @@ class FavoriteLogic {
     }
     fun removeAndAddFavoriteDataByCorrectedData(indexRemovedFavoriteCorrectedData: Int,
                                                 indexAddedFavoriteCorrectedData: Int) {
-        fullDatesList.remove(correctedDatesList[indexRemovedFavoriteCorrectedData])
-        var addedIndex: Int =
+        val removedIndex: Int =
+            searchElementInCorrectedDatesList(correctedDatesList[indexRemovedFavoriteCorrectedData])
+        val addedIndex: Int =
             searchElementInCorrectedDatesList(correctedDatesList[indexAddedFavoriteCorrectedData])
+        val removeFavoriteData: Favorite = fullDatesList.removeAt(removedIndex)
         if (addedIndex > -1) {
-            fullDatesList.add(addedIndex, correctedDatesList[indexRemovedFavoriteCorrectedData])
+            fullDatesList.add(addedIndex, removeFavoriteData)
         }
     }
     //endregion
     
     //region МЕТОДЫ РЕДАКТИРОВАНИЯ ИЗБРАННЫХ ДАННЫХ
-    fun editFavoriteData(indexEditedFavoriteData: Int, newPriority: Int, newTitle: String, newDescription: String) {
+    fun editFavoriteData(
+        indexEditedFavoriteData: Int, newPriority: Int, newTitle: String, newDescription: String) {
         if (fullDatesList.size >= indexEditedFavoriteData + 1) {
             fullDatesList[indexEditedFavoriteData].setPriority(newPriority)
             fullDatesList[indexEditedFavoriteData].setTitle(newTitle)
             fullDatesList[indexEditedFavoriteData].setDescription(newDescription)
         }
     }
-    fun editFavoriteData(titleEditedFavoriteData: String, newPriority: Int, newTitle: String, newDescription: String) {
+    fun editFavoriteData(titleEditedFavoriteData: String, newPriority: Int,
+                         newTitle: String, newDescription: String) {
         fullDatesList.forEach {
             if (it.getTitle() == titleEditedFavoriteData) {
                 it.setPriority(newPriority)

@@ -1,6 +1,6 @@
 package com.example.nasaapplication.controller.recyclers
 
-import android.graphics.Color
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -149,10 +149,10 @@ class FavoriteRecyclerListFragmentAdapter (
         }
         //region МЕТОДЫ ItemTouchHelperViewHolder ДЛЯ РАБОТЫ СО СМАХИВАНИЕМ (ВЫДЕЛЕНИЕ И ОЧИСТКА)
         override fun onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY)
+            itemView.setBackgroundColor(mainActivity.getColorPrimaryTypedValue().data)
         }
         override fun onItemClear() {
-            itemView.setBackgroundColor(mainActivity.getColorSecondary().data)
+            itemView.setBackgroundColor(mainActivity.getColorSecondaryTypedValue().data)
         }
         //endregion
     }
@@ -230,10 +230,10 @@ class FavoriteRecyclerListFragmentAdapter (
         }
         //region МЕТОДЫ ItemTouchHelperViewHolder ДЛЯ РАБОТЫ СО СМАХИВАНИЕМ (ВЫДЕЛЕНИЕ И ОЧИСТКА)
         override fun onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY)
+            itemView.setBackgroundColor(mainActivity.getColorPrimaryTypedValue().data)
         }
         override fun onItemClear() {
-            itemView.setBackgroundColor(mainActivity.getColorSecondary().data)
+            itemView.setBackgroundColor(mainActivity.getColorSecondaryTypedValue().data)
         }
         //endregion
     }
@@ -312,10 +312,10 @@ class FavoriteRecyclerListFragmentAdapter (
         }
         //region МЕТОДЫ ItemTouchHelperViewHolder ДЛЯ РАБОТЫ СО СМАХИВАНИЕМ (ВЫДЕЛЕНИЕ И ОЧИСТКА)
         override fun onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY)
+            itemView.setBackgroundColor(mainActivity.getColorPrimaryTypedValue().data)
         }
         override fun onItemClear() {
-            itemView.setBackgroundColor(mainActivity.getColorSecondary().data)
+            itemView.setBackgroundColor(mainActivity.getColorSecondaryTypedValue().data)
         }
         //endregion
     }
@@ -380,18 +380,24 @@ class FavoriteRecyclerListFragmentAdapter (
 
     //region БАЗОВЫЕ МЕТОДЫ ДЛЯ РЕАЛИЗАЦИИ СМАХИВАНИЯ (УДАЛЕНИЯ) ЭЛЕМЕНТОВ
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
-        removeAtAndAddInFullDatesList(fromPosition,
-            if (toPosition > fromPosition) toPosition - 1 else toPosition)
+//        removeAtAndAddInFullDatesList(fromPosition,
+//            if (toPosition > fromPosition) toPosition - 1 else toPosition)
+//             toPosition)
+//        favoriteData.removeAt(fromPosition).apply {
+//            favoriteData.add(
+//                if (toPosition > fromPosition) toPosition - 1 else toPosition, this)
+//        }
+//        if (toPosition > fromPosition) {
+//            notifyItemMoved(fromPosition, toPosition) // Движение вниз
+//        }
+//        else {
+//            notifyItemMoved(fromPosition, toPosition) // Движение вверх
+//        }
+        removeAtAndAddInFullDatesList(fromPosition, toPosition)
         favoriteData.removeAt(fromPosition).apply {
-            favoriteData.add(
-                if (toPosition > fromPosition) toPosition - 1 else toPosition, this)
+            favoriteData.add(toPosition, this)
         }
-        if (toPosition > fromPosition) {
-            notifyItemMoved(fromPosition, toPosition) // Удивительно, но в этом случае все работает
-        }
-        else {
-            notifyItemMoved(fromPosition, toPosition) // Удивительно, но в этом случае все работает
-        }
+        notifyItemMoved(fromPosition, toPosition)
     }
     override fun onItemDismiss(position: Int) {
         removeAtInFullDatesList(position)
