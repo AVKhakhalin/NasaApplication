@@ -97,10 +97,6 @@ class FavoriteRecyclerListFragmentAdapter (
                     mainActivity.priorityRangeFullDatesList()
                     favoriteData = mainActivity.getFavoriteDataList()
                     notifyDataSetChanged()
-                    mainActivity.getFavoriteDataList().forEach {
-                        Log.d("mylogs", "${it.getTitle()} ${it.getPriority()}\n")
-                    }
-                    Log.d("mylogs", "---")
                 }
                 recyclerItemPhotoOfDayPriorityNormal.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
@@ -109,10 +105,6 @@ class FavoriteRecyclerListFragmentAdapter (
                     mainActivity.priorityRangeFullDatesList()
                     favoriteData = mainActivity.getFavoriteDataList()
                     notifyDataSetChanged()
-                    mainActivity.getFavoriteDataList().forEach {
-                        Log.d("mylogs", "${it.getTitle()} ${it.getPriority()}\n")
-                    }
-                    Log.d("mylogs", "---")
                 }
                 recyclerItemPhotoOfDayPriorityLow.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
@@ -121,10 +113,6 @@ class FavoriteRecyclerListFragmentAdapter (
                     mainActivity.priorityRangeFullDatesList()
                     favoriteData = mainActivity.getFavoriteDataList()
                     notifyDataSetChanged()
-                    mainActivity.getFavoriteDataList().forEach {
-                        Log.d("mylogs", "${it.getTitle()} ${it.getPriority()}\n")
-                    }
-                    Log.d("mylogs", "---")
                 }
                 //endregion
                 // Изменение картинки элемента в зависимости от его приоритета
@@ -192,10 +180,6 @@ class FavoriteRecyclerListFragmentAdapter (
                     mainActivity.priorityRangeFullDatesList()
                     favoriteData = mainActivity.getFavoriteDataList()
                     notifyDataSetChanged()
-                    mainActivity.getFavoriteDataList().forEach {
-                        Log.d("mylogs", "${it.getTitle()} ${it.getPriority()}\n")
-                    }
-                    Log.d("mylogs", "---")
                 }
                 recyclerItemSearchInWikiPriorityNormal.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
@@ -204,10 +188,6 @@ class FavoriteRecyclerListFragmentAdapter (
                     mainActivity.priorityRangeFullDatesList()
                     favoriteData = mainActivity.getFavoriteDataList()
                     notifyDataSetChanged()
-                    mainActivity.getFavoriteDataList().forEach {
-                        Log.d("mylogs", "${it.getTitle()} ${it.getPriority()}\n")
-                    }
-                    Log.d("mylogs", "---")
                 }
                 recyclerItemSearchInWikiPriorityLow.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
@@ -216,10 +196,6 @@ class FavoriteRecyclerListFragmentAdapter (
                     mainActivity.priorityRangeFullDatesList()
                     favoriteData = mainActivity.getFavoriteDataList()
                     notifyDataSetChanged()
-                    mainActivity.getFavoriteDataList().forEach {
-                        Log.d("mylogs", "${it.getTitle()} ${it.getPriority()}\n")
-                    }
-                    Log.d("mylogs", "---")
                 }
                 //endregion
                 // Изменение картинки элемента в зависимости от его приоритета
@@ -286,10 +262,6 @@ class FavoriteRecyclerListFragmentAdapter (
                     mainActivity.priorityRangeFullDatesList()
                     favoriteData = mainActivity.getFavoriteDataList()
                     notifyDataSetChanged()
-                    mainActivity.getFavoriteDataList().forEach {
-                        Log.d("mylogs", "${it.getTitle()} ${it.getPriority()}\n")
-                    }
-                    Log.d("mylogs", "---")
                 }
                 recyclerItemSearchInNasaPriorityNormal.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
@@ -298,10 +270,6 @@ class FavoriteRecyclerListFragmentAdapter (
                     mainActivity.priorityRangeFullDatesList()
                     favoriteData = mainActivity.getFavoriteDataList()
                     notifyDataSetChanged()
-                    mainActivity.getFavoriteDataList().forEach {
-                        Log.d("mylogs", "${it.getTitle()} ${it.getPriority()}\n")
-                    }
-                    Log.d("mylogs", "---")
                 }
                 recyclerItemSearchInNasaPriorityLow.setOnClickListener {
                     itemFavoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
@@ -310,10 +278,6 @@ class FavoriteRecyclerListFragmentAdapter (
                     mainActivity.priorityRangeFullDatesList()
                     favoriteData = mainActivity.getFavoriteDataList()
                     notifyDataSetChanged()
-                    mainActivity.getFavoriteDataList().forEach {
-                        Log.d("mylogs", "${it.getTitle()} ${it.getPriority()}\n")
-                    }
-                    Log.d("mylogs", "---")
                 }
                 //endregion
                 // Изменение картинки элемента в зависимости от его приоритета

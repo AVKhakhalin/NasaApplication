@@ -82,14 +82,14 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     private val localRoomImpl: LocalRoomImpl = LocalRoomImpl(getFavoriteDAO())
     //endregion
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
         // Обновление списка "Избранное" в базе данных перед закрытием приложения
         localRoomImpl.deleteAllFavorite()
         favoriteListData.setFilterWord("")
         favoriteListData.getDatesList().forEach {
             localRoomImpl.saveFavorite(it)
         }
+        super.onPause()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -321,11 +321,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     setListFavoriteEmptyData()
                     // Отображение фрагмента со списком "Избранное"
                     showFavoriteRecyclerListFragment()
-
-                    getFavoriteDataList().forEach {
-                        Log.d("mylogs", "${it.getPriority()}\n")
-                    }
-                    Log.d("mylogs", "---")
                 }
             R.id.action_bottom_bar_add_to_favorite ->
                 if ((!isBlockingOtherFABButtons) && (newFavorite != Favorite()) &&
@@ -813,13 +808,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     }
     // Проверка на то, что новые данные уже есть в списке "Избранное"
     fun checkSimilarFavoriteData(): Boolean {
-        Log.d("mylogs",
-            "\n\nMainActivity:\n${newFavorite.getLinkImage()}" +
-                    "\n${newFavorite.getLinkSource()}" +
-                    "\n${newFavorite.getSearchRequest()}" +
-                    "\n${newFavorite.getTypeSource()}" +
-                    "\n${newFavorite.getDescription()}" +
-                    "\n${newFavorite.getTitle()}\n")
         return favoriteListData.checkSimilarFavoriteData(newFavorite)
     }
     // Установка фильтра для выбора нужной информации из списка "Избранное"

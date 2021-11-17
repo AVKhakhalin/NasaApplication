@@ -75,8 +75,8 @@ class SearchNASAArchiveFragmentAdapter(
                         mainActivity.setListFavoriteDataTitle(newNASAArchiveEntityList[position])
                         mainActivity.setListFavoriteDataDescription(entitiesTexts[position])
                         mainActivity.setListFavoriteDataLinkSource(
-                                searchNASAArchiveFragment.getDataViewModel().getRequestUrl()
-                            )
+                                searchNASAArchiveFragment.getDataViewModel().getRequestUrl())
+                        mainActivity.setListFavoriteDataPriority(0)
                     }
                     searchNASAArchiveFragment.getSearchNASAArchiveFavorite().setSearchRequest(
                         "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}")
@@ -91,6 +91,7 @@ class SearchNASAArchiveFragmentAdapter(
                     searchNASAArchiveFragment.getSearchNASAArchiveFavorite()
                         .setLinkSource(
                     searchNASAArchiveFragment.getDataViewModel().getRequestUrl())
+                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite().setPriority(0)
                     // Анимированное появление найденной картинки по запросу в архиве NASA
                     searchNASAArchiveFragment.binding.searchInNasaArchiveImageView.alpha =
                         transparientValue

@@ -84,14 +84,6 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     override fun onResume() {
         // Начальная настройка фрагмента
         initialSettingFragment()
-        Log.d("mylogs",
-            "\n\n${searchNASAArchiveFavorite.getLinkImage()}" +
-                    "\n${searchNASAArchiveFavorite.getLinkSource()}" +
-                    "\n${searchNASAArchiveFavorite.getSearchRequest()}" +
-                    "\n${searchNASAArchiveFavorite.getTypeSource()}" +
-                    "\n${searchNASAArchiveFavorite.getDescription()}" +
-                    "\n${searchNASAArchiveFavorite.getTitle()}\n")
-        super.onResume()
     }
 
     //region МЕТОДЫ РАБОТЫ С RECYCLER VIEW (СПИСКОМ НАЙДЕННЫХ В АРХИВЕ NASA ПО ЗАПРОСУ ЗАПИСЕЙ)
