@@ -1,19 +1,37 @@
-package com.example.nasaapplication.ui
+package com.example.nasaapplication
 
-import android.os.Bundle
 import android.util.TypedValue
-import com.example.nasaapplication.R
-import com.example.nasaapplication.ui.activities.MainActivity
 
-// Класс с константами для Ui
-class ConstantsUi {
+class Constants {
     companion object {
+        //----------------------
+        // controller:
+        @JvmField
+        val API_KEY: String = BuildConfig.NASA_API_KEY
+        // Индексы фрагментов
+        @JvmField
+        val DAY_PHOTO_FRAGMENT_INDEX: Int = 0
+        @JvmField
+        val SEARCH_WIKI_FRAGMENT_INDEX: Int = 1
+        @JvmField
+        val SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX: Int = 2
+
+        //----------------------
+        // domain:
+
+        //----------------------
+        // repository:
+        @JvmField
+        val POD_BASE_URL: String = "https://api.nasa.gov/"
+        @JvmField
+        val NASA_ARCHIVE_BASE_URL: String = "https://images-api.nasa.gov/"
+
+        //----------------------
+        // ui:
         @JvmField // TODO: Доработать изменение языка запроса в зависимости от языковых настроек пользователя
         val WIKI_URL: String = "https://ru.wikipedia.org/wiki/"
         @JvmField
         val WIKI_ERROR_URL: String = "https://ru.m.wikipedia.org/wiki/wiki"
-        @JvmField
-        val DAY_PHOTO_TEXT: String ="\"Фотография дня\" от "
         @JvmField
         val SHARED_PREFERENCES_KEY: String = "Shared Preferences"
         @JvmField
@@ -30,10 +48,6 @@ class ConstantsUi {
         val WEBVIEW_TEXT_FOOTER: String = "</strong></body></html>"
         private val colorSecondaryVariantValue: TypedValue = TypedValue()
         //endregion
-
-        // Сообщения об ошибках
-        @JvmField
-        val ERROR_LINK_EMPTY: String = "Ссылка пуста"
 
         // Константы для метода ShowUrlInWiki
         @JvmField
