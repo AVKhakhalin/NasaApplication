@@ -3,7 +3,6 @@ package com.example.nasaapplication.ui.fragments.contents
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nasaapplication.R
@@ -93,8 +92,8 @@ class FavoriteRecyclerListFragment(
                             mainActivity.binding.transparentBackground.visibility = View.VISIBLE
                         }
                         else -> {
-                            Toast.makeText(context, "${getString(R.string.error)}: ${
-                                getString(R.string.unknown_type_source_favorite_data)}", Toast.LENGTH_LONG).show()
+                            mainActivity.toast("${getString(R.string.error)}: ${
+                                getString(R.string.unknown_type_source_favorite_data)}")
                         }
                     }
                 }

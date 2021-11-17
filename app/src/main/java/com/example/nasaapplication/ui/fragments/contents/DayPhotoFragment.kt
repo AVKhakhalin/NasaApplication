@@ -106,8 +106,8 @@ class DayPhotoFragment:
                     val url = serverResponseData.url
                     if (url.isNullOrEmpty()) {
                         //showError("Сообщение, что ссылка пустая")
-                        toast("${mainActivity.resources.getString(R.string.error)}: ${
-                            mainActivity.resources.getString(R.string.error_empty_link)}")
+                        mainActivity.toast("${mainActivity.resources.getString(
+                            R.string.error)}: ${mainActivity.resources.getString(R.string.error_empty_link)}")
                     } else {
                         //showSuccess()
                         // Сохранение данных для списка "Избранное"
@@ -200,7 +200,7 @@ class DayPhotoFragment:
                 }
                 is PODData.Error -> {
                     //showError(data.error.message)
-                    toast(data.error.message)
+                    mainActivity.toast(data.error.message)
                 }
             }
         }
@@ -330,14 +330,6 @@ class DayPhotoFragment:
             if (dateDay < 10) "0$dateDay" else "$dateDay"}"
         return "${if (dateDay < 10) "0$dateDay" else "$dateDay"}.${
             if (dateMonth < 10) "0$dateMonth" else "$dateMonth"}.$dateYear"
-    }
-
-    // Метод для отображения сообщения в виде Toast
-    private fun Fragment.toast(string: String?) {
-        Toast.makeText(context, string, Toast.LENGTH_SHORT).apply {
-            setGravity(Gravity.BOTTOM, 0, 250)
-            show()
-        }
     }
 
     // Метод установки элемента из списка "Избранное" для просмотра в данном фрагменте

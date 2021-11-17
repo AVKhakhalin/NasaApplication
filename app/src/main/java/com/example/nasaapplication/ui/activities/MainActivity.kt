@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import android.os.*
 import android.util.Log
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -18,6 +19,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.nasaapplication.FavoriteBaseApp.Companion.getFavoriteDAO
 import com.example.nasaapplication.R
@@ -332,19 +334,14 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                         // Добавление новой записи "Избранное" в базу данных
                         localRoomImpl.saveFavorite(newFavorite)
                         // Уведомление пользователя о добавлении новой записи в список "Избранное"
-                        Toast.makeText(this, "${
-                            resources.getString(R.string.info_added_item_in_favorite_list)}:\n\"${
-                                newFavorite.getTitle()}\"", Toast.LENGTH_LONG
-                        ).show()
+                        // TODO: Сделать изменение нового счётчика в закледке фрагмента
                     } else {
                         // Удаление понравившегося содержимого из списка "Избранное"
                         favoriteListData.removeFavoriteData(indexSimilarData)
                         // Изменение вида иконки сердца
                         changeHeartIconState(this, false, true)
-                        // Уведомление пользователя о добавлении новой записи в список "Избранное"
-                        Toast.makeText(this, "${resources.getString(
-                            R.string.info_deleted_item_from_favorite_list)}\n\"${
-                            newFavorite.getTitle()}\"", Toast.LENGTH_LONG).show()
+                        // Уведомление пользователя об удалении новой записи из списка "Избранное"
+                        // TODO: Сделать изменение нового счётчика в закледке фрагмента
                     }
                 }
             android.R.id.home -> {
@@ -828,5 +825,13 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Ранжирование списка fullDatesList по приоритетам
     fun priorityRangeFullDatesList() {
         favoriteListData.priorityRangeFullDatesList()
+    }
+
+    // Метод для отображения сообщения в виде Toast
+    fun toast(string: String?) {
+        Toast.makeText(this, string, Toast.LENGTH_SHORT).apply {
+            setGravity(Gravity.CENTER_VERTICAL, 0, 250)
+            show()
+        }
     }
 }

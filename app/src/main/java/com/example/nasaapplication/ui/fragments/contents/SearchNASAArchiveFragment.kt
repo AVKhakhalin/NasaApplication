@@ -233,7 +233,7 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                     if (url.isNullOrEmpty()) {
                         //showError("Сообщение, что ссылка пустая")
                         mainActivity?.let {
-                            toast("${it.resources.getString(R.string.error)}: ${
+                            it.toast("${it.resources.getString(R.string.error)}: ${
                                 it.resources.getString(R.string.error_empty_link)}")
                         }
                     } else {
@@ -276,16 +276,8 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
             }
             is NASAArchiveData.Error -> {
                 // Показать ошибку в случае загрузки картинки (showError(data.error.message))
-                toast(data.error.message)
+                mainActivity?.let { it.toast(data.error.message) }
             }
-        }
-    }
-
-    // Метод для отображения сообщения в виде Toast
-    private fun Fragment.toast(string: String?) {
-        Toast.makeText(context, string, Toast.LENGTH_LONG).apply {
-            setGravity(Gravity.BOTTOM, 0, 250)
-            show()
         }
     }
 

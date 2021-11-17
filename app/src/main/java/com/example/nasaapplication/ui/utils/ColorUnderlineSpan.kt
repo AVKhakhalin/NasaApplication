@@ -3,7 +3,6 @@ package com.example.nasaapplication.ui.utils
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.text.style.LineBackgroundSpan
-import android.widget.Toast
 import com.example.nasaapplication.R
 import com.example.nasaapplication.ui.activities.MainActivity
 
