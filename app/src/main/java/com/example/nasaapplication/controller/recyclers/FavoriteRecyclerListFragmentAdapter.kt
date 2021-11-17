@@ -9,7 +9,7 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nasaapplication.R
-import com.example.nasaapplication.controller.ConstantsController
+import com.example.nasaapplication.Constants
 import com.example.nasaapplication.controller.recyclers.utils.BaseViewHolder
 import com.example.nasaapplication.controller.recyclers.utils.ItemTouchHelperAdapter
 import com.example.nasaapplication.controller.recyclers.utils.ItemTouchHelperViewHolder
@@ -17,7 +17,6 @@ import com.example.nasaapplication.databinding.FavoriteListRecyclerItemPhotoOfDa
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemSearchInNasaBinding
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemSearchInWikiBinding
 import com.example.nasaapplication.domain.logic.Favorite
-import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 
 class FavoriteRecyclerListFragmentAdapter (
@@ -28,19 +27,19 @@ class FavoriteRecyclerListFragmentAdapter (
     //region БАЗОВЫЕ МЕТОДЫ ДЛЯ РАБОТЫ АДАПТЕРА
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when(viewType) {
-            ConstantsController.DAY_PHOTO_FRAGMENT_INDEX -> {
+            Constants.DAY_PHOTO_FRAGMENT_INDEX -> {
                 val binding: FavoriteListRecyclerItemPhotoOfDayBinding =
                     FavoriteListRecyclerItemPhotoOfDayBinding
                         .inflate(LayoutInflater.from(parent.context), parent,false)
                 PhotoOfDayViewHolder(binding.root)
             }
-            ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX -> {
+            Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX -> {
                 val binding: FavoriteListRecyclerItemSearchInNasaBinding =
                     FavoriteListRecyclerItemSearchInNasaBinding
                         .inflate(LayoutInflater.from(parent.context), parent,false)
                 SearchInNASAArchiveViewHolder(binding.root)
             }
-            ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX -> {
+            Constants.SEARCH_WIKI_FRAGMENT_INDEX -> {
                 val binding: FavoriteListRecyclerItemSearchInWikiBinding =
                     FavoriteListRecyclerItemSearchInWikiBinding
                         .inflate(LayoutInflater.from(parent.context), parent,false)
@@ -57,15 +56,15 @@ class FavoriteRecyclerListFragmentAdapter (
     override fun getItemViewType(position: Int): Int {
         return when {
             favoriteData[position].getTypeSource() ==
-                    ConstantsController.DAY_PHOTO_FRAGMENT_INDEX ->
-                ConstantsController.DAY_PHOTO_FRAGMENT_INDEX
+                    Constants.DAY_PHOTO_FRAGMENT_INDEX ->
+                Constants.DAY_PHOTO_FRAGMENT_INDEX
             favoriteData[position].getTypeSource() ==
-                    ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX ->
-                ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
+                    Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX ->
+                Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
             favoriteData[position].getTypeSource() ==
-                    ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX ->
-                ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX
-            else -> ConstantsController.DAY_PHOTO_FRAGMENT_INDEX
+                    Constants.SEARCH_WIKI_FRAGMENT_INDEX ->
+                Constants.SEARCH_WIKI_FRAGMENT_INDEX
+            else -> Constants.DAY_PHOTO_FRAGMENT_INDEX
         }
     }
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
@@ -91,7 +90,7 @@ class FavoriteRecyclerListFragmentAdapter (
                 }
                 //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
                 recyclerItemPhotoOfDayPriorityHigh.setOnClickListener {
-                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_HIGH)
+                    itemFavoriteData.setPriority(Constants.PRIORITY_HIGH)
                     changePhotoOfDayItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
                     mainActivity.priorityRangeFullDatesList()
@@ -99,7 +98,7 @@ class FavoriteRecyclerListFragmentAdapter (
                     notifyDataSetChanged()
                 }
                 recyclerItemPhotoOfDayPriorityNormal.setOnClickListener {
-                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
+                    itemFavoriteData.setPriority(Constants.PRIORITY_NORMAL)
                     changePhotoOfDayItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
                     mainActivity.priorityRangeFullDatesList()
@@ -107,7 +106,7 @@ class FavoriteRecyclerListFragmentAdapter (
                     notifyDataSetChanged()
                 }
                 recyclerItemPhotoOfDayPriorityLow.setOnClickListener {
-                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
+                    itemFavoriteData.setPriority(Constants.PRIORITY_LOW)
                     changePhotoOfDayItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
                     mainActivity.priorityRangeFullDatesList()
@@ -174,7 +173,7 @@ class FavoriteRecyclerListFragmentAdapter (
                 }
                 //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
                 recyclerItemSearchInWikiPriorityHigh.setOnClickListener {
-                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_HIGH)
+                    itemFavoriteData.setPriority(Constants.PRIORITY_HIGH)
                     changeSearchInWikiItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
                     mainActivity.priorityRangeFullDatesList()
@@ -182,7 +181,7 @@ class FavoriteRecyclerListFragmentAdapter (
                     notifyDataSetChanged()
                 }
                 recyclerItemSearchInWikiPriorityNormal.setOnClickListener {
-                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
+                    itemFavoriteData.setPriority(Constants.PRIORITY_NORMAL)
                     changeSearchInWikiItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
                     mainActivity.priorityRangeFullDatesList()
@@ -190,7 +189,7 @@ class FavoriteRecyclerListFragmentAdapter (
                     notifyDataSetChanged()
                 }
                 recyclerItemSearchInWikiPriorityLow.setOnClickListener {
-                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
+                    itemFavoriteData.setPriority(Constants.PRIORITY_LOW)
                     changeSearchInWikiItemImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
                     mainActivity.priorityRangeFullDatesList()
@@ -256,7 +255,7 @@ class FavoriteRecyclerListFragmentAdapter (
                 }
                 //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
                 recyclerItemSearchInNasaPriorityHigh.setOnClickListener {
-                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_HIGH)
+                    itemFavoriteData.setPriority(Constants.PRIORITY_HIGH)
                     changeSearchInNASAArchiveImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
                     mainActivity.priorityRangeFullDatesList()
@@ -264,7 +263,7 @@ class FavoriteRecyclerListFragmentAdapter (
                     notifyDataSetChanged()
                 }
                 recyclerItemSearchInNasaPriorityNormal.setOnClickListener {
-                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_NORMAL)
+                    itemFavoriteData.setPriority(Constants.PRIORITY_NORMAL)
                     changeSearchInNASAArchiveImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
                     mainActivity.priorityRangeFullDatesList()
@@ -272,7 +271,7 @@ class FavoriteRecyclerListFragmentAdapter (
                     notifyDataSetChanged()
                 }
                 recyclerItemSearchInNasaPriorityLow.setOnClickListener {
-                    itemFavoriteData.setPriority(ConstantsUi.PRIORITY_LOW)
+                    itemFavoriteData.setPriority(Constants.PRIORITY_LOW)
                     changeSearchInNASAArchiveImageOnPriority(
                         itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
                     mainActivity.priorityRangeFullDatesList()

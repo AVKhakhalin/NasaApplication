@@ -10,7 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.nasaapplication.R
-import com.example.nasaapplication.controller.ConstantsController
+import com.example.nasaapplication.Constants
 import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragment
 
 class SearchNASAArchiveFragmentAdapter(
@@ -69,7 +69,7 @@ class SearchNASAArchiveFragmentAdapter(
                                 "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}"
                             )
                         mainActivity.setListFavoriteDataTypeSource(
-                                ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
+                                Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
                             )
                         mainActivity.setListFavoriteDataLinkImage(entitiesLinks[position])
                         mainActivity.setListFavoriteDataTitle(newNASAArchiveEntityList[position])
@@ -81,7 +81,7 @@ class SearchNASAArchiveFragmentAdapter(
                     searchNASAArchiveFragment.getSearchNASAArchiveFavorite().setSearchRequest(
                         "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}")
                     searchNASAArchiveFragment.getSearchNASAArchiveFavorite()
-                        .setTypeSource(ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
+                        .setTypeSource(Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
                     searchNASAArchiveFragment.getSearchNASAArchiveFavorite()
                         .setLinkImage(entitiesLinks[position])
                     searchNASAArchiveFragment.getSearchNASAArchiveFavorite()

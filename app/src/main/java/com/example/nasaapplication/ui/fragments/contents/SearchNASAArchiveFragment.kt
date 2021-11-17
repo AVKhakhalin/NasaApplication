@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.nasaapplication.R
-import com.example.nasaapplication.controller.ConstantsController
+import com.example.nasaapplication.Constants
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.observers.viewmodels.NASAArchive.NASAArchiveData
@@ -31,7 +31,6 @@ import com.example.nasaapplication.controller.recyclers.SearchNASAArchiveFragmen
 import com.example.nasaapplication.databinding.FragmentSearchInNasaArchiveBinding
 import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.repository.facadeuser.NASAArchive.NASAArchiveServerResponseItems
-import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -73,6 +72,7 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
+        dataViewModel.setMainActivity(mainActivity)
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
         mainActivity?.let { it
             navigationDialogs = it.getNavigationDialogs()
@@ -84,6 +84,7 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     override fun onResume() {
         // Начальная настройка фрагмента
         initialSettingFragment()
+        super.onResume()
     }
 
     //region МЕТОДЫ РАБОТЫ С RECYCLER VIEW (СПИСКОМ НАЙДЕННЫХ В АРХИВЕ NASA ПО ЗАПРОСУ ЗАПИСЕЙ)
@@ -231,7 +232,10 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                     val url = serverResponseData.collection.items[0].links[0].href
                     if (url.isNullOrEmpty()) {
                         //showError("Сообщение, что ссылка пустая")
-                        toast(ConstantsUi.ERROR_LINK_EMPTY)
+                        mainActivity?.let {
+                            toast("${it.resources.getString(R.string.error)}: ${
+                                it.resources.getString(R.string.error_empty_link)}")
+                        }
                     } else {
                         // Удаление сообщения об отсутствии найденной информации по запросу
                         binding.searchInNasaArchiveTitleTextView.text = ""
@@ -255,15 +259,14 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                     binding.searchInNasaArchiveDescriptionTextView.visibility = View.INVISIBLE
                     binding.nasaArchiveEntityListContainer.visibility = View.INVISIBLE
                     // Отображение информации об отсутствии найденной информации по запросу
-                    binding.searchInNasaArchiveTitleTextView.text =
-                        ConstantsController.ERROR_EMPTY_DOWNLOAD_DATES
+                    mainActivity?.let { binding.searchInNasaArchiveTitleTextView.text = "${
+                        it.resources.getString(R.string.error_empty_download_dates)}" }
                     binding.searchInNasaArchiveTitleTextView.visibility = View.VISIBLE
                     // Сохранение в "Избранное" ответа об отсутствии информации на сервере NASA
-                    mainActivity?.let { it.setListFavoriteDataDescription(
-                        ConstantsController.ERROR_EMPTY_DOWNLOAD_DATES)
-                    }
-                    searchNASAArchiveFavorite.setDescription(
-                        ConstantsController.ERROR_EMPTY_DOWNLOAD_DATES)
+                    mainActivity?.let { it.setListFavoriteDataDescription("${
+                        it.resources.getString(R.string.error_empty_download_dates)}") }
+                    mainActivity?.let { searchNASAArchiveFavorite.setDescription(
+                        "${it.resources.getString(R.string.error_empty_download_dates)}") }
                 }
             }
             is NASAArchiveData.Loading -> {

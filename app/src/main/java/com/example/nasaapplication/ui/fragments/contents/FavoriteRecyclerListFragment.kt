@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nasaapplication.R
-import com.example.nasaapplication.controller.ConstantsController
+import com.example.nasaapplication.Constants
 import com.example.nasaapplication.controller.recyclers.FavoriteRecyclerListFragmentAdapter
 import com.example.nasaapplication.controller.recyclers.FavoriteRecyclerListFragmentOnItemClickListener
 import com.example.nasaapplication.controller.recyclers.utils.ItemTouchHelperViewHolder
@@ -53,41 +53,41 @@ class FavoriteRecyclerListFragment(
                 override fun onItemClick(favoriteData: Favorite) {
                     // Открытие данных во фрагментах
                     when(favoriteData.getTypeSource()) {
-                        ConstantsController.DAY_PHOTO_FRAGMENT_INDEX -> {
+                        Constants.DAY_PHOTO_FRAGMENT_INDEX -> {
                             // Очистка текущей информации для списка "Избранное"
                             // при переключении на фрагмент "Картинка дня"
                             mainActivity.setListFavoriteEmptyData()
                             // Открытие выбранной информации во фрагменте "Картинка дня"
                             mainActivity.getViewPager().currentItem =
-                                ConstantsController.DAY_PHOTO_FRAGMENT_INDEX
+                                Constants.DAY_PHOTO_FRAGMENT_INDEX
                             (mainActivity.getViewPagerAdapter()
-                                .getFragments()[ConstantsController.DAY_PHOTO_FRAGMENT_INDEX]
+                                .getFragments()[Constants.DAY_PHOTO_FRAGMENT_INDEX]
                                     as DayPhotoFragment).setAndShowFavoriteData(favoriteData)
                             mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
                             mainActivity.binding.transparentBackground.visibility = View.VISIBLE
                         }
-                        ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX -> {
+                        Constants.SEARCH_WIKI_FRAGMENT_INDEX -> {
                             // Очистка текущей информации для списка "Избранное"
                             // при переключении на фрагмент с поиском в Википедии
                             mainActivity.setListFavoriteEmptyData()
                             // Открытие выбранной информации во фрагменте с поиском в Википедии
                             mainActivity.getViewPager().currentItem =
-                                ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX
+                                Constants.SEARCH_WIKI_FRAGMENT_INDEX
                             (mainActivity.getViewPagerAdapter()
-                                .getFragments()[ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX]
+                                .getFragments()[Constants.SEARCH_WIKI_FRAGMENT_INDEX]
                                     as SearchWikiFragment).setAndShowFavoriteData(favoriteData)
                             mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
                             mainActivity.binding.transparentBackground.visibility = View.VISIBLE
                         }
-                        ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX -> {
+                        Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX -> {
                             // Очистка текущей информации для списка "Избранное"
                             // при переключении на фрагмент с поиском в архиве NASA
                             mainActivity.setListFavoriteEmptyData()
                             // Открытие выбранной информации во фрагменте с поиском в архиве NASA
                             mainActivity.getViewPager().currentItem =
-                                ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
+                                Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
                             (mainActivity.getViewPagerAdapter()
-                                .getFragments()[ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
+                                .getFragments()[Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
                                     as SearchNASAArchiveFragment).setAndShowFavoriteData(favoriteData)
                             mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
                             mainActivity.binding.transparentBackground.visibility = View.VISIBLE

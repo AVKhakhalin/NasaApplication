@@ -3,10 +3,11 @@ package com.example.nasaapplication.controller.observers.viewmodels.POD
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.nasaapplication.controller.ConstantsController
-import com.example.nasaapplication.repository.ConstantsRepository
+import com.example.nasaapplication.R
+import com.example.nasaapplication.Constants
 import com.example.nasaapplication.repository.facadeuser.POD.PODRetrofitImpl
 import com.example.nasaapplication.repository.facadeuser.POD.PODServerResponseData
+import com.example.nasaapplication.ui.activities.MainActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -14,15 +15,21 @@ import java.util.*
 
 class PODViewModel (
     private val liveDataForViewToObserve: MutableLiveData<PODData> = MutableLiveData(),
-    private val retrofitImpl: PODRetrofitImpl = PODRetrofitImpl()
+    private val retrofitImpl: PODRetrofitImpl = PODRetrofitImpl(),
 ): ViewModel() {
 
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     private var curDate: String = ""
     // Ссылка запроса для сохранения в списке "Избранное"
-    private var baseUrl: String = "${ConstantsRepository.POD_BASE_URL}planetary/apod?date="
+    private var baseUrl: String = "${Constants.POD_BASE_URL}planetary/apod?date="
     private var requestUrl: String = ""
+    // MainActivity
+    private var mainActivity: MainActivity? = null
     //endregion
+
+    fun setMainActivity(mainActivity: MainActivity?) {
+        this.mainActivity = mainActivity
+    }
 
     fun getRequestUrl(): String {
         return requestUrl
@@ -36,14 +43,17 @@ class PODViewModel (
 
     private fun sendServerRequest() {
         liveDataForViewToObserve.value = PODData.Loading(null)
-        if (ConstantsController.API_KEY.isBlank()) {
-            PODData.Error(Throwable(ConstantsController.ERROR_NO_API_KEY))
+        if (Constants.API_KEY.isBlank()) {
+            mainActivity?.let {
+                PODData.Error(Throwable("${it.resources.getString(R.string.error)}: ${
+                    it.resources.getString(R.string.error_no_api_key)}"))
+            }
         } else {
             // Сохранение ссылки запроса
-            requestUrl = "$baseUrl${getCurDate()}&api_key=${ConstantsController.API_KEY}"
+            requestUrl = "$baseUrl${getCurDate()}&api_key=${Constants.API_KEY}"
             // Выполнение запроса
             retrofitImpl.getRetrofitImpl().getPictureOfTheDay(getCurDate(),
-                ConstantsController.API_KEY).enqueue(object:
+                Constants.API_KEY).enqueue(object:
                 Callback<PODServerResponseData> {
                 override fun onResponse(
                     call: Call<PODServerResponseData>,
@@ -55,8 +65,12 @@ class PODViewModel (
                     } else {
                         val message = response.message()
                         if (message.isNullOrEmpty()) {
-                            liveDataForViewToObserve.value =
-                                PODData.Error(Throwable(ConstantsController.ERROR_UNKNOWN))
+                            mainActivity?.let {
+                                liveDataForViewToObserve.value =
+                                    PODData.Error(Throwable("${
+                                        it.resources.getString(R.string.error)}: ${
+                                        it.resources.getString(R.string.error_unknown)}"))
+                            }
                         } else {
                             liveDataForViewToObserve.value =
                                 PODData.Error(Throwable(message))

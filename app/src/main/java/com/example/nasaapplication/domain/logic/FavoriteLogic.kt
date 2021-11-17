@@ -1,6 +1,6 @@
 package com.example.nasaapplication.domain.logic
 
-import com.example.nasaapplication.ui.ConstantsUi
+import com.example.nasaapplication.Constants
 
 // Класс с логикой проекта - построение и сохранение списка избранных данных
 class FavoriteLogic {
@@ -170,7 +170,7 @@ class FavoriteLogic {
         var highPriorityLastIndex: Int = 0
         for (counter in 0 until fullDatesList.size) {
             when (fullDatesList[counter].getPriority()) {
-                ConstantsUi.PRIORITY_HIGH -> {
+                Constants.PRIORITY_HIGH -> {
                     if (counter != highPriorityLastIndex) {
                         fullDatesList.removeAt(counter).apply {
                             fullDatesList.add(highPriorityLastIndex++, this)
@@ -183,7 +183,7 @@ class FavoriteLogic {
         var normalPriorityLastIndex: Int = highPriorityLastIndex
         for (counter in highPriorityLastIndex until fullDatesList.size) {
             when (fullDatesList[counter].getPriority()) {
-                ConstantsUi.PRIORITY_NORMAL -> {
+                Constants.PRIORITY_NORMAL -> {
                     if (counter != normalPriorityLastIndex) {
                         fullDatesList.removeAt(counter).apply {
                             fullDatesList.add(normalPriorityLastIndex++, this)
@@ -196,7 +196,7 @@ class FavoriteLogic {
         var lowPriorityLastIndex: Int = normalPriorityLastIndex
         for (counter in normalPriorityLastIndex until fullDatesList.size) {
             when (fullDatesList[counter].getPriority()) {
-                ConstantsUi.PRIORITY_LOW -> {
+                Constants.PRIORITY_LOW -> {
                     if (counter != lowPriorityLastIndex) {
                         fullDatesList.removeAt(counter).apply {
                             fullDatesList.add(lowPriorityLastIndex++, this)

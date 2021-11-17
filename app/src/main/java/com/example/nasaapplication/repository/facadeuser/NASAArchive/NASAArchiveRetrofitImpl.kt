@@ -1,6 +1,6 @@
 package com.example.nasaapplication.repository.facadeuser.NASAArchive
 
-import com.example.nasaapplication.repository.ConstantsRepository
+import com.example.nasaapplication.Constants
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -12,7 +12,7 @@ import java.io.IOException
 class NASAArchiveRetrofitImpl {
     fun getRetrofitImpl(): NASAArchiveAPI {
         val nasaArchiveRetrofit = Retrofit.Builder()
-            .baseUrl(ConstantsRepository.NASA_ARCHIVE_BASE_URL)
+            .baseUrl(Constants.NASA_ARCHIVE_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
             .client(createOkHttpClient(NASAArchiveInterceptor()))
             .build()

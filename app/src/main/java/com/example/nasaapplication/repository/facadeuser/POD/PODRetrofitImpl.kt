@@ -1,6 +1,6 @@
 package com.example.nasaapplication.repository.facadeuser.POD
 
-import com.example.nasaapplication.repository.ConstantsRepository
+import com.example.nasaapplication.Constants
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -12,7 +12,7 @@ import java.io.IOException
 class PODRetrofitImpl {
     fun getRetrofitImpl(): PODAPI {
         val podRetrofit = Retrofit.Builder()
-            .baseUrl(ConstantsRepository.POD_BASE_URL)
+            .baseUrl(Constants.POD_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
             .client(createOkHttpClient(PODInterceptor()))
             .build()

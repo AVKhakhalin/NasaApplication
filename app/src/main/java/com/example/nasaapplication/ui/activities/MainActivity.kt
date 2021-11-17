@@ -21,7 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.nasaapplication.FavoriteBaseApp.Companion.getFavoriteDAO
 import com.example.nasaapplication.R
-import com.example.nasaapplication.controller.ConstantsController
+import com.example.nasaapplication.Constants
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.contents.NavigationContentGetter
 import com.example.nasaapplication.controller.navigation.contents.ViewPagerAdapter
@@ -31,7 +31,6 @@ import com.example.nasaapplication.databinding.ActivityMainBinding
 import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.domain.logic.FavoriteLogic
 import com.example.nasaapplication.repository.facadeuser.room.LocalRoomImpl
-import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.fragments.contents.DayPhotoFragment
 import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragment
 import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
@@ -124,12 +123,12 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         // Получение списка View закладок TabLayout
         touchableListTabLayot = binding.tabLayout.touchables
         // Настройка TabLayout (установка на него картинок)
-        binding.tabLayout.getTabAt(ConstantsController.DAY_PHOTO_FRAGMENT_INDEX)?.customView =
+        binding.tabLayout.getTabAt(Constants.DAY_PHOTO_FRAGMENT_INDEX)?.customView =
             layoutInflater.inflate(R.layout.tablayout_photo_of_day, null)
-        binding.tabLayout.getTabAt(ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX)?.customView =
+        binding.tabLayout.getTabAt(Constants.SEARCH_WIKI_FRAGMENT_INDEX)?.customView =
             layoutInflater.inflate(R.layout.tablayout_search_in_wiki, null)
         binding.tabLayout.getTabAt(
-            ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)?.customView =
+            Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)?.customView =
             layoutInflater.inflate(R.layout.tablayout_search_in_nasa_archive, null)
         //endregion
 
@@ -167,9 +166,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
         val sharedPreferences: SharedPreferences =
-            getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY, AppCompatActivity.MODE_PRIVATE)
+            getSharedPreferences(Constants.SHARED_PREFERENCES_KEY, AppCompatActivity.MODE_PRIVATE)
         val sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
-        sharedPreferencesEditor.putBoolean(ConstantsUi.SHARED_PREFERENCES_THEME_KEY, isThemeDay)
+        sharedPreferencesEditor.putBoolean(Constants.SHARED_PREFERENCES_THEME_KEY, isThemeDay)
         sharedPreferencesEditor.apply()
     }
 
@@ -206,7 +205,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         binding.tabLayout.visibility = View.VISIBLE
         // Анимация вращения картинки на нижней кнопке FAB
         ObjectAnimator.ofFloat(binding.bottomNavigationMenu.bottomAppBarFab,
-            "rotation", 0f, ConstantsUi.ANGLE_TO_ROTATE_BOTTOM_FAB).start()
+            "rotation", 0f, Constants.ANGLE_TO_ROTATE_BOTTOM_FAB).start()
 
         if (isMain) {
             // Изменение нижего меню, выходящего из FAB
@@ -275,7 +274,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             searchedEditText.setTextColor(colorTypedValue.data)
             searchedEditText.setHintTextColor(colorTypedValue.data)
             // Установка размера поискового текста
-            searchedEditText.setTextSize(ConstantsUi.SEARCH_FIELD_TEXT_SIZE)
+            searchedEditText.setTextSize(Constants.SEARCH_FIELD_TEXT_SIZE)
             // Установка значка поиска внутри editText (без исчезновения)
 //            editText.setCompoundDrawablesWithIntrinsicBounds(
 //                android.R.drawable.ic_menu_search,0,0,0)
@@ -603,7 +602,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             binding.fabButtonsGroup.visibility = View.INVISIBLE
             hideAndShowFragmentsContainersAndDismissDialogs()
             isFABButtonsGroupView = false
-            binding.viewPager.currentItem = ConstantsController.DAY_PHOTO_FRAGMENT_INDEX
+            binding.viewPager.currentItem = Constants.DAY_PHOTO_FRAGMENT_INDEX
             // Проба анимации кнопки
 //            TransitionManager.beginDelayedTransition(binding.fabButtonsContainer, Slide(Gravity.END))
 //            binding.fabButtonDayPhoto.visibility = View.GONE
@@ -616,7 +615,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             // Разблокировка кликов по закладкам во View Pager 2
             touchableListTabLayot.forEach { it.isEnabled = true }
             // Начальная настройка фрагмента "Картинка дня"
-            (getViewPagerAdapter().getFragments()[ConstantsController.DAY_PHOTO_FRAGMENT_INDEX]
+            (getViewPagerAdapter().getFragments()[Constants.DAY_PHOTO_FRAGMENT_INDEX]
                     as DayPhotoFragment).initialSettingFragment()
         }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в Википедии
@@ -625,7 +624,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 binding.fabButtonsGroup.visibility = View.INVISIBLE
                 hideAndShowFragmentsContainersAndDismissDialogs()
                 isFABButtonsGroupView = false
-                binding.viewPager.currentItem = ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX
+                binding.viewPager.currentItem = Constants.SEARCH_WIKI_FRAGMENT_INDEX
                 isBlockingOtherFABButtons = false
                 // Установка анимационного просветления фона
                 setHideShowBackgroundAnimation(
@@ -636,7 +635,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 touchableListTabLayot.forEach { it.isEnabled = true }
                 // Начальная настройка фрагмента "Поиск в Википедии"
                 (getViewPagerAdapter()
-                    .getFragments()[ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX]
+                    .getFragments()[Constants.SEARCH_WIKI_FRAGMENT_INDEX]
                         as SearchWikiFragment).initialSettingFragment()
             }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в архиве NASA
@@ -646,7 +645,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 hideAndShowFragmentsContainersAndDismissDialogs()
                 isFABButtonsGroupView = false
                 binding.viewPager.currentItem =
-                    ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
+                    Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
                 isBlockingOtherFABButtons = false
                 // Установка анимационного просветления фона
                 setHideShowBackgroundAnimation(
@@ -657,7 +656,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 touchableListTabLayot.forEach { it.isEnabled = true }
                 // Начальная настройка фрагмента "Поиск в архиве NASA"
                 (getViewPagerAdapter()
-                    .getFragments()[ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
+                    .getFragments()[Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
                         as SearchNASAArchiveFragment).initialSettingFragment()
             }
         // Установка слушателя на нажатие кнопки вызова настроек приложения
@@ -681,9 +680,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     private fun readSettingsAndSetupApplication(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             val sharedPreferences: SharedPreferences =
-                getSharedPreferences(ConstantsUi.SHARED_PREFERENCES_KEY, MODE_PRIVATE)
+                getSharedPreferences(Constants.SHARED_PREFERENCES_KEY, MODE_PRIVATE)
             isThemeDay = sharedPreferences.getBoolean(
-                ConstantsUi.SHARED_PREFERENCES_THEME_KEY, true)
+                Constants.SHARED_PREFERENCES_THEME_KEY, true)
             if (isThemeDay) {
                 setTheme(R.style.Theme_NasaApplication_Day)
             } else {
@@ -763,10 +762,10 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         mainActivity.getBottomMenu()?.let {
             if (it.size() > 0) {
                 if (isFavorite) {
-                    it.getItem(ConstantsUi.INDEX_ADD_FAVORITE_MENU_ITEM)
+                    it.getItem(Constants.INDEX_ADD_FAVORITE_MENU_ITEM)
                         .setIcon(R.drawable.ic_favourite_on)
                 } else {
-                    it.getItem(ConstantsUi.INDEX_ADD_FAVORITE_MENU_ITEM)
+                    it.getItem(Constants.INDEX_ADD_FAVORITE_MENU_ITEM)
                         .setIcon(R.drawable.ic_favourite)
                 }
 //                isFavorite = !isFavorite

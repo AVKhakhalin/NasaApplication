@@ -15,13 +15,12 @@ import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProviders
 import com.example.nasaapplication.R
-import com.example.nasaapplication.controller.ConstantsController
+import com.example.nasaapplication.Constants
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.observers.viewmodels.POD.PODViewModel
 import com.example.nasaapplication.databinding.FragmentSearchInWikiBinding
 import com.example.nasaapplication.domain.logic.Favorite
-import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -95,7 +94,7 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
                     (binding.inputWikiFieldText.text!!.length <=
                             binding.inputWikiField.counterMaxLength)) {
                         showUrlInWiki(
-                            "${ConstantsUi.WIKI_URL}${
+                            "${Constants.WIKI_URL}${
                                 binding.inputWikiFieldText.text.toString()}")
                     }
                 }
@@ -119,18 +118,18 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
             mainActivity.setListFavoriteDataSearchRequest(
                 "${binding.inputWikiFieldText.text.toString()}")
             mainActivity.setListFavoriteDataTypeSource(
-                ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX)
-            mainActivity.setListFavoriteDataPriority(ConstantsUi.PRIORITY_LOW)
-            mainActivity.setListFavoriteDataLinkSource("${ConstantsUi.WIKI_URL}${
+                Constants.SEARCH_WIKI_FRAGMENT_INDEX)
+            mainActivity.setListFavoriteDataPriority(Constants.PRIORITY_LOW)
+            mainActivity.setListFavoriteDataLinkSource("${Constants.WIKI_URL}${
                 binding.inputWikiFieldText.text.toString()}")
             mainActivity.setListFavoriteDataTitle(
                 "${binding.inputWikiFieldText.text.toString()}")
             searchWikiFavorite.setSearchRequest(
                 "${binding.inputWikiFieldText.text.toString()}")
             searchWikiFavorite.setTypeSource(
-                ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX)
-            searchWikiFavorite.setPriority(ConstantsUi.PRIORITY_LOW)
-            searchWikiFavorite.setLinkSource("${ConstantsUi.WIKI_URL}${
+                Constants.SEARCH_WIKI_FRAGMENT_INDEX)
+            searchWikiFavorite.setPriority(Constants.PRIORITY_LOW)
+            searchWikiFavorite.setLinkSource("${Constants.WIKI_URL}${
                 binding.inputWikiFieldText.text.toString()}")
             searchWikiFavorite.setTitle(
                 "${binding.inputWikiFieldText.text.toString()}")
@@ -139,8 +138,8 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
             binding.webViewContainer.alpha = transparientValue
             Thread {
                 val urlConnection = url.openConnection() as HttpsURLConnection
-                urlConnection.requestMethod = ConstantsUi.SHOWURLINWIKI_METHOD_NAME
-                urlConnection.readTimeout = ConstantsUi.SHOWURLINWIKI_READ_TIME_OUT
+                urlConnection.requestMethod = Constants.SHOWURLINWIKI_METHOD_NAME
+                urlConnection.readTimeout = Constants.SHOWURLINWIKI_READ_TIME_OUT
                 var reader: BufferedReader? = null
                 try {
                     reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
@@ -148,10 +147,10 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
                     urlConnection.disconnect()
                 }
                 if (reader != null) {
-                    val result = "${ConstantsUi.WEBVIEW_TEXT_HEADER_SUCCESS_BEGIN}${
+                    val result = "${Constants.WEBVIEW_TEXT_HEADER_SUCCESS_BEGIN}${
                         mainActivity.getColorPrimaryVariantTypedValue().data.toHexString()
-                            .subSequence(2, 8)}${ConstantsUi.WEBVIEW_TEXT_HEADER_SUCCESS_END}${
-                                getLines(reader)}${ConstantsUi.WEBVIEW_TEXT_FOOTER}"
+                            .subSequence(2, 8)}${Constants.WEBVIEW_TEXT_HEADER_SUCCESS_END}${
+                                getLines(reader)}${Constants.WEBVIEW_TEXT_FOOTER}"
                     // Сохранение результата запроса в "Избранное"
                     mainActivity.setListFavoriteDataDescription(result)
                     searchWikiFavorite.setDescription(result)
@@ -162,8 +161,8 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
                         binding.webViewContainer.loadDataWithBaseURL(
                             null,
                             result,
-                            ConstantsUi.SHOWURLINWIKI_TEXT_CHARSER,
-                            ConstantsUi.SHOWURLINWIKI_ENCODING,
+                            Constants.SHOWURLINWIKI_TEXT_CHARSER,
+                            Constants.SHOWURLINWIKI_ENCODING,
                             null)
                     }
                 } else {
@@ -176,17 +175,17 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
                             .replace("<Br><Br>"," "))
                     // Отображение сообщения об отсутствии результата по запросу
                     val handler = Handler(Looper.getMainLooper())
-                    val result = "${ConstantsUi.WEBVIEW_TEXT_HEADER_NOTSUCCESS_BEGIN}${
+                    val result = "${Constants.WEBVIEW_TEXT_HEADER_NOTSUCCESS_BEGIN}${
                         mainActivity.getColorPrimaryVariantTypedValue().data.toHexString()
-                            .subSequence(2, 8)}${ConstantsUi.WEBVIEW_TEXT_HEADER_NOTSUCCESS_END}${
+                            .subSequence(2, 8)}${Constants.WEBVIEW_TEXT_HEADER_NOTSUCCESS_END}${
                                 resources.getString(R.string.error_wiki_empty_request)}${
-                                    ConstantsUi.WEBVIEW_TEXT_FOOTER}"
+                                    Constants.WEBVIEW_TEXT_FOOTER}"
                     handler.post {
                         binding.webViewContainer.loadDataWithBaseURL(
                             null,
                             result,
-                            ConstantsUi.SHOWURLINWIKI_TEXT_CHARSER,
-                            ConstantsUi.SHOWURLINWIKI_ENCODING,
+                            Constants.SHOWURLINWIKI_TEXT_CHARSER,
+                            Constants.SHOWURLINWIKI_ENCODING,
                             null)
                     }
                 }

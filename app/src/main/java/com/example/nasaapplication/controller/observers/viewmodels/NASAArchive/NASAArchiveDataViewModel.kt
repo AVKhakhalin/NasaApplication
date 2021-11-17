@@ -3,23 +3,30 @@ package com.example.nasaapplication.controller.observers.viewmodels.NASAArchive
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.nasaapplication.controller.ConstantsController
-import com.example.nasaapplication.repository.ConstantsRepository
+import com.example.nasaapplication.R
+import com.example.nasaapplication.Constants
 import com.example.nasaapplication.repository.facadeuser.NASAArchive.NASAArchiveRetrofitImpl
 import com.example.nasaapplication.repository.facadeuser.NASAArchive.NASAArchiveServerResponseWelcome
+import com.example.nasaapplication.ui.activities.MainActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class NASAArchiveDataViewModel (
     private val liveDataForViewToObserve: MutableLiveData<NASAArchiveData> = MutableLiveData(),
-    private val retrofitImpl: NASAArchiveRetrofitImpl = NASAArchiveRetrofitImpl()
+    private val retrofitImpl: NASAArchiveRetrofitImpl = NASAArchiveRetrofitImpl(),
 ): ViewModel() {
     // ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Ссылка запроса для сохранения в списке "Избранное"
-    private var baseUrl: String = "${ConstantsRepository.NASA_ARCHIVE_BASE_URL}search?q="
+    private var baseUrl: String = "${Constants.NASA_ARCHIVE_BASE_URL}search?q="
     private var requestUrl: String = ""
+    // MainActivity
+    private var mainActivity: MainActivity? = null
     //endregion
+
+    fun setMainActivity(mainActivity: MainActivity?) {
+        this.mainActivity = mainActivity
+    }
 
     fun getRequestUrl(): String {
         return requestUrl
@@ -47,8 +54,12 @@ class NASAArchiveDataViewModel (
                 } else {
                     val message = response.message()
                     if (message.isNullOrEmpty()) {
-                        liveDataForViewToObserve.value =
-                            NASAArchiveData.Error(Throwable(ConstantsController.ERROR_UNKNOWN))
+                        mainActivity?.let {
+                            liveDataForViewToObserve.value =
+                                NASAArchiveData.Error(Throwable("${
+                                    it.resources.getString(R.string.error)}: ${
+                                    it.resources.getString(R.string.error_unknown)}"))
+                        }
                     } else {
                         liveDataForViewToObserve.value =
                             NASAArchiveData.Error(Throwable(message))

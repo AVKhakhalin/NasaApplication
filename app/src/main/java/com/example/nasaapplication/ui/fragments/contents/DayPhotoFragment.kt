@@ -21,14 +21,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import coil.load
 import com.example.nasaapplication.R
-import com.example.nasaapplication.controller.ConstantsController
+import com.example.nasaapplication.Constants
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.observers.viewmodels.POD.PODData
 import com.example.nasaapplication.controller.observers.viewmodels.POD.PODViewModel
 import com.example.nasaapplication.databinding.FragmentDayPhotoBinding
 import com.example.nasaapplication.domain.logic.Favorite
-import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ColorUnderlineSpan
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
@@ -77,6 +76,7 @@ class DayPhotoFragment:
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
+        viewModel.setMainActivity(mainActivity)
         //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
         mainActivity?.let { it
             navigationDialogs = it.getNavigationDialogs()
@@ -106,7 +106,8 @@ class DayPhotoFragment:
                     val url = serverResponseData.url
                     if (url.isNullOrEmpty()) {
                         //showError("Сообщение, что ссылка пустая")
-                        toast(ConstantsUi.ERROR_LINK_EMPTY)
+                        toast("${mainActivity.resources.getString(R.string.error)}: ${
+                            mainActivity.resources.getString(R.string.error_empty_link)}")
                     } else {
                         //showSuccess()
                         // Сохранение данных для списка "Избранное"
@@ -117,15 +118,15 @@ class DayPhotoFragment:
                             serverResponseData.explanation ?: "")
                         mainActivity.setListFavoriteDataLinkImage(url)
                         mainActivity.setListFavoriteDataTypeSource(
-                            ConstantsController.DAY_PHOTO_FRAGMENT_INDEX)
-                        mainActivity.setListFavoriteDataPriority(ConstantsUi.PRIORITY_LOW)
+                            Constants.DAY_PHOTO_FRAGMENT_INDEX)
+                        mainActivity.setListFavoriteDataPriority(Constants.PRIORITY_LOW)
                         dayPhotoFavorite.setSearchRequest(curDate)
                         dayPhotoFavorite.setLinkSource(viewModel.getRequestUrl())
                         dayPhotoFavorite.setTitle(serverResponseData.title ?: "")
                         dayPhotoFavorite.setDescription(serverResponseData.explanation ?: "")
                         dayPhotoFavorite.setLinkImage(url)
-                        dayPhotoFavorite.setTypeSource(ConstantsController.DAY_PHOTO_FRAGMENT_INDEX)
-                        dayPhotoFavorite.setPriority(ConstantsUi.PRIORITY_LOW)
+                        dayPhotoFavorite.setTypeSource(Constants.DAY_PHOTO_FRAGMENT_INDEX)
+                        dayPhotoFavorite.setPriority(Constants.PRIORITY_LOW)
 
                         // Отображение результатов запроса
                         binding.pODImageView.alpha = transparientValue
@@ -218,7 +219,8 @@ class DayPhotoFragment:
 
             // Установка текущей даты в заголовке над фотографией
             binding.fragmentDayPhotoCurrentDateTextView.text =
-                "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(0)}"
+                "${mainActivity.resources.getString(R.string.photo_of_the_day_text)} ${
+                    getDate(0)}"
 
             // Инициализация текстового блока для отображения текущей даты
             currentDateTextView = binding.fragmentDayPhotoCurrentDateTextView
@@ -235,8 +237,8 @@ class DayPhotoFragment:
                             mainActivity.changeHeartIconState(
                                 mainActivity, false, true)
                             // Получение данных о картинке сегодняшего дня
-                            currentDateTextView!!.text =
-                                "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(0)}"
+                            currentDateTextView!!.text = "${mainActivity.resources.getString(
+                                R.string.photo_of_the_day_text)} ${getDate(0)}"
                             viewModel.getData(curDate)
                                 .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
                             // Сохранение запроса в "Избранное"
@@ -255,8 +257,8 @@ class DayPhotoFragment:
                             mainActivity.changeHeartIconState(
                                 mainActivity, false, true)
                             // Получение данных о картинке вчерашнего дня
-                            currentDateTextView!!.text =
-                                "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-1)}"
+                            currentDateTextView!!.text = "${mainActivity.resources.getString(
+                                    R.string.photo_of_the_day_text)} ${getDate(-1)}"
                             viewModel.getData(curDate)
                                 .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
                             // Сохранение запроса в "Избранное"
@@ -275,8 +277,8 @@ class DayPhotoFragment:
                             mainActivity.changeHeartIconState(
                                 mainActivity, false, true)
                             // Получение данных о картинке позавчерашнего дня
-                            currentDateTextView!!.text =
-                                "${ConstantsUi.DAY_PHOTO_TEXT} ${getDate(-2)}"
+                            currentDateTextView!!.text = "${mainActivity.resources.getString(
+                                    R.string.photo_of_the_day_text)} ${getDate(-2)}"
                             viewModel.getData(curDate)
                                 .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
                             // Сохранение запроса в "Избранное"
@@ -346,7 +348,8 @@ class DayPhotoFragment:
                 if (!mainActivity.getIsBlockingOtherFABButtons()) {
                     curDate = favoriteData.getSearchRequest()
                     currentDateTextView?.let {
-                        it.text = "${ConstantsUi.DAY_PHOTO_TEXT} ${curDate.substring(8, 10)}.${
+                        it.text = "${mainActivity.resources.getString(
+                            R.string.photo_of_the_day_text)} ${curDate.substring(8, 10)}.${
                             curDate.substring(5, 7)}.${curDate.substring(0, 4)}"
                     }
                     viewModel.getData(favoriteData.getSearchRequest())

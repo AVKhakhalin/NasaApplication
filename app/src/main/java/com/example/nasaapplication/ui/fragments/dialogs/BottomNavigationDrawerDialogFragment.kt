@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.example.nasaapplication.R
-import com.example.nasaapplication.controller.ConstantsController
+import com.example.nasaapplication.Constants
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.databinding.BottomNavigationLayoutBinding
 import com.example.nasaapplication.ui.activities.MainActivity
@@ -64,7 +64,7 @@ class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
                     hideShowDismissElements()
                     // Начальная настройка фрагмента "Картинка дня"
                     (mainActivity.getViewPagerAdapter()
-                        .getFragments()[ConstantsController.DAY_PHOTO_FRAGMENT_INDEX]
+                        .getFragments()[Constants.DAY_PHOTO_FRAGMENT_INDEX]
                             as DayPhotoFragment).initialSettingFragment()
                 }
                 R.id.action_bottom_bar_search_to_wiki -> {
@@ -72,7 +72,7 @@ class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
                     hideShowDismissElements()
                     // Начальная настройка фрагмента "Поиск в Википедии"
                     (mainActivity.getViewPagerAdapter()
-                        .getFragments()[ConstantsController.SEARCH_WIKI_FRAGMENT_INDEX]
+                        .getFragments()[Constants.SEARCH_WIKI_FRAGMENT_INDEX]
                             as SearchWikiFragment).initialSettingFragment()
                 }
                 R.id.action_bottom_bar_search_to_nasa_archive -> {
@@ -80,7 +80,7 @@ class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
                     hideShowDismissElements()
                     // Начальная настройка фрагмента "Поиск в архиве NASA"
                     (mainActivity.getViewPagerAdapter()
-                        .getFragments()[ConstantsController.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
+                        .getFragments()[Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
                             as SearchNASAArchiveFragment).initialSettingFragment()
                 }
             }

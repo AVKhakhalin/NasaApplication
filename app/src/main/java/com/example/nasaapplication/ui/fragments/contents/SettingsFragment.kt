@@ -9,7 +9,7 @@ import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.databinding.FragmentSettingsBinding
-import com.example.nasaapplication.ui.ConstantsUi
+import com.example.nasaapplication.Constants
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.chip.Chip
@@ -59,12 +59,12 @@ class SettingsFragment:
                         (requireActivity() as MainActivity).setIsThemeDay(true)
                         val sharedPreferences: SharedPreferences =
                             requireActivity().getSharedPreferences(
-                                ConstantsUi.SHARED_PREFERENCES_KEY,
+                                Constants.SHARED_PREFERENCES_KEY,
                                 AppCompatActivity.MODE_PRIVATE
                             )
                         var sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
                         sharedPreferencesEditor.putBoolean(
-                            ConstantsUi.SHARED_PREFERENCES_THEME_KEY,
+                            Constants.SHARED_PREFERENCES_THEME_KEY,
                             true
                         )
                         sharedPreferencesEditor.apply()
@@ -82,12 +82,12 @@ class SettingsFragment:
                         (requireActivity() as MainActivity).setIsThemeDay(false)
                         val sharedPreferences: SharedPreferences =
                             requireActivity().getSharedPreferences(
-                                ConstantsUi.SHARED_PREFERENCES_KEY,
+                                Constants.SHARED_PREFERENCES_KEY,
                                 AppCompatActivity.MODE_PRIVATE
                             )
                         var sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
                         sharedPreferencesEditor.putBoolean(
-                            ConstantsUi.SHARED_PREFERENCES_THEME_KEY,
+                            Constants.SHARED_PREFERENCES_THEME_KEY,
                             false
                         )
                         sharedPreferencesEditor.apply()
