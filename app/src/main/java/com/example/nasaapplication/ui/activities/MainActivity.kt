@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
+import com.example.nasaapplication.FavoriteBaseApp.Companion.getFavoriteDAO
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.ConstantsController
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
@@ -29,6 +30,7 @@ import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialo
 import com.example.nasaapplication.databinding.ActivityMainBinding
 import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.domain.logic.FavoriteLogic
+import com.example.nasaapplication.repository.facadeuser.room.LocalRoomImpl
 import com.example.nasaapplication.ui.ConstantsUi
 import com.example.nasaapplication.ui.fragments.contents.DayPhotoFragment
 import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragment
@@ -76,12 +78,27 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     private val colorSecondaryVariantTypedValue: TypedValue = TypedValue()
     private val colorPrimaryVariantTypedValue: TypedValue = TypedValue()
     private val colorPrimaryTypedValue: TypedValue = TypedValue()
+    // Room
+    private val localRoomImpl: LocalRoomImpl = LocalRoomImpl(getFavoriteDAO())
     //endregion
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Обновление списка "Избранное" в базе данных перед закрытием приложения
+        localRoomImpl.deleteAllFavorite()
+        favoriteListData.setFilterWord("")
+        favoriteListData.getDatesList().forEach {
+            localRoomImpl.saveFavorite(it)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Считывание системных настроек, применение темы к приложению
         readSettingsAndSetupApplication(savedInstanceState)
+
+        // Считывание данных по списку "Избранное" из базы данных
+        favoriteListData.addListFavoriteData(localRoomImpl.getAllFavorite())
 
         // Установка цветов из аттрибутов темы
         theme.resolveAttribute(R.attr.colorSecondary, colorSecondaryTypedValue, true)
@@ -304,6 +321,11 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     setListFavoriteEmptyData()
                     // Отображение фрагмента со списком "Избранное"
                     showFavoriteRecyclerListFragment()
+
+                    getFavoriteDataList().forEach {
+                        Log.d("mylogs", "${it.getPriority()}\n")
+                    }
+                    Log.d("mylogs", "---")
                 }
             R.id.action_bottom_bar_add_to_favorite ->
                 if ((!isBlockingOtherFABButtons) && (newFavorite != Favorite()) &&
@@ -313,6 +335,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     if (indexSimilarData == -1) {
                         // Изменение вида иконки сердца
                         changeHeartIconState(this, true, false)
+                        // Добавление новой записи "Избранное" в базу данных
+                        localRoomImpl.saveFavorite(newFavorite)
                         // Уведомление пользователя о добавлении новой записи в список "Избранное"
                         Toast.makeText(this, "${
                             resources.getString(R.string.info_added_item_in_favorite_list)}:\n\"${

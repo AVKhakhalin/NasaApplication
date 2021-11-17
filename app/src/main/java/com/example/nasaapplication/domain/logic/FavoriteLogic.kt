@@ -1,7 +1,5 @@
 package com.example.nasaapplication.domain.logic
 
-import android.util.Log
-import android.widget.Toast
 import com.example.nasaapplication.ui.ConstantsUi
 
 // Класс с логикой проекта - построение и сохранение списка избранных данных
@@ -41,6 +39,20 @@ class FavoriteLogic {
             fullDatesList[lastIndex].setIsShowDescription(newFavorite.getIsShowDescription())
         }
         return indexSimilarData
+    }
+    fun addListFavoriteData(newListFavorite: List<Favorite>) {
+        newListFavorite.forEach {
+            fullDatesList.add(Favorite())
+            val lastIndex: Int = fullDatesList.size - 1
+            fullDatesList[lastIndex].setLinkSource(it.getLinkSource())
+            fullDatesList[lastIndex].setDescription(it.getDescription())
+            fullDatesList[lastIndex].setTitle(it.getTitle())
+            fullDatesList[lastIndex].setLinkImage(it.getLinkImage())
+            fullDatesList[lastIndex].setTypeSource(it.getTypeSource())
+            fullDatesList[lastIndex].setSearchRequest(it.getSearchRequest())
+            fullDatesList[lastIndex].setPriority(it.getPriority())
+            fullDatesList[lastIndex].setIsShowDescription(it.getIsShowDescription())
+        }
     }
     //endregion
 
