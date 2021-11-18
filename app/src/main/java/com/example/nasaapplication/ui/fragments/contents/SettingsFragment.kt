@@ -47,7 +47,7 @@ class SettingsFragment:
         mainActivity?.let { mainActivity ->
             // Изменение вида Bottom Navigation Menu
             mainActivity.setIsMain(true)
-            mainActivity.switchBottomAppBar(mainActivity)
+            mainActivity.getSetBottomNavigationMenu().switchBottomAppBar()
 
             // Установка слушателей на кнопки выбора тем
             buttonStyleChooseDay = view.findViewById(R.id.button_style_day)

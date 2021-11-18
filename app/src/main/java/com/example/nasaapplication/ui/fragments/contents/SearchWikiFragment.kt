@@ -147,46 +147,50 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
                     urlConnection.disconnect()
                 }
                 if (reader != null) {
-                    val result = "${Constants.WEBVIEW_TEXT_HEADER_SUCCESS_BEGIN}${
-                        mainActivity.getColorPrimaryVariantTypedValue().data.toHexString()
-                            .subSequence(2, 8)}${Constants.WEBVIEW_TEXT_HEADER_SUCCESS_END}${
-                                getLines(reader)}${Constants.WEBVIEW_TEXT_FOOTER}"
-                    // Сохранение результата запроса в "Избранное"
-                    mainActivity.setListFavoriteDataDescription(result)
-                    searchWikiFavorite.setDescription(result)
+                    mainActivity.getThemeColor()?.let {
+                        val result = "${Constants.WEBVIEW_TEXT_HEADER_SUCCESS_BEGIN}${
+                            it.getColorPrimaryVariantTypedValue().toHexString()
+                                .subSequence(2, 8)}${Constants.WEBVIEW_TEXT_HEADER_SUCCESS_END}${
+                                    getLines(reader)}${Constants.WEBVIEW_TEXT_FOOTER}"
+                        // Сохранение результата запроса в "Избранное"
+                        mainActivity.setListFavoriteDataDescription(result)
+                        searchWikiFavorite.setDescription(result)
 
-                    // Отображение результата запроса
-                    val handler = Handler(Looper.getMainLooper())
-                    handler.post {
-                        binding.webViewContainer.loadDataWithBaseURL(
-                            null,
-                            result,
-                            Constants.SHOWURLINWIKI_TEXT_CHARSER,
-                            Constants.SHOWURLINWIKI_ENCODING,
-                            null)
+                        // Отображение результата запроса
+                        val handler = Handler(Looper.getMainLooper())
+                        handler.post {
+                            binding.webViewContainer.loadDataWithBaseURL(
+                                null,
+                                result,
+                                Constants.SHOWURLINWIKI_TEXT_CHARSER,
+                                Constants.SHOWURLINWIKI_ENCODING,
+                                null)
+                        }
                     }
                 } else {
-                    // Сохранение результата запроса в "Избранное"
-                    mainActivity.setListFavoriteDataDescription(
-                        resources.getString(R.string.error_wiki_empty_request)
-                            .replace("<Br><Br>"," "))
-                    searchWikiFavorite.setDescription(
-                        resources.getString(R.string.error_wiki_empty_request)
-                            .replace("<Br><Br>"," "))
-                    // Отображение сообщения об отсутствии результата по запросу
-                    val handler = Handler(Looper.getMainLooper())
-                    val result = "${Constants.WEBVIEW_TEXT_HEADER_NOTSUCCESS_BEGIN}${
-                        mainActivity.getColorPrimaryVariantTypedValue().data.toHexString()
-                            .subSequence(2, 8)}${Constants.WEBVIEW_TEXT_HEADER_NOTSUCCESS_END}${
-                                resources.getString(R.string.error_wiki_empty_request)}${
-                                    Constants.WEBVIEW_TEXT_FOOTER}"
-                    handler.post {
-                        binding.webViewContainer.loadDataWithBaseURL(
-                            null,
-                            result,
-                            Constants.SHOWURLINWIKI_TEXT_CHARSER,
-                            Constants.SHOWURLINWIKI_ENCODING,
-                            null)
+                    mainActivity.getThemeColor()?.let {
+                        // Сохранение результата запроса в "Избранное"
+                        mainActivity.setListFavoriteDataDescription(
+                            resources.getString(R.string.error_wiki_empty_request)
+                                .replace("<Br><Br>"," "))
+                        searchWikiFavorite.setDescription(
+                            resources.getString(R.string.error_wiki_empty_request)
+                                .replace("<Br><Br>"," "))
+                        // Отображение сообщения об отсутствии результата по запросу
+                        val handler = Handler(Looper.getMainLooper())
+                        val result = "${Constants.WEBVIEW_TEXT_HEADER_NOTSUCCESS_BEGIN}${
+                            it.getColorPrimaryVariantTypedValue().toHexString().subSequence(2, 8)}${
+                                    Constants.WEBVIEW_TEXT_HEADER_NOTSUCCESS_END}${
+                                    resources.getString(R.string.error_wiki_empty_request)}${
+                                        Constants.WEBVIEW_TEXT_FOOTER}"
+                        handler.post {
+                            binding.webViewContainer.loadDataWithBaseURL(
+                                null,
+                                result,
+                                Constants.SHOWURLINWIKI_TEXT_CHARSER,
+                                Constants.SHOWURLINWIKI_ENCODING,
+                                null)
+                        }
                     }
                 }
                 urlConnection.disconnect()
@@ -223,7 +227,7 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     // и отрисовка соответствующего значка сердца (контурная или с заливкой)
     private fun checkAndChangeHeartIconState() {
         mainActivity?.let { mainActivity ->
-            if (mainActivity.checkSimilarFavoriteData())
+            if (mainActivity.getFacadeFavoriteLogic().checkSimilarFavoriteData())
                 mainActivity.changeHeartIconState(mainActivity, true, false)
             else
                 mainActivity.changeHeartIconState(mainActivity, false, true)

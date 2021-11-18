@@ -151,17 +151,20 @@ class DayPhotoFragment:
                         serverResponseData.title?.let {
                             try {
                                 val spannable = SpannableString(serverResponseData.title)
-                                spannable.setSpan(ColorUnderlineSpan(mainActivity,
-                                        mainActivity.getSecondaryVariantTypedValue().data,0,
-                                        it.length),0, it.length,
-                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                mainActivity.getThemeColor()?.let {  themeColor ->
+                                    spannable.setSpan(ColorUnderlineSpan(mainActivity,
+                                        themeColor.getSecondaryVariantTypedValue(),0,
+                                            it.length),0, it.length,
+                                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                }
                                 bottomSheetDescriptionTitle.text = spannable
                             } catch (errorMessage: Exception) {
                                 bottomSheetDescriptionTitle.text = serverResponseData.title
                                 Toast.makeText(mainActivity.applicationContext,
                                     "${mainActivity.resources.getString(R.string.error)}: ${
                                     mainActivity.resources.getString(R.string.
-                                    error_underline_creation_for_title)}", Toast.LENGTH_LONG).show()
+                                    error_underline_creation_for_title)}",
+                                    Toast.LENGTH_LONG).show()
                             }
                         }
                         bottomSheetDescriptionTitle.animate()
@@ -358,7 +361,7 @@ class DayPhotoFragment:
     // и отрисовка соответствующего значка сердца (контурная или с заливкой)
     private fun checkAndChangeHeartIconState() {
         mainActivity?.let { mainActivity ->
-            if (mainActivity.checkSimilarFavoriteData())
+            if (mainActivity.getFacadeFavoriteLogic().checkSimilarFavoriteData())
                 mainActivity.changeHeartIconState(mainActivity, true, false)
             else
                 mainActivity.changeHeartIconState(mainActivity, false, true)

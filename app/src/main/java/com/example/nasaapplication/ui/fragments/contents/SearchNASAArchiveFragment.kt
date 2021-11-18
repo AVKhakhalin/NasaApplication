@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.Group
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -379,17 +380,6 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
         return dataViewModel
     }
 
-    // Метод проверки наличия текущей информации в списке "Избранное"
-    // и отрисовка соответствующего значка сердца (контурная или с заливкой)
-    private fun checkAndChangeHeartIconState() {
-        mainActivity?.let { mainActivity ->
-            if (mainActivity.checkSimilarFavoriteData())
-                mainActivity.changeHeartIconState(mainActivity, true, false)
-            else
-                mainActivity.changeHeartIconState(mainActivity, false, true)
-        }
-    }
-
     // Метод с начальной настройкой фрагмента
     fun initialSettingFragment() {
         mainActivity?.let { mainActivity ->
@@ -405,6 +395,17 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
             // Метод проверки наличия текущей информации в списке "Избранное"
             // и отрисовка соответствующего значка сердца (контурная или с заливкой)
             checkAndChangeHeartIconState()
+        }
+    }
+
+    // Метод проверки наличия текущей информации в списке "Избранное"
+    // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+    fun checkAndChangeHeartIconState() {
+        mainActivity?.let { mainActivity ->
+            if (mainActivity.getFacadeFavoriteLogic().checkSimilarFavoriteData())
+                mainActivity.changeHeartIconState(mainActivity, true, false)
+            else
+                mainActivity.changeHeartIconState(mainActivity, false, true)
         }
     }
 }

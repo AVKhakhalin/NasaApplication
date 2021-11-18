@@ -44,7 +44,7 @@ class FavoriteRecyclerListFragment(
         mainActivity?.let { mainActivity ->
             // Изменение вида Bottom Navigation Menu
             mainActivity.setIsMain(true)
-            mainActivity.switchBottomAppBar(mainActivity)
+            mainActivity.getSetBottomNavigationMenu().switchBottomAppBar()
 
             // Recycler
             adapter = FavoriteRecyclerListFragmentAdapter(
@@ -62,7 +62,8 @@ class FavoriteRecyclerListFragment(
                             (mainActivity.getViewPagerAdapter()
                                 .getFragments()[Constants.DAY_PHOTO_FRAGMENT_INDEX]
                                     as DayPhotoFragment).setAndShowFavoriteData(favoriteData)
-                            mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
+                            mainActivity.binding.activityFragmentsContainer.visibility =
+                                View.INVISIBLE
                             mainActivity.binding.transparentBackground.visibility = View.VISIBLE
                         }
                         Constants.SEARCH_WIKI_FRAGMENT_INDEX -> {
@@ -83,6 +84,10 @@ class FavoriteRecyclerListFragment(
                             // при переключении на фрагмент с поиском в архиве NASA
                             mainActivity.setListFavoriteEmptyData()
                             // Открытие выбранной информации во фрагменте с поиском в архиве NASA
+                            mainActivity.binding.viewPager.visibility = View.VISIBLE
+                            mainActivity.binding.tabLayout.visibility = View.VISIBLE
+                            mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
+
                             mainActivity.getViewPager().currentItem =
                                 Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
                             (mainActivity.getViewPagerAdapter()
@@ -97,7 +102,7 @@ class FavoriteRecyclerListFragment(
                         }
                     }
                 }
-            }, mainActivity.getFavoriteDataList(), mainActivity)
+            }, mainActivity.getFacadeFavoriteLogic().getFavoriteDataList(), mainActivity)
             binding.favoriteRecyclerListView.adapter = adapter
             adapter?.let { ItemTouchHelper(ItemTouchHelperCallback(it))
                 .attachToRecyclerView(binding.favoriteRecyclerListView) }

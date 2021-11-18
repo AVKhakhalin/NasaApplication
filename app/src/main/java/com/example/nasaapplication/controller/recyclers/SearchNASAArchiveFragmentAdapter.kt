@@ -64,13 +64,12 @@ class SearchNASAArchiveFragmentAdapter(
                         mainActivity.setListFavoriteEmptyData()
                         // Изменение вида иконки сердца на контурное
                         mainActivity.changeHeartIconState(mainActivity, false, true)
+
                         // Сохранение запроса, ссылки на картинку, заголовка и описания в "Избранное"
                         mainActivity.setListFavoriteDataSearchRequest(
-                                "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}"
-                            )
+                                "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}")
                         mainActivity.setListFavoriteDataTypeSource(
-                                Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
-                            )
+                                Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
                         mainActivity.setListFavoriteDataLinkImage(entitiesLinks[position])
                         mainActivity.setListFavoriteDataTitle(newNASAArchiveEntityList[position])
                         mainActivity.setListFavoriteDataDescription(entitiesTexts[position])
@@ -159,6 +158,10 @@ class SearchNASAArchiveFragmentAdapter(
                     searchNASAArchiveFragment.setIsRecyclerViewWindowHide(isRecyclerViewWindowHide)
                     searchNASAArchiveFragment.binding.fragmentSearchInNasaArchiveRecyclerView
                         .visibility = View.INVISIBLE
+
+                    // Метод проверки наличия текущей информации в списке "Избранное"
+                    // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+                    searchNASAArchiveFragment.checkAndChangeHeartIconState()
                 }
             }
         }

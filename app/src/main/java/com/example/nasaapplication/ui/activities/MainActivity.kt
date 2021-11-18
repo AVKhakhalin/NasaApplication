@@ -2,24 +2,15 @@ package com.example.nasaapplication.ui.activities
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.*
-import android.util.Log
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.nasaapplication.FavoriteBaseApp.Companion.getFavoriteDAO
 import com.example.nasaapplication.R
@@ -30,18 +21,13 @@ import com.example.nasaapplication.controller.navigation.contents.ViewPagerAdapt
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogsGetter
 import com.example.nasaapplication.databinding.ActivityMainBinding
+import com.example.nasaapplication.domain.FacadeFavoriteLogic
 import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.domain.logic.FavoriteLogic
 import com.example.nasaapplication.repository.facadeuser.room.LocalRoomImpl
-import com.example.nasaapplication.ui.fragments.contents.DayPhotoFragment
-import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragment
-import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
-import com.google.android.material.bottomappbar.BottomAppBar
+import com.example.nasaapplication.ui.utils.ThemeColor
 import com.google.android.material.tabs.TabLayoutMediator
-import java.lang.Thread.sleep
 import java.util.*
-import kotlin.math.round
-import kotlin.math.sqrt
 
 class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationContentGetter {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
@@ -63,33 +49,30 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     private val transparientValue: Float = 1f
     private val notTransparientValue: Float = 0.2f
     // ViewPager2
-    private val viewPagerAdapter: ViewPagerAdapter =
-        ViewPagerAdapter(this)
+    private val viewPagerAdapter: ViewPagerAdapter = ViewPagerAdapter(this)
     private var textTabLayouts: List<String> = listOf()
-    private var touchableListTabLayot: ArrayList<View> = arrayListOf()
+    private var touchableListTabLayout: ArrayList<View> = arrayListOf()
+    // Цвета из аттрибутов темы
+    private var themeColor: ThemeColor? = null
     // Menu
     private var bottomMenu: Menu? = null
     private var isFavorite: Boolean = false
-    // Данные для сохранения в "Избранное"
-    private var newFavorite: Favorite = Favorite()
-    private var favoriteListData: FavoriteLogic = FavoriteLogic()
-    // Цвета из аттрибутов темы
-    private val colorSecondaryTypedValue: TypedValue = TypedValue()
-    private val colorTypedValue: TypedValue = TypedValue()
-    private val colorSecondaryVariantTypedValue: TypedValue = TypedValue()
-    private val colorPrimaryVariantTypedValue: TypedValue = TypedValue()
-    private val colorPrimaryTypedValue: TypedValue = TypedValue()
+    private val setBottomNavigationMenu: SetBottomNavigationMenu = 
+        SetBottomNavigationMenu(
+            this, durationAnimation, transparientValue, notTransparientValue, themeColor)
     // Room
     private val localRoomImpl: LocalRoomImpl = LocalRoomImpl(getFavoriteDAO())
+    // Данные для сохранения в "Избранное"
+    private var newFavorite: Favorite = Favorite()
+    private var favoriteLogic: FavoriteLogic = FavoriteLogic()
+    private var facadeFavoriteLogic: FacadeFavoriteLogic =
+        FacadeFavoriteLogic(favoriteLogic, localRoomImpl, newFavorite)
     //endregion
 
     override fun onPause() {
         // Обновление списка "Избранное" в базе данных перед закрытием приложения
-        localRoomImpl.deleteAllFavorite()
-        favoriteListData.setFilterWord("")
-        favoriteListData.getDatesList().forEach {
-            localRoomImpl.saveFavorite(it)
-        }
+        facadeFavoriteLogic.updateFavoriteDataBase()
+
         super.onPause()
     }
 
@@ -97,33 +80,30 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         super.onCreate(savedInstanceState)
         // Считывание системных настроек, применение темы к приложению
         readSettingsAndSetupApplication(savedInstanceState)
-
+        
         // Считывание данных по списку "Избранное" из базы данных
-        favoriteListData.addListFavoriteData(localRoomImpl.getAllFavorite())
-
-        // Установка цветов из аттрибутов темы
-        theme.resolveAttribute(R.attr.colorSecondary, colorSecondaryTypedValue, true)
-        theme.resolveAttribute(R.attr.color, colorTypedValue, true)
-        theme.resolveAttribute(
-            R.attr.colorSecondaryVariant, colorSecondaryVariantTypedValue, true)
-        theme.resolveAttribute(
-            R.attr.colorPrimaryVariant, colorPrimaryVariantTypedValue, true)
-        theme.resolveAttribute(
-            R.attr.colorPrimary, colorPrimaryTypedValue, true)
-
+        facadeFavoriteLogic.addListFavoriteData(localRoomImpl.getAllFavorite())
+        
+        // Получение цветов из аттрибутов темы
+        themeColor = ThemeColor(theme)
+        themeColor?.let { it.initiateColors()}
+        
         // Подключение Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
-
+        
         //region ПОДКЛЮЧЕНИЕ И НАСТРОЙКА VIEWPAGER2
         // Подключение ViewPagerAdapter и TabLayout для запуска фрагментов
         binding.viewPager.adapter = viewPagerAdapter
+        // Настройка загрузки всех невидимых фрагментов
+        binding.viewPager.setOffscreenPageLimit(viewPagerAdapter.getFragments().size)
+        // Установка текста на закладки
         textTabLayouts = listOf(resources.getString(R.string.tablayout_photo_of_day_icon_text),
             resources.getString(R.string.tablayout_search_in_wiki_icon_text),
             resources.getString(R.string.tablayout_search_in_nasa_archive_text))
         TabLayoutMediator(binding.tabLayout, binding.viewPager, true, true)
         {tab, position -> tab.text = textTabLayouts[position] }.attach()
         // Получение списка View закладок TabLayout
-        touchableListTabLayot = binding.tabLayout.touchables
+        touchableListTabLayout = binding.tabLayout.touchables
         // Настройка TabLayout (установка на него картинок)
         binding.tabLayout.getTabAt(Constants.DAY_PHOTO_FRAGMENT_INDEX)?.customView =
             layoutInflater.inflate(R.layout.tablayout_photo_of_day, null)
@@ -138,7 +118,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         hideAndShowFragmentsContainersAndDismissDialogs()
 
         // Методы работы с Bottom Navigation Menu
-        setBottomNavigationMenu()
+        setBottomNavigationMenu.setMenu()
 
         // Отключение блокировки всех кнопок, кроме кнопок, появившихся из FAB
         isBlockingOtherFABButtons = false
@@ -150,7 +130,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Скрытие контейнера для фрамгента с установками приложения
     // и отображение элементов viewPager и tabLayout,
     // а также закрытие всех открытых диалоговых фрагментов
-    private fun hideAndShowFragmentsContainersAndDismissDialogs() {
+    fun hideAndShowFragmentsContainersAndDismissDialogs() {
         binding.transparentBackground.visibility = View.VISIBLE
         binding.activityFragmentsContainer.visibility = View.INVISIBLE
         navigationDialogs.closeDialogs()
@@ -184,123 +164,19 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     //endregion
 
     //region УСТАНОВКА BOTTOM NAVIGATION MENU
-    private fun setBottomAppBar() {
+    fun setBottomAppBar() {
         this.setSupportActionBar(binding.bottomNavigationMenu.bottomAppBar)
 
-        switchBottomAppBar(this)
+        setBottomNavigationMenu.switchBottomAppBar()
         binding.bottomNavigationMenu.bottomAppBarFab.setOnClickListener {
             if (navigationContent.getSettingsFragment() != null) {
                 recreate()
             } else {
-                switchBottomAppBar(this)
+                setBottomNavigationMenu.switchBottomAppBar()
             }
         }
     }
-    // Переключение режима нижней навигационной кнопки BottomAppBar
-    // с центрального на крайнее правое положение и обратно
-    fun switchBottomAppBar(context: MainActivity) {
-        // Отключение блокировки всех кнопок, кроме кнопок, появившихся из FAB
-        isBlockingOtherFABButtons = false
-        // Установка анимационного просветления фона
-        setHideShowBackgroundAnimation(transparientValue, durationAnimation, true)
-        // Отображение навигационного меню View Pager
-        binding.tabLayout.visibility = View.VISIBLE
-        // Анимация вращения картинки на нижней кнопке FAB
-        ObjectAnimator.ofFloat(binding.bottomNavigationMenu.bottomAppBarFab,
-            "rotation", 0f, Constants.ANGLE_TO_ROTATE_BOTTOM_FAB).start()
 
-        if (isMain) {
-            // Изменение нижего меню, выходящего из FAB
-            if (isFABButtonsGroupView) {
-                binding.fabButtonsGroup.visibility = View.INVISIBLE
-                isFABButtonsGroupView = !isFABButtonsGroupView
-            }
-            // Изменение нижней кнопки FAB
-            isMain = false
-            binding.bottomNavigationMenu.bottomAppBar.navigationIcon = null
-            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode =
-                BottomAppBar.FAB_ALIGNMENT_MODE_END
-            binding.bottomNavigationMenu.bottomAppBarFab.setImageDrawable(
-                ContextCompat.getDrawable(context, R.drawable.ic_back_fab)
-            )
-            binding.bottomNavigationMenu.bottomAppBar.replaceMenu(
-                R.menu.bottom_menu_bottom_bar_other_screen)
-
-            //region НАСТРОЙКИ ПОИСКОВОГО ПОЛЯ
-            val searchViewActionView = binding.bottomNavigationMenu.bottomAppBar.menu
-                .findItem(R.id.action_bottom_bar_search_request_form).actionView
-            val searchView = searchViewActionView as SearchView
-            // Событие установки поискового запроса
-            searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    // Отображение полученного поискового запроса
-                    setFilterWord(query)
-                    navigationContent.getFavoriteRecyclerListFragment()?.let {
-                        it.getAdapter()?.let { adapter ->
-                            adapter.setFavoriteData(getFavoriteDataList())
-                            adapter.notifyDataSetChanged()
-                        }
-                    }
-                    return false
-                }
-                // Отслеживание появления каждого символа
-                override fun onQueryTextChange(newText: String): Boolean {
-                    // Отображение полученного поискового запроса
-                    setFilterWord(newText)
-                    navigationContent.getFavoriteRecyclerListFragment()?.let {
-                        it.getAdapter()?.let { adapter ->
-                            adapter.setFavoriteData(getFavoriteDataList())
-                            adapter.notifyDataSetChanged()
-                        }
-                    }
-                    return false
-                }
-            })
-            // Событие на закрытие поискового окна (обнуление фильтра)
-            searchView.setOnCloseListener {
-                // Отображение полученного поискового запроса
-                setFilterWord("")
-                navigationContent.getFavoriteRecyclerListFragment()?.let {
-                    it.getAdapter()?.let {adapter ->
-                        adapter.setFavoriteData(getFavoriteDataList())
-                        adapter.notifyDataSetChanged()
-                    }
-                }
-                true
-            }
-            // Получение поискового поля для ввода и редактирования текста поискового
-            val searchedEditText =
-                searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
-            // Установка цветов фона и текста для поискового поля
-            searchedEditText.setBackgroundResource(R.drawable.search_view_shape)
-            searchedEditText.setTextColor(colorTypedValue.data)
-            searchedEditText.setHintTextColor(colorTypedValue.data)
-            // Установка размера поискового текста
-            searchedEditText.setTextSize(Constants.SEARCH_FIELD_TEXT_SIZE)
-            // Установка значка поиска внутри editText (без исчезновения)
-//            editText.setCompoundDrawablesWithIntrinsicBounds(
-//                android.R.drawable.ic_menu_search,0,0,0)
-            //endregion
-        } else {
-            // Изменение нижего меню, выходящего из FAB
-            if (isFABButtonsGroupView) {
-                binding.fabButtonsGroup.visibility = View.INVISIBLE
-                isFABButtonsGroupView = !isFABButtonsGroupView
-            }
-            // Изменение нижней кнопки FAB
-            isMain = true
-            binding.bottomNavigationMenu.bottomAppBar.navigationIcon =
-                ContextCompat.getDrawable(context, R.drawable.ic_hamburger_menu_bottom_bar)
-            binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode =
-                BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
-            binding.bottomNavigationMenu.bottomAppBarFab.setImageDrawable(
-                ContextCompat.getDrawable(context, R.drawable.ic_plus_fab)
-            )
-            binding.bottomNavigationMenu.bottomAppBar.replaceMenu(R.menu.bottom_menu_bottom_bar)
-            // Изменение вида иконки сердца
-            changeHeartIconState(this, false, false)
-        }
-    }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Отобразить справа внизу стартового меню
         menuInflater.inflate(R.menu.bottom_menu_bottom_bar, menu)
@@ -327,7 +203,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                 if ((!isBlockingOtherFABButtons) && (newFavorite != Favorite()) &&
                     (newFavorite.getTitle().isNotEmpty())) {
                     // Добавление понравившегося содержимого в список "Избранное"
-                    val indexSimilarData: Int = favoriteListData.addFavoriteData(newFavorite)
+                    val indexSimilarData: Int = facadeFavoriteLogic.addFavoriteData(newFavorite)
                     if (indexSimilarData == -1) {
                         // Изменение вида иконки сердца
                         changeHeartIconState(this, true, false)
@@ -337,7 +213,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                         // TODO: Сделать изменение нового счётчика в закледке фрагмента
                     } else {
                         // Удаление понравившегося содержимого из списка "Избранное"
-                        favoriteListData.removeFavoriteData(indexSimilarData)
+                        facadeFavoriteLogic.removeFavoriteData(indexSimilarData)
                         // Изменение вида иконки сердца
                         changeHeartIconState(this, false, true)
                         // Уведомление пользователя об удалении новой записи из списка "Избранное"
@@ -382,297 +258,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         return binding.viewPager
     }
 
-    //region МЕТОДЫ ДЛЯ НАСТРОЙКИ КНОПОК BOTTOM NAVIGATION MENU
-    private fun setBottomNavigationMenu() {
-        // Установка Bottom Navigation Menu
-        setBottomAppBar()
-        // Установка слушателя на длительное нажатие на нижнюю кнопку FAB
-        binding.fabButtonsGroup.visibility = View.INVISIBLE
-        binding.bottomNavigationMenu.bottomAppBarFab.setOnLongClickListener {
-            if (isFABButtonsGroupView) {
-                // Установка анимационного просветления фона
-                setHideShowBackgroundAnimation(
-                    transparientValue, durationAnimation, false)
-                // Установка признака блокировки кнопок во всем приложении,
-                // при появления меню из нижней FAB
-                isBlockingOtherFABButtons = false
-                // Разблокировка перелистывания во View Pager 2
-                binding.viewPager.setUserInputEnabled(true)
-                // Разблокировка кликов по закладкам во View Pager 2
-                touchableListTabLayot.forEach { it.isEnabled = true }
-                // Скрытие группы кнопок от меню кнопки FAB
-                binding.fabButtonsGroup.visibility = View.INVISIBLE
-                isFABButtonsGroupView = !isFABButtonsGroupView
-            } else {
-                // Установка анимационного затенения фона
-                setHideShowBackgroundAnimation(
-                    notTransparientValue, durationAnimation, false)
-                // Установка признака блокировки кнопок во всем приложении,
-                // при появления меню из нижней FAB
-                isBlockingOtherFABButtons = true
-                // Блокировка перелистывания во View Pager 2
-                binding.viewPager.setUserInputEnabled(false)
-                // Блокировка кликов по закладкам во View Pager 2
-                touchableListTabLayot.forEach { it.isEnabled = false }
-
-                // Анимация появления кнопок меню из нижней кнопки FAB
-                if (isMain) {
-                    val constraintLayout =
-                        findViewById<ConstraintLayout>(R.id.fab_buttons_container)
-                    val constraintSet = ConstraintSet()
-                    constraintSet.clone(constraintLayout)
-                    constraintSet.constrainCircle(
-                        R.id.fab_button_day_photo,
-                        R.id.bottom_fab_maket,
-                        0,
-                        285f
-                    )
-                    constraintSet.constrainCircle(
-                        R.id.fab_button_search_in_wiki,
-                        R.id.bottom_fab_maket,
-                        0,
-                        330f
-                    )
-                    constraintSet.constrainCircle(
-                        R.id.fab_button_search_in_nasa_archive,
-                        R.id.bottom_fab_maket,
-                        0,
-                        20f
-                    )
-                    constraintSet.constrainCircle(
-                        R.id.fab_button_settings,
-                        R.id.bottom_fab_maket,
-                        0,
-                        73f
-                    )
-                    constraintSet.applyTo(constraintLayout)
-                    binding.fabButtonsGroup.visibility = View.VISIBLE
-                    isFABButtonsGroupView = !isFABButtonsGroupView
-                    Thread {
-                        // Исходные параметры
-                        val numberFrames: Int = 30 // numberFrames - ОБЩЕЕ КОЛИЧЕСТВО ШАГОВ (С УЧЁТОМ РЕЛАКСАЦИИ)
-                        val deltaTime: Long = 8L // deltaTime - ВАЖНЫЙ ПАРАМТЕР - ДЛИТЕЛЬНОСТЬ ОДНОГО ШАГА
-                        val deltaRadius: Int = 8 // deltaRadius - ВАЖНЫЙ ПАРАМЕТР, ОТВЕЧАЕТ ЗА УВЕЛИЧЕНИЕ РАДИУСА НА ОДНОМ ШАГЕ
-                        val handler = Handler(Looper.getMainLooper())
-
-                        // Создание релаксации при прохождении через конечную точку
-                        val a: Double = 1.0 // a - В ПРИНЦИПЕ, МОЖНО ЭТОТ ПАРАМЕТР ИСКЛЮЧИТЬ, ПРИРАВНЯВ ЕГО К ЕДИНИЦЕ. ОН ОТВЕЧАЕТ В УРАВНЕНИИ y = a * x2 за широту нашей параболы
-                        val k: Double = 0.3 // k - ОЧЕНЬ ВАЖНЫЙ ПАРАМЕТР (0 <= k <= 1). ОТВЕЧАЕТ ЗА ТО, КАК ДАЛЕКО ПРОЙДЕТ ОБЪЕКТ, ПО СРАВНЕНИЮ С ПРОЙДЕННЫМ ДО КОНЕЧНОЙ ТОЧКИ ПУТИ. 1 - ПУТЬ ВОЗВРАТА БУДЕТ РАВЕН ПУТИ ДО КОНЕЧНОЙ ТОКИ
-                        var y: Double = (numberFrames * deltaRadius).toDouble() // Начальная точка движения для определения maxX и minX. После их определения y корректируется
-                        val maxX: Double = sqrt(y / a) // Расстояние до конечной точки
-                        val minX: Double = sqrt(y * k / a) // Длина траектории релаксации
-                        val deltaX: Double = (maxX + minX) / numberFrames // Смещение на одном шаге
-                        y *= (1 + k) // Учёт длины траектории релаксации (нужно увеличить начальный y, чтобы мы в результате удалились только на maxX от начальной точки
-
-                        repeat(numberFrames) {
-                            sleep(deltaTime)
-                            handler.post {
-                                val constraintLayout =
-                                    findViewById<ConstraintLayout>(R.id.fab_buttons_container)
-                                val constraintSet = ConstraintSet()
-                                constraintSet.clone(constraintLayout)
-                                constraintSet.constrainCircle(
-                                    R.id.fab_button_day_photo,
-                                    R.id.bottom_fab_maket,
-                                    round(y - a * (maxX - deltaX * it) *
-                                            (maxX - deltaX * it)).toInt(),
-                                    285f
-                                )
-                                constraintSet.constrainCircle(
-                                    R.id.fab_button_search_in_wiki,
-                                    R.id.bottom_fab_maket,
-                                    round(y - a * (maxX - deltaX * it) *
-                                            (maxX - deltaX * it)).toInt(),
-                                    330f
-                                )
-                                constraintSet.constrainCircle(
-                                    R.id.fab_button_search_in_nasa_archive,
-                                    R.id.bottom_fab_maket,
-                                    round(y - a * (maxX - deltaX * it) *
-                                            (maxX - deltaX * it)).toInt(),
-                                    20f
-                                )
-                                constraintSet.constrainCircle(
-                                    R.id.fab_button_settings,
-                                    R.id.bottom_fab_maket,
-                                    round(y - a * (maxX - deltaX * it) *
-                                            (maxX - deltaX * it)).toInt(),
-                                    73f
-                                )
-                                constraintSet.applyTo(constraintLayout)
-                            }
-                        }
-                    }.start()
-                } else {
-                    val constraintLayout =
-                        findViewById<ConstraintLayout>(R.id.fab_buttons_container)
-                    val constraintSet = ConstraintSet()
-                    constraintSet.clone(constraintLayout)
-                    constraintSet.constrainCircle(
-                        R.id.fab_button_day_photo,
-                        R.id.bottom_fab_maket_right,
-                        0,
-                        285f
-                    )
-                    constraintSet.constrainCircle(
-                        R.id.fab_button_search_in_wiki,
-                        R.id.bottom_fab_maket_right,
-                        0,
-                        310f
-                    )
-                    constraintSet.constrainCircle(
-                        R.id.fab_button_search_in_nasa_archive,
-                        R.id.bottom_fab_maket_right,
-                        0,
-                        345f
-                    )
-                    constraintSet.constrainCircle(
-                        R.id.fab_button_settings,
-                        R.id.bottom_fab_maket_right,
-                        0,
-                        15f
-                    )
-                    constraintSet.applyTo(constraintLayout)
-                    binding.fabButtonsGroup.visibility = View.VISIBLE
-                    isFABButtonsGroupView = !isFABButtonsGroupView
-                    Thread {
-                        // Исходные параметры
-                        val numberFrames: Int = 30 // numberFrames - ОБЩЕЕ КОЛИЧЕСТВО ШАГОВ (С УЧЁТОМ РЕЛАКСАЦИИ)
-                        val deltaTime: Long = 8L // deltaTime - ВАЖНЫЙ ПАРАМТЕР - ДЛИТЕЛЬНОСТЬ ОДНОГО ШАГА
-                        val deltaRadius: Int = 9 // deltaRadius - ВАЖНЫЙ ПАРАМЕТР, ОТВЕЧАЕТ ЗА УВЕЛИЧЕНИЕ РАДИУСА НА ОДНОМ ШАГЕ
-                        val handler = Handler(Looper.getMainLooper())
-
-                        // Создание релаксации при прохождении через конечную точку
-                        val a: Double = 1.0 // a - В ПРИНЦИПЕ, МОЖНО ЭТОТ ПАРАМЕТР ИСКЛЮЧИТЬ, ПРИРАВНЯВ ЕГО К ЕДИНИЦЕ. ОН ОТВЕЧАЕТ В УРАВНЕНИИ y = a * x2 за широту нашей параболы
-                        val k: Double = 0.3 // k - ОЧЕНЬ ВАЖНЫЙ ПАРАМЕТР (0 <= k <= 1). ОТВЕЧАЕТ ЗА ТО, КАК ДАЛЕКО ПРОЙДЕТ ОБЪЕКТ, ПО СРАВНЕНИЮ С ПРОЙДЕННЫМ ДО КОНЕЧНОЙ ТОЧКИ ПУТИ. 1 - ПУТЬ ВОЗВРАТА БУДЕТ РАВЕН ПУТИ ДО КОНЕЧНОЙ ТОКИ
-                        var y: Double = (numberFrames * deltaRadius).toDouble() // Начальная точка движения для определения maxX и minX. После их определения y корректируется
-                        val maxX: Double = sqrt(y / a) // Расстояние до конечной точки
-                        val minX: Double = sqrt(y * k / a) // Длина траектории релаксации
-                        val deltaX: Double = (maxX + minX) / numberFrames // Смещение на одном шаге
-                        y *= (1 + k) // Учёт длины траектории релаксации (нужно увеличить начальный y, чтобы мы в результате удалились только на maxX от начальной точки
-
-                        repeat(numberFrames) {
-                            sleep(deltaTime)
-                            handler.post {
-                                val constraintLayout =
-                                    findViewById<ConstraintLayout>(R.id.fab_buttons_container)
-                                val constraintSet = ConstraintSet()
-                                constraintSet.clone(constraintLayout)
-                                constraintSet.constrainCircle(
-                                    R.id.fab_button_day_photo,
-                                    R.id.bottom_fab_maket_right,
-                                    round(y - a * (maxX - deltaX * it) *
-                                            (maxX - deltaX * it)).toInt(),
-                                    285f
-                                )
-                                constraintSet.constrainCircle(
-                                    R.id.fab_button_search_in_wiki,
-                                    R.id.bottom_fab_maket_right,
-                                    round(y - a * (maxX - deltaX * it) *
-                                            (maxX - deltaX * it)).toInt(),
-                                    310f
-                                )
-                                constraintSet.constrainCircle(
-                                    R.id.fab_button_search_in_nasa_archive,
-                                    R.id.bottom_fab_maket_right,
-                                    round(y - a * (maxX - deltaX * it) *
-                                            (maxX - deltaX * it)).toInt(),
-                                    345f
-                                )
-                                constraintSet.constrainCircle(
-                                    R.id.fab_button_settings,
-                                    R.id.bottom_fab_maket_right,
-                                    round(y - a * (maxX - deltaX * it) *
-                                            (maxX - deltaX * it)).toInt(),
-                                    15f
-                                )
-                                constraintSet.applyTo(constraintLayout)
-                            }
-                        }
-                    }.start()
-                }
-            }
-            true
-        }
-        // Установка слушателя на нажатие кнопки вызова фрагмента с картинкой дня
-        binding.fabButtonsContainer.getViewById(R.id.fab_button_day_photo).setOnClickListener {
-            binding.fabButtonsGroup.visibility = View.INVISIBLE
-            hideAndShowFragmentsContainersAndDismissDialogs()
-            isFABButtonsGroupView = false
-            binding.viewPager.currentItem = Constants.DAY_PHOTO_FRAGMENT_INDEX
-            // Проба анимации кнопки
-//            TransitionManager.beginDelayedTransition(binding.fabButtonsContainer, Slide(Gravity.END))
-//            binding.fabButtonDayPhoto.visibility = View.GONE
-            isBlockingOtherFABButtons = false
-            // Установка анимационного просветления фона
-            setHideShowBackgroundAnimation(
-                transparientValue, durationAnimation, true)
-            // Разблокировка перелистывания во View Pager 2
-            binding.viewPager.setUserInputEnabled(true)
-            // Разблокировка кликов по закладкам во View Pager 2
-            touchableListTabLayot.forEach { it.isEnabled = true }
-            // Начальная настройка фрагмента "Картинка дня"
-            (getViewPagerAdapter().getFragments()[Constants.DAY_PHOTO_FRAGMENT_INDEX]
-                    as DayPhotoFragment).initialSettingFragment()
-        }
-        // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в Википедии
-        binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_wiki)
-            .setOnClickListener {
-                binding.fabButtonsGroup.visibility = View.INVISIBLE
-                hideAndShowFragmentsContainersAndDismissDialogs()
-                isFABButtonsGroupView = false
-                binding.viewPager.currentItem = Constants.SEARCH_WIKI_FRAGMENT_INDEX
-                isBlockingOtherFABButtons = false
-                // Установка анимационного просветления фона
-                setHideShowBackgroundAnimation(
-                    transparientValue, durationAnimation, true)
-                // Разблокировка перелистывания во View Pager 2
-                binding.viewPager.setUserInputEnabled(true)
-                // Разблокировка кликов по закладкам во View Pager 2
-                touchableListTabLayot.forEach { it.isEnabled = true }
-                // Начальная настройка фрагмента "Поиск в Википедии"
-                (getViewPagerAdapter()
-                    .getFragments()[Constants.SEARCH_WIKI_FRAGMENT_INDEX]
-                        as SearchWikiFragment).initialSettingFragment()
-            }
-        // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в архиве NASA
-        binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_nasa_archive)
-            .setOnClickListener {
-                binding.fabButtonsGroup.visibility = View.INVISIBLE
-                hideAndShowFragmentsContainersAndDismissDialogs()
-                isFABButtonsGroupView = false
-                binding.viewPager.currentItem =
-                    Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
-                isBlockingOtherFABButtons = false
-                // Установка анимационного просветления фона
-                setHideShowBackgroundAnimation(
-                    transparientValue, durationAnimation, true)
-                // Разблокировка перелистывания во View Pager 2
-                binding.viewPager.setUserInputEnabled(true)
-                // Разблокировка кликов по закладкам во View Pager 2
-                touchableListTabLayot.forEach { it.isEnabled = true }
-                // Начальная настройка фрагмента "Поиск в архиве NASA"
-                (getViewPagerAdapter()
-                    .getFragments()[Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
-                        as SearchNASAArchiveFragment).initialSettingFragment()
-            }
-        // Установка слушателя на нажатие кнопки вызова настроек приложения
-        binding.fabButtonsContainer.getViewById(R.id.fab_button_settings).setOnClickListener {
-            binding.fabButtonsGroup.visibility = View.INVISIBLE
-            isFABButtonsGroupView = false
-            isBlockingOtherFABButtons = false
-            showSettingsFragment()
-            // Установка анимационного просветления фона
-            setHideShowBackgroundAnimation(
-                transparientValue, durationAnimation, true)
-            // Разблокировка перелистывания во View Pager 2
-            binding.viewPager.setUserInputEnabled(true)
-            // Разблокировка кликов по закладкам во View Pager 2
-            touchableListTabLayot.forEach { it.isEnabled = true }
-        }
-    }
-    //endregion
-
     // Считывание системных настроек, применение темы к приложению
     private fun readSettingsAndSetupApplication(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
@@ -694,11 +279,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         }
     }
 
-    // Установка значения переменной isMain
-    fun setIsMain(isMain: Boolean) {
-        this.isMain = isMain
-    }
-
     override fun onResume() {
         super.onResume()
         // Установка начального значения isMain
@@ -706,13 +286,8 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         setBottomAppBar()
     }
 
-    // Получение признака блокировки всех кнопок, кроме появившихся из контекстного меню
-    fun getIsBlockingOtherFABButtons(): Boolean {
-        return isBlockingOtherFABButtons
-    }
-
     // Установка анимационного затенения/просветления фона
-    private fun setHideShowBackgroundAnimation (
+    fun setHideShowBackgroundAnimation (
         alpha: Float, duration: Long, isClickable: Boolean) {
         binding.transparentBackground.animate()
             .alpha(alpha)
@@ -765,7 +340,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
                     it.getItem(Constants.INDEX_ADD_FAVORITE_MENU_ITEM)
                         .setIcon(R.drawable.ic_favourite)
                 }
-//                isFavorite = !isFavorite
             }
         }
     }
@@ -777,54 +351,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     }
     //endregion
 
-    //region МЕТОДЫ ПОЛУЧЕНИЯ ЦВЕТОВ ИЗ АТТРИБУТОВ ТЕМЫ
-    fun getColorSecondaryTypedValue(): TypedValue {
-        return colorSecondaryTypedValue
-    }
-    fun getSecondaryVariantTypedValue(): TypedValue {
-        return colorSecondaryVariantTypedValue
-    }
-    fun getColorPrimaryVariantTypedValue(): TypedValue {
-        return colorPrimaryVariantTypedValue
-    }
-    fun getColorPrimaryTypedValue(): TypedValue {
-        return colorPrimaryTypedValue
-    }
-    //endregion
-
     // Получение viewPagerAdapter
     fun getViewPagerAdapter(): ViewPagerAdapter {
         return viewPagerAdapter
-    }
-
-    //region МЕТОДЫ ФАСАДА ЛОГИКИ ПРОЕКТА (РАБОТА С ЛОГИКОЙ, КЛАССОМ FavoriteLogic)
-    // Получение списка избранных данных
-    fun getFavoriteDataList(): MutableList<Favorite> {
-        return favoriteListData.getDatesList()
-    }
-    // Проверка на то, что новые данные уже есть в списке "Избранное"
-    fun checkSimilarFavoriteData(): Boolean {
-        return favoriteListData.checkSimilarFavoriteData(newFavorite)
-    }
-    // Установка фильтра для выбора нужной информации из списка "Избранное"
-    private fun setFilterWord(newFilterWord: String) {
-        favoriteListData.setFilterWord(newFilterWord)
-    }
-    // Удаление данных в списке FullDates
-    fun removeFavoriteDataByCorrectedData(indexRemovedFavoriteCorrectedData: Int) {
-        favoriteListData.removeFavoriteDataByCorrectedData(indexRemovedFavoriteCorrectedData)
-    }
-    // Удаление и добавление данных в списке FullDates
-    fun removeAndAddFavoriteDataByCorrectedData(indexRemovedFavoriteCorrectedData: Int,
-                                                indexAddedFavoriteCorrectedData: Int) {
-        favoriteListData.removeAndAddFavoriteDataByCorrectedData(
-            indexRemovedFavoriteCorrectedData, indexAddedFavoriteCorrectedData)
-    }
-    //endregion
-
-    // Ранжирование списка fullDatesList по приоритетам
-    fun priorityRangeFullDatesList() {
-        favoriteListData.priorityRangeFullDatesList()
     }
 
     // Метод для отображения сообщения в виде Toast
@@ -834,4 +363,48 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             show()
         }
     }
+
+    // Получение фасада класса с логикой "FavoriteLogic"
+    fun getFacadeFavoriteLogic(): FacadeFavoriteLogic {
+        return facadeFavoriteLogic
+    }
+
+    // Получение класса с цветами темы
+    fun getThemeColor(): ThemeColor? {
+        return themeColor
+    }
+    
+    //region Методы для класса SetBottomNavigationMenu
+    // Установка isFABButtonsGroupView
+    fun setIsFABButtonsGroupView(isFABButtonsGroupView: Boolean) {
+        this.isFABButtonsGroupView = isFABButtonsGroupView
+    }
+    // Получение isFABButtonsGroupView
+    fun getIsFABButtonsGroupView(): Boolean {
+        return isFABButtonsGroupView
+    }
+    // Установка признака блокировки всех кнопок, кроме появившихся из контекстного меню
+    fun setIsBlockingOtherFABButtons(isBlockingOtherFABButtons: Boolean) {
+        this.isBlockingOtherFABButtons = isBlockingOtherFABButtons
+    }
+    // Получение признака блокировки всех кнопок, кроме появившихся из контекстного меню
+    fun getIsBlockingOtherFABButtons(): Boolean {
+        return isBlockingOtherFABButtons
+    }
+    // Получение закладок
+    fun getTouchableListTabLayout(): ArrayList<View> {
+        return touchableListTabLayout
+    }
+    // Установка значения переменной isMain
+    fun setIsMain(isMain: Boolean) {
+        this.isMain = isMain
+    }
+    // Получение значения переменной isMain
+    fun getIsMain(): Boolean {
+        return isMain
+    }
+    fun getSetBottomNavigationMenu(): SetBottomNavigationMenu {
+        return setBottomNavigationMenu
+    }
+    //endregion
 }
