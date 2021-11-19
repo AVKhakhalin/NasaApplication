@@ -1,6 +1,10 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    // Подключение плагина для работы с аннотациями (нужно для Room)
+    id 'kotlin-kapt'
+    // Подключение плагина для удобной парселизации
+    id 'kotlin-android-extensions'
 }
 
 android {
@@ -8,12 +12,25 @@ android {
 
     defaultConfig {
         applicationId "com.example.nasaapplication"
-        minSdkVersion 24
+        minSdkVersion 25
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 5
+        versionName "1.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    // Добавили разрешение на использование Binding
+    buildFeatures {
+        viewBinding true
+    }
+
+    // Установка API ключа, полученного на сайте "https://api.nasa.gov/"
+    buildTypes.each {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("app.properties").newDataInputStream())
+        def nasaApiKey = properties.getProperty("NASA_API_KEY", "")
+        it.buildConfigField "String", "NASA_API_KEY", nasaApiKey
     }
 
     buildTypes {
@@ -32,13 +49,32 @@ android {
 }
 
 dependencies {
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    // UI
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
-    testImplementation 'junit:junit:4.+'
+    // Test
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2'
+    // Kotlin
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.6.0'
+    // AppCompat
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    // Lifecycle and ViewModel (архитектурные компоненты)
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
+    // Koil image download (аналог Picasso и Glide, написанный на Kotlin)
+    implementation("io.coil-kt:coil:1.3.2")
+    // ViewPager2
+    implementation 'com.google.android.material:material:1.1.0-rc02'
+    // Библиотека Room для работы с базами данных
+    implementation 'androidx.room:room-runtime:2.3.0'
+    kapt 'androidx.room:room-compiler:2.3.0'
 }

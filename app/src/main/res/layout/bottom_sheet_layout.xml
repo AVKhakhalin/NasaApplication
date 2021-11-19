@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_sheet_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
+    android:layout_marginTop="?actionBarSize"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
+    android:visibility="visible"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <View
+        android:id="@+id/bottom_sheet_line"
+        android:layout_width="@dimen/bottom_sheet_line_width"
+        android:layout_height="@dimen/bottom_sheet_line_height"
+        android:layout_marginTop="@dimen/bottom_sheet_line_margin_top"
+        android:background="@color/bottom_sheet_line_color_day"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/bottom_sheet_description_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/bottom_sheet_description_title_margin_top"
+        android:paddingStart="@dimen/bottom_sheet_description_title_padding_start"
+        android:paddingEnd="@dimen/bottom_sheet_description_title_padding_end"
+        android:textColor="?attr/color"
+        android:textStyle="bold"
+        android:textSize="@dimen/bottom_sheet_description_title_text_size"
+        android:fontFamily="@font/aldrich"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_line"
+        android:text="@string/bottom_sheet_description_title_text" />
+
+    <TextView
+        android:id="@+id/bottom_sheet_description_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/bottom_sheet_description_text_padding_start"
+        android:paddingEnd="@dimen/bottom_sheet_description_text_padding_end"
+        android:textColor="?attr/color"
+        android:textSize="@dimen/bottom_sheet_description_text_text_size"
+        android:fontFamily="@font/convergence"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_description_title"
+        android:text="@string/bottom_sheet_description_text_text"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

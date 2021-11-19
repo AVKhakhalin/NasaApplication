@@ -1,16 +1,80 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.NasaApplication" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <!-- DAY THEME -->
+    <style name="Theme.NasaApplication.Day" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+            <!--The color displayed most frequently across your app’s screens and components.
+            This color should pass accessibilty guidelines for text / iconography when drawn on top
+            of the surface or background color.
+            Цвет рамки вокруг текстового поля с поиском информации в Википедии-->
+        <item name="colorPrimary">@color/color_primary_day</item>
+            <!--Surface colors affect surfaces of components, such as cards, sheets, and menus-->
+        <item name="colorSurface">@color/activity_background_day</item>
+            <!--Цвет вехрней линии на экране-->
+        <item name="colorPrimaryVariant">@color/color_primary_dark_day</item>
+        <item name="colorOnPrimary">@color/white_day</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/bottom_sheet_background_color_day</item>
+        <item name="colorSecondaryVariant">@color/color_accent_day</item>
+        <item name="colorOnSecondary">@color/bottom_sheet_description_title_text_color_day</item>
+        <item name="color">@color/bottom_sheet_background_color_night_description_text_day</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <!-- Фон -->
+        <item name="colorOnBackground">@color/activity_background_day</item>
+
+        <!-- Применение собственных стилей компонент -->
+        <item name="textInputStyle">@style/CustomOutlinedBox</item>
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
+    </style>
+
+    <!-- РАСШИФРОВКИ СТИЛЕЙ ТЕМЫ DAY -->
+    <!-- Переопределение стиля текстового поля для поиска в Википедии -->
+    <style name="CustomOutlinedBox" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="counterEnabled">true</item>
+        <item name="endIconMode">custom</item>
+    </style>
+    <!-- Переопределение стиля поискового поля для поиска информации в разделе Любимое -->
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <!-- Основная иконка для вызова поискового поля -->
+        <item name="searchIcon">@drawable/ic_search</item>
+        <!-- Цвет фона всего поискового элемента -->
+<!--        <item name="queryBackground">@color/black</item> -->
+        <!-- Иконка внутри поискового поля -->
+<!--        <item name="searchHintIcon">@drawable/ic_save</item> -->
+        <!-- Фраза на фоне поискового поля -->
+        <item name="queryHint">"Поиск в избранном"</item>
+        <!-- Иконка закрытия -->
+       <item name="closeIcon">@drawable/ic_close</item>
+        <!-- Иконка подсказки внутри текстового поискового поля.
+        Исчезает при начале набора текста -->
+       <item name="searchHintIcon">@drawable/ic_search_gray</item>
+    </style>
+
+    <!-- NIGHT THEME -->
+    <style name="Theme.NasaApplication.Night" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <!--The color displayed most frequently across your app’s screens and components.
+        This color should pass accessibilty guidelines for text / iconography when drawn on top
+        of the surface or background color.
+        Цвет рамки вокруг текстового поля с поиском информации в Википедии-->
+        <item name="colorPrimary">@color/color_primary_night</item>
+        <!--Surface colors affect surfaces of components, such as cards, sheets, and menus-->
+        <item name="colorSurface">@color/activity_background_night</item>
+        <!--Цвет вехрней линии на экране-->
+        <item name="colorPrimaryVariant">@color/color_primary_dark_night</item>
+        <item name="colorOnPrimary">@color/white_night</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/bottom_sheet_background_color_night</item>
+        <item name="colorSecondaryVariant">@color/color_accent_night</item>
+        <item name="colorOnSecondary">@color/bottom_sheet_description_title_text_color_night</item>
+        <item name="color">@color/bottom_sheet_background_color_night_description_text_night</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Фон -->
+        <item name="colorOnBackground">@color/activity_background_night</item>
+
+        <!-- Применение собственных стилей компонент -->
+        <item name="textInputStyle">@style/CustomOutlinedBox</item>
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
     </style>
 </resources>
