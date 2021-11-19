@@ -4,41 +4,22 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModelProviders
-import com.example.nasaapplication.R
 import com.example.nasaapplication.Constants
-import com.example.nasaapplication.controller.navigation.contents.NavigationContent
-import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
-import com.example.nasaapplication.controller.observers.viewmodels.POD.PODViewModel
+import com.example.nasaapplication.controller.observers.viewmodels.WIKI.WIKIViewModel
 import com.example.nasaapplication.databinding.FragmentSearchInWikiBinding
 import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.utils.ViewBindingFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import okhttp3.internal.toHexString
-import java.io.BufferedReader
-import java.io.FileNotFoundException
-import java.io.InputStreamReader
-import java.net.URL
-import java.util.stream.Collectors
-import javax.net.ssl.HttpsURLConnection
 
 class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     FragmentSearchInWikiBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
-    // ViewModel
-    private val viewModel: PODViewModel by lazy {
-        ViewModelProviders.of(this).get(PODViewModel::class.java)
-    }
     // BottomSheet
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     // Анимация появления результирующих данных
@@ -49,6 +30,9 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     private var searchWikiFavorite: Favorite = Favorite()
     // MainActivity
     private var mainActivity: MainActivity? = null
+    // ViewModel
+    private val viewModel: WIKIViewModel =
+        WIKIViewModel(this, searchWikiFavorite, transparientValue)
     //endregion
 
     companion object {
@@ -84,9 +68,8 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
                     if ((binding.inputWikiFieldText.text != null) &&
                     (binding.inputWikiFieldText.text!!.length <=
                             binding.inputWikiField.counterMaxLength)) {
-                        showUrlInWiki(
-                            "${Constants.WIKI_URL}${
-                                binding.inputWikiFieldText.text.toString()}")
+                            viewModel.showUrlInWiki("${Constants.WIKI_URL}${
+                                binding.inputWikiFieldText.text.toString()}", mainActivity)
                     }
                 }
             }
@@ -103,96 +86,91 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
         }
     }
 
-    fun showUrlInWiki(urlString: String){
-        mainActivity?.let { mainActivity ->
-            // Сохранение запроса в "Избранное"
-            mainActivity.setListFavoriteDataSearchRequest(
-                "${binding.inputWikiFieldText.text.toString()}")
-            mainActivity.setListFavoriteDataTypeSource(
-                Constants.SEARCH_WIKI_FRAGMENT_INDEX)
-            mainActivity.setListFavoriteDataPriority(Constants.PRIORITY_LOW)
-            mainActivity.setListFavoriteDataLinkSource("${Constants.WIKI_URL}${
-                binding.inputWikiFieldText.text.toString()}")
-            mainActivity.setListFavoriteDataTitle(
-                "${binding.inputWikiFieldText.text.toString()}")
-            searchWikiFavorite.setSearchRequest(
-                "${binding.inputWikiFieldText.text.toString()}")
-            searchWikiFavorite.setTypeSource(
-                Constants.SEARCH_WIKI_FRAGMENT_INDEX)
-            searchWikiFavorite.setPriority(Constants.PRIORITY_LOW)
-            searchWikiFavorite.setLinkSource("${Constants.WIKI_URL}${
-                binding.inputWikiFieldText.text.toString()}")
-            searchWikiFavorite.setTitle(
-                "${binding.inputWikiFieldText.text.toString()}")
-            // Отображение результата запроса
-            val url = URL(urlString)
-            binding.webViewContainer.alpha = transparientValue
-            Thread {
-                val urlConnection = url.openConnection() as HttpsURLConnection
-                urlConnection.requestMethod = Constants.SHOWURLINWIKI_METHOD_NAME
-                urlConnection.readTimeout = Constants.SHOWURLINWIKI_READ_TIME_OUT
-                var reader: BufferedReader? = null
-                try {
-                    reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
-                } catch (exception: FileNotFoundException) {
-                    urlConnection.disconnect()
-                }
-                if (reader != null) {
-                    mainActivity.getThemeColor()?.let {
-                        val result = "${Constants.WEBVIEW_TEXT_HEADER_SUCCESS_BEGIN}${
-                            it.getColorPrimaryVariantTypedValue().toHexString()
-                                .subSequence(2, 8)}${Constants.WEBVIEW_TEXT_HEADER_SUCCESS_END}${
-                                    getLines(reader)}${Constants.WEBVIEW_TEXT_FOOTER}"
-                        // Сохранение результата запроса в "Избранное"
-                        mainActivity.setListFavoriteDataDescription(result)
-                        searchWikiFavorite.setDescription(result)
-
-                        // Отображение результата запроса
-                        val handler = Handler(Looper.getMainLooper())
-                        handler.post {
-                            binding.webViewContainer.loadDataWithBaseURL(
-                                null,
-                                result,
-                                Constants.SHOWURLINWIKI_TEXT_CHARSER,
-                                Constants.SHOWURLINWIKI_ENCODING,
-                                null)
-                        }
-                    }
-                } else {
-                    mainActivity.getThemeColor()?.let {
-                        // Сохранение результата запроса в "Избранное"
-                        mainActivity.setListFavoriteDataDescription(
-                            resources.getString(R.string.error_wiki_empty_request)
-                                .replace("<Br><Br>"," "))
-                        searchWikiFavorite.setDescription(
-                            resources.getString(R.string.error_wiki_empty_request)
-                                .replace("<Br><Br>"," "))
-                        // Отображение сообщения об отсутствии результата по запросу
-                        val handler = Handler(Looper.getMainLooper())
-                        val result = "${Constants.WEBVIEW_TEXT_HEADER_NOTSUCCESS_BEGIN}${
-                            it.getColorPrimaryVariantTypedValue().toHexString().subSequence(2, 8)}${
-                                    Constants.WEBVIEW_TEXT_HEADER_NOTSUCCESS_END}${
-                                    resources.getString(R.string.error_wiki_empty_request)}${
-                                        Constants.WEBVIEW_TEXT_FOOTER}"
-                        handler.post {
-                            binding.webViewContainer.loadDataWithBaseURL(
-                                null,
-                                result,
-                                Constants.SHOWURLINWIKI_TEXT_CHARSER,
-                                Constants.SHOWURLINWIKI_ENCODING,
-                                null)
-                        }
-                    }
-                }
-                urlConnection.disconnect()
-            }.start()
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.N) // TODO: Доработать, заменить на метод, независящий от версии
-    private fun getLines(reader: BufferedReader): String {
-        return reader.lines().collect(Collectors.joining("\n"))
-    }
+//    fun showUrlInWiki(urlString: String){
+//        mainActivity?.let { mainActivity ->
+//            // Сохранение запроса в "Избранное"
+//            mainActivity.setListFavoriteDataSearchRequest(
+//                "${binding.inputWikiFieldText.text.toString()}")
+//            mainActivity.setListFavoriteDataTypeSource(
+//                Constants.SEARCH_WIKI_FRAGMENT_INDEX)
+//            mainActivity.setListFavoriteDataPriority(Constants.PRIORITY_LOW)
+//            mainActivity.setListFavoriteDataLinkSource("${Constants.WIKI_URL}${
+//                binding.inputWikiFieldText.text.toString()}")
+//            mainActivity.setListFavoriteDataTitle(
+//                "${binding.inputWikiFieldText.text.toString()}")
+//            searchWikiFavorite.setSearchRequest(
+//                "${binding.inputWikiFieldText.text.toString()}")
+//            searchWikiFavorite.setTypeSource(
+//                Constants.SEARCH_WIKI_FRAGMENT_INDEX)
+//            searchWikiFavorite.setPriority(Constants.PRIORITY_LOW)
+//            searchWikiFavorite.setLinkSource("${Constants.WIKI_URL}${
+//                binding.inputWikiFieldText.text.toString()}")
+//            searchWikiFavorite.setTitle(
+//                "${binding.inputWikiFieldText.text.toString()}")
+//            // Отображение результата запроса
+//            val url = URL(urlString)
+//            binding.webViewContainer.alpha = transparientValue
+//            Thread {
+//                val urlConnection = url.openConnection() as HttpsURLConnection
+//                urlConnection.requestMethod = Constants.SHOWURLINWIKI_METHOD_NAME
+//                urlConnection.readTimeout = Constants.SHOWURLINWIKI_READ_TIME_OUT
+//                var reader: BufferedReader? = null
+//                try {
+//                    reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
+//                } catch (exception: FileNotFoundException) {
+//                    urlConnection.disconnect()
+//                }
+//                if (reader != null) {
+//                    mainActivity.getThemeColor()?.let {
+//                        val result = "${Constants.WEBVIEW_TEXT_HEADER_SUCCESS_BEGIN}${
+//                            it.getColorPrimaryVariantTypedValue().toHexString()
+//                                .subSequence(2, 8)}${Constants.WEBVIEW_TEXT_HEADER_SUCCESS_END}${
+//                                    getLines(reader)}${Constants.WEBVIEW_TEXT_FOOTER}"
+//                        // Сохранение результата запроса в "Избранное"
+//                        mainActivity.setListFavoriteDataDescription(result)
+//                        searchWikiFavorite.setDescription(result)
+//
+//                        // Отображение результата запроса
+//                        val handler = Handler(Looper.getMainLooper())
+//                        handler.post {
+//                            binding.webViewContainer.loadDataWithBaseURL(
+//                                null,
+//                                result,
+//                                Constants.SHOWURLINWIKI_TEXT_CHARSER,
+//                                Constants.SHOWURLINWIKI_ENCODING,
+//                                null)
+//                        }
+//                    }
+//                } else {
+//                    mainActivity.getThemeColor()?.let {
+//                        // Сохранение результата запроса в "Избранное"
+//                        mainActivity.setListFavoriteDataDescription(
+//                            resources.getString(R.string.error_wiki_empty_request)
+//                                .replace("<Br><Br>"," "))
+//                        searchWikiFavorite.setDescription(
+//                            resources.getString(R.string.error_wiki_empty_request)
+//                                .replace("<Br><Br>"," "))
+//                        // Отображение сообщения об отсутствии результата по запросу
+//                        val handler = Handler(Looper.getMainLooper())
+//                        val result = "${Constants.WEBVIEW_TEXT_HEADER_NOTSUCCESS_BEGIN}${
+//                            it.getColorPrimaryVariantTypedValue().toHexString().subSequence(2, 8)}${
+//                                    Constants.WEBVIEW_TEXT_HEADER_NOTSUCCESS_END}${
+//                                    resources.getString(R.string.error_wiki_empty_request)}${
+//                                        Constants.WEBVIEW_TEXT_FOOTER}"
+//                        handler.post {
+//                            binding.webViewContainer.loadDataWithBaseURL(
+//                                null,
+//                                result,
+//                                Constants.SHOWURLINWIKI_TEXT_CHARSER,
+//                                Constants.SHOWURLINWIKI_ENCODING,
+//                                null)
+//                        }
+//                    }
+//                }
+//                urlConnection.disconnect()
+//            }.start()
+//        }
+//    }
 
     private fun animatedShowWebView() {
         // Анимация появления Web View с результатами поиска
@@ -210,7 +188,7 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     fun setAndShowFavoriteData(favoriteData: Favorite) {
         favoriteData?.let {
             binding.inputWikiFieldText.setText(it.getSearchRequest())
-            showUrlInWiki(it.getLinkSource())
+            viewModel.showUrlInWiki(it.getLinkSource(), mainActivity)
         }
     }
 
