@@ -8,9 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nasaapplication.R
 import com.example.nasaapplication.Constants
-import com.example.nasaapplication.controller.recyclers.utils.BaseViewHolder
-import com.example.nasaapplication.controller.recyclers.utils.ItemTouchHelperAdapter
-import com.example.nasaapplication.controller.recyclers.utils.ItemTouchHelperViewHolder
+import com.example.nasaapplication.controller.recyclers.utils.*
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemPhotoOfDayBinding
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemSearchInNasaBinding
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemSearchInWikiBinding
@@ -18,9 +16,9 @@ import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.ui.activities.MainActivity
 
 class FavoriteRecyclerListFragmentAdapter (
-    private var onListItemClickListener: FavoriteRecyclerListFragmentOnItemClickListener,
+    private val onListItemClickListener: FavoriteRecyclerListFragmentOnItemClickListener,
     private var favoriteData: MutableList<Favorite>,
-    private var mainActivity: MainActivity,
+    private val mainActivity: MainActivity,
 ): RecyclerView.Adapter<BaseViewHolder>(), ItemTouchHelperAdapter {
     //region БАЗОВЫЕ МЕТОДЫ ДЛЯ РАБОТЫ АДАПТЕРА
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -29,25 +27,29 @@ class FavoriteRecyclerListFragmentAdapter (
                 val binding: FavoriteListRecyclerItemPhotoOfDayBinding =
                     FavoriteListRecyclerItemPhotoOfDayBinding
                         .inflate(LayoutInflater.from(parent.context), parent,false)
-                PhotoOfDayViewHolder(binding.root)
+                PhotoOfDayViewHolder(binding.root, mainActivity, onListItemClickListener,
+                    favoriteData, this)
             }
             Constants.SEARCH_WIKI_FRAGMENT_INDEX -> {
                 val binding: FavoriteListRecyclerItemSearchInWikiBinding =
                     FavoriteListRecyclerItemSearchInWikiBinding
                         .inflate(LayoutInflater.from(parent.context), parent,false)
-                SearchInWikiViewHolder(binding.root)
+                SearchInWikiViewHolder(binding.root, mainActivity, onListItemClickListener,
+                    favoriteData, this)
             }
             Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX -> {
                 val binding: FavoriteListRecyclerItemSearchInNasaBinding =
                     FavoriteListRecyclerItemSearchInNasaBinding
                         .inflate(LayoutInflater.from(parent.context), parent,false)
-                SearchInNASAArchiveViewHolder(binding.root)
+                SearchInNASAArchiveViewHolder(binding.root, mainActivity, onListItemClickListener,
+                    favoriteData, this)
             }
             else -> {
                 val binding: FavoriteListRecyclerItemPhotoOfDayBinding =
                     FavoriteListRecyclerItemPhotoOfDayBinding
                         .inflate(LayoutInflater.from(parent.context), parent,false)
-                PhotoOfDayViewHolder(binding.root)
+                PhotoOfDayViewHolder(binding.root, mainActivity, onListItemClickListener,
+                    favoriteData, this)
             }
         }
     }
@@ -73,320 +75,10 @@ class FavoriteRecyclerListFragmentAdapter (
     }
     //endregion
 
-    inner class PhotoOfDayViewHolder(view: View): BaseViewHolder(view), ItemTouchHelperViewHolder {
-        override fun bind(itemFavoriteData: Favorite) {
-            FavoriteListRecyclerItemPhotoOfDayBinding.bind(itemView).apply {
-                recyclerItemPhotoOfDayItemTitle.text = itemFavoriteData.getTitle()
-                recyclerItemPhotoOfDayItemDescription.text = itemFavoriteData.getDescription()
-                // Загрузка информации по выбранному элементу на странице фрагмента "Картинка дня"
-                recyclerItemPhotoOfDayTypeImage.setOnClickListener {
-                    onListItemClickListener.onItemClick(itemFavoriteData)
-                    // Переключение режима нижней навигационной кнопки BottomAppBar
-                    // с крайнего правого положения в центральное положение
-                    mainActivity.setIsMain(false)
-                    mainActivity.getSetBottomNavigationMenu().switchBottomAppBar()
-                }
-                //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
-                recyclerItemPhotoOfDayPriorityHigh.setOnClickListener {
-                    itemFavoriteData.setPriority(Constants.PRIORITY_HIGH)
-                    changePhotoOfDayItemImageOnPriority(
-                        itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
-                    mainActivity.getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                    favoriteData = mainActivity.getFacadeFavoriteLogic().getFavoriteDataList()
-                    notifyDataSetChanged()
-                }
-                recyclerItemPhotoOfDayPriorityNormal.setOnClickListener {
-                    itemFavoriteData.setPriority(Constants.PRIORITY_NORMAL)
-                    changePhotoOfDayItemImageOnPriority(
-                        itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
-                    mainActivity.getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                    favoriteData = mainActivity.getFacadeFavoriteLogic().getFavoriteDataList()
-                    notifyDataSetChanged()
-                }
-                recyclerItemPhotoOfDayPriorityLow.setOnClickListener {
-                    itemFavoriteData.setPriority(Constants.PRIORITY_LOW)
-                    changePhotoOfDayItemImageOnPriority(
-                        itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
-                    mainActivity.getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                    favoriteData = mainActivity.getFacadeFavoriteLogic().getFavoriteDataList()
-                    notifyDataSetChanged()
-                }
-                //endregion
-                // Изменение картинки элемента в зависимости от его приоритета
-                changePhotoOfDayItemImageOnPriority(
-                    itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
-                //region МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
-                recyclerItemPhotoOfDayArrowUp.setOnClickListener {
-                    layoutPosition.takeIf {it > 0}?.also {
-                        removeAtAndAddInFullDatesList(it, it - 1)
-                        favoriteData.removeAt(it).apply {
-                            favoriteData.add(it - 1, this)
-                        }
-                        notifyItemMoved(it, it - 1)
-                    }
-                }
-                recyclerItemPhotoOfDayArrowDown.setOnClickListener {
-                    if (layoutPosition < favoriteData.size - 1) {
-                        layoutPosition.takeIf {it < itemCount - 1}?.also {
-                            removeAtAndAddInFullDatesList(it, it + 1)
-                            favoriteData.removeAt(it).apply {
-                                favoriteData.add(it + 1, this)
-                            }
-                            notifyItemMoved(it, it + 1)
-                        }
-                    }
-                }
-                //endregion
-                // Отображение описания элемента при нажатии на его заголовок (Title)
-                recyclerItemPhotoOfDayItemTitle.setOnClickListener {
-                    itemFavoriteData.setIsShowDescription(!itemFavoriteData.getIsShowDescription())
-                    recyclerItemPhotoOfDayItemDescription.visibility =
-                        if (itemFavoriteData.getIsShowDescription()) View.VISIBLE else View.GONE
-                }
-            }
-        }
-        //region МЕТОДЫ ItemTouchHelperViewHolder ДЛЯ РАБОТЫ СО СМАХИВАНИЕМ (ВЫДЕЛЕНИЕ И ОЧИСТКА)
-        override fun onItemSelected() {
-            mainActivity.getThemeColor()?.let {
-                itemView.setBackgroundColor(it.getColorPrimaryTypedValue())
-            }
-        }
-        override fun onItemClear() {
-            mainActivity.getThemeColor()?.let {
-                itemView.setBackgroundColor(it.getColorSecondaryTypedValue()
-                )
-            }
-        }
-        //endregion
-    }
-
-    inner class SearchInWikiViewHolder(view: View):BaseViewHolder(view), ItemTouchHelperViewHolder {
-        override fun bind(itemFavoriteData: Favorite) {
-            FavoriteListRecyclerItemSearchInWikiBinding.bind(itemView).apply {
-                recyclerItemSearchInWikiItemTitle.text = itemFavoriteData.getTitle()
-                recyclerItemSearchInWikiItemDescription.text = itemFavoriteData.getDescription()
-                // Загрузка информации по выбранному элементу
-                // на странице фрагмента с поиском в Википедии
-                recyclerItemSearchInWikiTypeImage.setOnClickListener {
-                    onListItemClickListener.onItemClick(itemFavoriteData)
-                    // Переключение режима нижней навигационной кнопки BottomAppBar
-                    // с крайнего правого положения в центральное положение
-                    mainActivity.setIsMain(false)
-                    mainActivity.getSetBottomNavigationMenu().switchBottomAppBar()
-                }
-                //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
-                recyclerItemSearchInWikiPriorityHigh.setOnClickListener {
-                    itemFavoriteData.setPriority(Constants.PRIORITY_HIGH)
-                    changeSearchInWikiItemImageOnPriority(
-                        itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
-                    mainActivity.getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                    favoriteData = mainActivity.getFacadeFavoriteLogic().getFavoriteDataList()
-                    notifyDataSetChanged()
-                }
-                recyclerItemSearchInWikiPriorityNormal.setOnClickListener {
-                    itemFavoriteData.setPriority(Constants.PRIORITY_NORMAL)
-                    changeSearchInWikiItemImageOnPriority(
-                        itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
-                    mainActivity.getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                    favoriteData = mainActivity.getFacadeFavoriteLogic().getFavoriteDataList()
-                    notifyDataSetChanged()
-                }
-                recyclerItemSearchInWikiPriorityLow.setOnClickListener {
-                    itemFavoriteData.setPriority(Constants.PRIORITY_LOW)
-                    changeSearchInWikiItemImageOnPriority(
-                        itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
-                    mainActivity.getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                    favoriteData = mainActivity.getFacadeFavoriteLogic().getFavoriteDataList()
-                    notifyDataSetChanged()
-                }
-                //endregion
-                // Изменение картинки элемента в зависимости от его приоритета
-                changeSearchInWikiItemImageOnPriority(
-                    itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
-                //region МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
-                recyclerItemSearchInWikiArrowUp.setOnClickListener {
-                    layoutPosition.takeIf {it > 0}?.also {
-                        removeAtAndAddInFullDatesList(it, it - 1)
-                        favoriteData.removeAt(it).apply {
-                            favoriteData.add(it - 1, this)
-                        }
-                        notifyItemMoved(it, it - 1)
-                    }
-                }
-                recyclerItemSearchInWikiArrowDown.setOnClickListener {
-                    layoutPosition.takeIf {it < itemCount - 1}?.also {
-                        removeAtAndAddInFullDatesList(it, it + 1)
-                        favoriteData.removeAt(it).apply {
-                            favoriteData.add(it + 1, this)
-                        }
-                        notifyItemMoved(it, it + 1)
-                    }
-                }
-                //endregion
-                // Отображение описания элемента при нажатии на его заголовок (Title)
-                recyclerItemSearchInWikiItemTitle.setOnClickListener {
-                    itemFavoriteData.setIsShowDescription(!itemFavoriteData.getIsShowDescription())
-                    recyclerItemSearchInWikiItemDescription.visibility =
-                        if (itemFavoriteData.getIsShowDescription()) View.VISIBLE else View.GONE
-                }
-            }
-        }
-        //region МЕТОДЫ ItemTouchHelperViewHolder ДЛЯ РАБОТЫ СО СМАХИВАНИЕМ (ВЫДЕЛЕНИЕ И ОЧИСТКА)
-        override fun onItemSelected() {
-            mainActivity.getThemeColor()?.let {
-                itemView.setBackgroundColor(it.getColorPrimaryTypedValue())
-            }
-        }
-        override fun onItemClear() {
-            mainActivity.getThemeColor()?.let {
-                itemView.setBackgroundColor(it.getColorSecondaryTypedValue())
-            }
-        }
-        //endregion
-    }
-
-    inner class SearchInNASAArchiveViewHolder(view: View):BaseViewHolder(view),
-        ItemTouchHelperViewHolder  {
-        override fun bind(itemFavoriteData: Favorite) {
-            FavoriteListRecyclerItemSearchInNasaBinding.bind(itemView).apply {
-                recyclerItemSearchInNasaItemTitle.text = itemFavoriteData.getTitle()
-                recyclerItemSearchInNasaItemDescription.text = itemFavoriteData.getDescription()
-                // Загрузка информации по выбранному элементу
-                // на странице фрагмента поиска в архиве NASA
-                recyclerItemSearchInNasaTypeImage.setOnClickListener {
-                    onListItemClickListener.onItemClick(itemFavoriteData)
-                    // Переключение режима нижней навигационной кнопки BottomAppBar
-                    // с крайнего правого положения в центральное положение
-                    mainActivity.setIsMain(false)
-                    mainActivity.getSetBottomNavigationMenu().switchBottomAppBar()
-                }
-                //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
-                recyclerItemSearchInNasaPriorityHigh.setOnClickListener {
-                    itemFavoriteData.setPriority(Constants.PRIORITY_HIGH)
-                    changeSearchInNASAArchiveImageOnPriority(
-                        itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                    mainActivity.getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                    favoriteData = mainActivity.getFacadeFavoriteLogic().getFavoriteDataList()
-                    notifyDataSetChanged()
-                }
-                recyclerItemSearchInNasaPriorityNormal.setOnClickListener {
-                    itemFavoriteData.setPriority(Constants.PRIORITY_NORMAL)
-                    changeSearchInNASAArchiveImageOnPriority(
-                        itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                    mainActivity.getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                    favoriteData = mainActivity.getFacadeFavoriteLogic().getFavoriteDataList()
-                    notifyDataSetChanged()
-                }
-                recyclerItemSearchInNasaPriorityLow.setOnClickListener {
-                    itemFavoriteData.setPriority(Constants.PRIORITY_LOW)
-                    changeSearchInNASAArchiveImageOnPriority(
-                        itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                    mainActivity.getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                    favoriteData = mainActivity.getFacadeFavoriteLogic().getFavoriteDataList()
-                    notifyDataSetChanged()
-                }
-                //endregion
-                // Изменение картинки элемента в зависимости от его приоритета
-                changeSearchInNASAArchiveImageOnPriority(
-                    itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                //region МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
-                recyclerItemSearchInNasaArrowUp.setOnClickListener {
-                    layoutPosition.takeIf {it > 0}?.also {
-                        removeAtAndAddInFullDatesList(it, it - 1)
-                        favoriteData.removeAt(it).apply {
-                            favoriteData.add(it - 1, this)
-                        }
-                        notifyItemMoved(it, it - 1)
-                    }
-                }
-                recyclerItemSearchInNasaArrowDown.setOnClickListener {
-                    layoutPosition.takeIf {it < itemCount - 1}?.also {
-                        removeAtAndAddInFullDatesList(it, it + 1)
-                        favoriteData.removeAt(it).apply {
-                            favoriteData.add(it + 1, this)
-                        }
-                        notifyItemMoved(it, it + 1)
-                    }
-                }
-                //endregion
-                // Отображение описания элемента при нажатии на его заголовок (Title)
-                recyclerItemSearchInNasaItemTitle.setOnClickListener {
-                    itemFavoriteData.setIsShowDescription(!itemFavoriteData.getIsShowDescription())
-                    recyclerItemSearchInNasaItemDescription.visibility =
-                        if (itemFavoriteData.getIsShowDescription()) View.VISIBLE else View.GONE
-                }
-            }
-        }
-        //region МЕТОДЫ ItemTouchHelperViewHolder ДЛЯ РАБОТЫ СО СМАХИВАНИЕМ (ВЫДЕЛЕНИЕ И ОЧИСТКА)
-        override fun onItemSelected() {
-            mainActivity.getThemeColor()?.let {
-                itemView.setBackgroundColor(it.getColorPrimaryTypedValue())
-            }
-        }
-        override fun onItemClear() {
-            mainActivity.getThemeColor()?.let {
-                itemView.setBackgroundColor(it.getColorSecondaryTypedValue())
-            }
-        }
-        //endregion
-    }
-
     // Установка favoriteData
     fun setFavoriteData(newFavoriteData: MutableList<Favorite>) {
         this.favoriteData = newFavoriteData
     }
-
-    //region МЕТОДЫ ИЗМЕНЕНИЯ КАРТИНКИ ЭЛЕМЕНТОВ В ЗАВИСИМОСТИ ОТ ИХ ПРИОРИТЕТОВ
-    // Смена картинки информации с фрагмента "Картинка дня" в зависимости от приоритета
-    private fun changePhotoOfDayItemImageOnPriority(
-        itemFavoriteData: Favorite, currentImageView: ImageView) {
-        if (itemFavoriteData.getPriority() == 0) {
-            currentImageView.setImageDrawable(
-                ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope))
-        } else if (itemFavoriteData.getPriority() == 1) {
-            currentImageView.setImageDrawable(
-                ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope_tab))
-        } else if (itemFavoriteData.getPriority() == 2) {
-            currentImageView.setImageDrawable(
-                ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope_tab_bottom))
-        } else
-            currentImageView.setImageDrawable(
-                ContextCompat.getDrawable(mainActivity, R.drawable.ic_telescope))
-    }
-    // Смена картинки информации с фрагмента "Поиск в Википедии" в зависимости от приоритета
-    private fun changeSearchInWikiItemImageOnPriority(
-        itemFavoriteData: Favorite, currentImageView: ImageView) {
-        if (itemFavoriteData.getPriority() == 0) {
-            currentImageView.setImageDrawable(
-                ContextCompat.getDrawable(mainActivity, R.drawable.ic_wikipedia))
-        } else if (itemFavoriteData.getPriority() == 1) {
-            currentImageView.setImageDrawable(
-                ContextCompat.getDrawable(mainActivity,
-                    R.drawable.ic_wikipedia_priority_normal))
-        } else if (itemFavoriteData.getPriority() == 2) {
-            currentImageView.setImageDrawable(
-                ContextCompat.getDrawable(mainActivity, R.drawable.ic_wikipedia_tab_bottom))
-        } else
-            currentImageView.setImageDrawable(
-                ContextCompat.getDrawable(mainActivity, R.drawable.ic_wikipedia))
-    }
-    // Смена картинки информации с фрагмента "Поиск в архиве NASA" в зависимости от приоритета
-    private fun changeSearchInNASAArchiveImageOnPriority(
-        itemFavoriteData: Favorite, currentImageView: ImageView) {
-        if (itemFavoriteData.getPriority() == 0) {
-            currentImageView.setImageDrawable(
-                ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive))
-        } else if (itemFavoriteData.getPriority() == 1) {
-            currentImageView.setImageDrawable(
-                ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive_tab))
-        } else if (itemFavoriteData.getPriority() == 2) {
-            currentImageView.setImageDrawable(
-                ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive_tab_bottom))
-        } else
-            currentImageView.setImageDrawable(
-                ContextCompat.getDrawable(mainActivity, R.drawable.ic_archive))
-    }
-    //endregion
 
     //region БАЗОВЫЕ МЕТОДЫ ДЛЯ РЕАЛИЗАЦИИ СМАХИВАНИЯ (УДАЛЕНИЯ) ЭЛЕМЕНТОВ
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
@@ -407,7 +99,7 @@ class FavoriteRecyclerListFragmentAdapter (
     private fun removeAtInFullDatesList(removedElementIndex: Int) {
         mainActivity.getFacadeFavoriteLogic().removeFavoriteDataByCorrectedData(removedElementIndex)
     }
-    private fun removeAtAndAddInFullDatesList(removedElementIndex: Int, addedElementIndex: Int) {
+    fun removeAtAndAddInFullDatesList(removedElementIndex: Int, addedElementIndex: Int) {
         mainActivity.getFacadeFavoriteLogic().removeAndAddFavoriteDataByCorrectedData(
             removedElementIndex, addedElementIndex)
     }
