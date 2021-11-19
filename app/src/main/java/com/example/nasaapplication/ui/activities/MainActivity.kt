@@ -32,8 +32,7 @@ import java.util.*
 class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationContentGetter {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
     // Навигационных переменны
-    private val navigationContent: NavigationContent =
-        NavigationContent(supportFragmentManager)
+    private val navigationContent: NavigationContent = NavigationContent(supportFragmentManager)
     private val navigationDialogs: NavigationDialogs = NavigationDialogs()
     // Установка темы приложения
     private var isThemeDay: Boolean = true
@@ -72,7 +71,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     override fun onPause() {
         // Обновление списка "Избранное" в базе данных перед закрытием приложения
         facadeFavoriteLogic.updateFavoriteDataBase()
-
         super.onPause()
     }
 

@@ -35,9 +35,6 @@ import javax.net.ssl.HttpsURLConnection
 class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     FragmentSearchInWikiBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
-    // Navigations
-    private lateinit var navigationDialogs: NavigationDialogs
-    private lateinit var navigationContent: NavigationContent
     // ViewModel
     private val viewModel: PODViewModel by lazy {
         ViewModelProviders.of(this).get(PODViewModel::class.java)
@@ -61,12 +58,6 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
-        //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
-        mainActivity?.let {
-            navigationDialogs = it.getNavigationDialogs()
-            navigationContent = it.getNavigationContent()
-        }
-        //endregion
     }
 
     override fun onResume() {

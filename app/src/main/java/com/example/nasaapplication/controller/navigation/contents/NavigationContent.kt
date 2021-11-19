@@ -2,7 +2,6 @@ package com.example.nasaapplication.controller.navigation.contents
 
 import androidx.fragment.app.FragmentManager
 import com.example.nasaapplication.R
-import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.fragments.contents.FavoriteRecyclerListFragment
 import com.example.nasaapplication.ui.fragments.contents.SettingsFragment
 

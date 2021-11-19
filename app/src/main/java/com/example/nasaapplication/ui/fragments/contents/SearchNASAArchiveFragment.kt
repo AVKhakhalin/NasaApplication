@@ -39,9 +39,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchiveBinding>(
     FragmentSearchInNasaArchiveBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
-    // Navigations
-    private lateinit var navigationDialogs: NavigationDialogs
-    private lateinit var navigationContent: NavigationContent
     // ViewModel
     private val dataViewModel: NASAArchiveDataViewModel by lazy {
         ViewModelProviders.of(this).get(NASAArchiveDataViewModel::class.java)
@@ -74,11 +71,6 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
         super.onAttach(context)
         mainActivity = context as MainActivity
         dataViewModel.setMainActivity(mainActivity)
-        //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
-        mainActivity?.let { it
-            navigationDialogs = it.getNavigationDialogs()
-            navigationContent = it.getNavigationContent()
-        }
         //endregion
     }
 

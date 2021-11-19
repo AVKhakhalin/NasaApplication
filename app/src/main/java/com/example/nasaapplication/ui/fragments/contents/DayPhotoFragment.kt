@@ -39,9 +39,6 @@ import java.util.*
 class DayPhotoFragment:
     ViewBindingFragment<FragmentDayPhotoBinding>(FragmentDayPhotoBinding::inflate) {
     //region ЗАДАНИЕ ПЕРЕМЕННЫХ
-    // Navigations
-    private lateinit var navigationDialogs: NavigationDialogs
-    private lateinit var navigationContent: NavigationContent
     // Buttons (Chip)
     private lateinit var buttonChipYesterday: Chip
     private lateinit var buttonChipToday: Chip
@@ -77,12 +74,6 @@ class DayPhotoFragment:
         super.onAttach(context)
         mainActivity = context as MainActivity
         viewModel.setMainActivity(mainActivity)
-        //region ПОЛУЧЕНИЕ КЛАССОВ НАВИГАТОРОВ
-        mainActivity?.let { it
-            navigationDialogs = it.getNavigationDialogs()
-            navigationContent = it.getNavigationContent()
-        }
-        //endregion
     }
 
     override fun onResume() {
