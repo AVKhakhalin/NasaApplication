@@ -1,7 +1,5 @@
 package com.example.nasaapplication.ui.activities
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.*
@@ -107,7 +105,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         //endregion
 
         // Установка настроек видимости элементов макета MainActivity
-        hideAndShowFragmentsContainersAndDismissDialogs()
+        setBottomNavigationMenu.hideAndShowFragmentsContainersAndDismissDialogs()
 
         // Методы работы с Bottom Navigation Menu
         setBottomNavigationMenu.setMenu()
@@ -117,15 +115,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
 
         // Отображение содержимого макета
         setContentView(binding.root)
-    }
-
-    // Скрытие контейнера для фрамгента с установками приложения
-    // и отображение элементов viewPager и tabLayout,
-    // а также закрытие всех открытых диалоговых фрагментов
-    fun hideAndShowFragmentsContainersAndDismissDialogs() {
-        binding.transparentBackground.visibility = View.VISIBLE
-        binding.activityFragmentsContainer.visibility = View.INVISIBLE
-        navigationDialogs.closeDialogs()
     }
 
     //region СЕТТЕР И ГЕТТЕР ДЛЯ ПАРАМЕТРА ТЕМЫ ПРИЛОЖЕНИЯ
@@ -218,19 +207,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         // Установка начального значения isMain
         isMain = false
         setBottomAppBar()
-    }
-
-    // Установка анимационного затенения/просветления фона
-    fun setHideShowBackgroundAnimation (
-        alpha: Float, duration: Long, isClickable: Boolean) {
-        binding.transparentBackground.animate()
-            .alpha(alpha)
-            .setDuration(duration)
-            .setListener(object: AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    binding.transparentBackground.isClickable = isClickable
-                }
-            })
     }
 
     // Получение нижнего меню для изменения вида иконки сердца

@@ -1,5 +1,7 @@
 package com.example.nasaapplication.ui.activities
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.os.Handler
 import android.os.Looper
@@ -34,7 +36,7 @@ class SetBottomNavigationMenu(
         mainActivity.binding.bottomNavigationMenu.bottomAppBarFab.setOnLongClickListener {
             if (mainActivity.getIsFABButtonsGroupView()) {
                 // Установка анимационного просветления фона
-                mainActivity.setHideShowBackgroundAnimation(
+                setHideShowBackgroundAnimation(
                     transparientValue, durationAnimation, false)
                 // Установка признака блокировки кнопок во всем приложении,
                 // при появления меню из нижней FAB
@@ -48,7 +50,7 @@ class SetBottomNavigationMenu(
                 mainActivity.setIsFABButtonsGroupView(!mainActivity.getIsFABButtonsGroupView())
             } else {
                 // Установка анимационного затенения фона
-                mainActivity.setHideShowBackgroundAnimation(
+                setHideShowBackgroundAnimation(
                     notTransparientValue, durationAnimation, false)
                 // Установка признака блокировки кнопок во всем приложении,
                 // при появления меню из нижней FAB
@@ -238,37 +240,32 @@ class SetBottomNavigationMenu(
             true
         }
         // Установка слушателя на нажатие кнопки вызова фрагмента с картинкой дня
-        mainActivity.binding.fabButtonsContainer.getViewById(R.id.fab_button_day_photo).setOnClickListener {
+        mainActivity.binding.fabButtonsContainer.getViewById(R.id.fab_button_day_photo)
+            .setOnClickListener {
             mainActivity.binding.fabButtonsGroup.visibility = View.INVISIBLE
-            mainActivity.hideAndShowFragmentsContainersAndDismissDialogs()
+            hideAndShowFragmentsContainersAndDismissDialogs()
             mainActivity.setIsFABButtonsGroupView(false)
             mainActivity.binding.viewPager.currentItem = Constants.DAY_PHOTO_FRAGMENT_INDEX
-            // Проба анимации кнопки
-//            TransitionManager.beginDelayedTransition(mainActivity.binding.fabButtonsContainer, Slide(Gravity.END))
-//            mainActivity.binding.fabButtonDayPhoto.visibility = View.GONE
             mainActivity.getUIObserversManager().setIsBlockingOtherFABButtons(false)
             // Установка анимационного просветления фона
-            mainActivity.setHideShowBackgroundAnimation(
-                transparientValue, durationAnimation, true)
+            setHideShowBackgroundAnimation(transparientValue, durationAnimation, true)
             // Разблокировка перелистывания во View Pager 2
             mainActivity.binding.viewPager.setUserInputEnabled(true)
             // Разблокировка кликов по закладкам во View Pager 2
             mainActivity.getTouchableListTabLayout().forEach { it.isEnabled = true }
             // Начальная настройка фрагмента "Картинка дня"
-            (mainActivity.getViewPagerAdapter().getFragments()[Constants.DAY_PHOTO_FRAGMENT_INDEX]
-                    as DayPhotoFragment).initialSettingFragment()
+            mainActivity.getUIObserversManager().initialSettingDayPhotoFragment()
         }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в Википедии
         mainActivity.binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_wiki)
             .setOnClickListener {
                 mainActivity.binding.fabButtonsGroup.visibility = View.INVISIBLE
-                mainActivity.hideAndShowFragmentsContainersAndDismissDialogs()
+                hideAndShowFragmentsContainersAndDismissDialogs()
                 mainActivity.setIsFABButtonsGroupView(false)
                 mainActivity.binding.viewPager.currentItem = Constants.SEARCH_WIKI_FRAGMENT_INDEX
                 mainActivity.getUIObserversManager().setIsBlockingOtherFABButtons(false)
                 // Установка анимационного просветления фона
-                mainActivity.setHideShowBackgroundAnimation(
-                    transparientValue, durationAnimation, true)
+                setHideShowBackgroundAnimation(transparientValue, durationAnimation, true)
                 // Разблокировка перелистывания во View Pager 2
                 mainActivity.binding.viewPager.setUserInputEnabled(true)
                 // Разблокировка кликов по закладкам во View Pager 2
@@ -282,14 +279,13 @@ class SetBottomNavigationMenu(
         mainActivity.binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_nasa_archive)
             .setOnClickListener {
                 mainActivity.binding.fabButtonsGroup.visibility = View.INVISIBLE
-                mainActivity.hideAndShowFragmentsContainersAndDismissDialogs()
+                hideAndShowFragmentsContainersAndDismissDialogs()
                 mainActivity.setIsFABButtonsGroupView(false)
                 mainActivity.binding.viewPager.currentItem =
                     Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
                 mainActivity.getUIObserversManager().setIsBlockingOtherFABButtons(false)
                 // Установка анимационного просветления фона
-                mainActivity.setHideShowBackgroundAnimation(
-                    transparientValue, durationAnimation, true)
+                setHideShowBackgroundAnimation(transparientValue, durationAnimation, true)
                 // Разблокировка перелистывания во ViewPager 2
                 mainActivity.binding.viewPager.setUserInputEnabled(true)
                 // Разблокировка кликов по закладкам во ViewPager 2
@@ -300,14 +296,14 @@ class SetBottomNavigationMenu(
                         as SearchNASAArchiveFragment).initialSettingFragment()
             }
         // Установка слушателя на нажатие кнопки вызова настроек приложения
-        mainActivity.binding.fabButtonsContainer.getViewById(R.id.fab_button_settings).setOnClickListener {
+        mainActivity.binding.fabButtonsContainer.getViewById(R.id.fab_button_settings)
+            .setOnClickListener {
             mainActivity.binding.fabButtonsGroup.visibility = View.INVISIBLE
             mainActivity.setIsFABButtonsGroupView(false)
             mainActivity.getUIObserversManager().setIsBlockingOtherFABButtons(false)
             mainActivity.getUIObserversManager().showSettingsFragment()
             // Установка анимационного просветления фона
-            mainActivity.setHideShowBackgroundAnimation(
-                transparientValue, durationAnimation, true)
+            setHideShowBackgroundAnimation(transparientValue, durationAnimation, true)
             // Разблокировка перелистывания во ViewPager 2
             mainActivity.binding.viewPager.setUserInputEnabled(true)
             // Разблокировка кликов по закладкам во ViewPager 2
@@ -321,8 +317,7 @@ class SetBottomNavigationMenu(
         // Отключение блокировки всех кнопок, кроме кнопок, появившихся из FAB
         mainActivity.getUIObserversManager().setIsBlockingOtherFABButtons(false)
         // Установка анимационного просветления фона
-        mainActivity.setHideShowBackgroundAnimation(
-            transparientValue, durationAnimation, true)
+        setHideShowBackgroundAnimation(transparientValue, durationAnimation, true)
         // Отображение навигационного меню View Pager
         mainActivity.binding.tabLayout.visibility = View.VISIBLE
         // Анимация вращения картинки на нижней кнопке FAB
@@ -433,5 +428,27 @@ class SetBottomNavigationMenu(
             mainActivity.getUIObserversManager()
                 .changeHeartIconState(mainActivity, false, false)
         }
+    }
+
+    // Установка анимационного затенения/просветления фона
+    fun setHideShowBackgroundAnimation (
+        alpha: Float, duration: Long, isClickable: Boolean) {
+        mainActivity.binding.transparentBackground.animate()
+            .alpha(alpha)
+            .setDuration(duration)
+            .setListener(object: AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    mainActivity.binding.transparentBackground.isClickable = isClickable
+                }
+            })
+    }
+
+    // Скрытие контейнера для фрамгента с установками приложения
+    // и отображение элементов viewPager и tabLayout,
+    // а также закрытие всех открытых диалоговых фрагментов
+    fun hideAndShowFragmentsContainersAndDismissDialogs() {
+        mainActivity.binding.transparentBackground.visibility = View.VISIBLE
+        mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
+        mainActivity.getNavigationDialogs().closeDialogs()
     }
 }

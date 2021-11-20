@@ -1,5 +1,6 @@
 package com.example.nasaapplication.domain.logic
 
+import android.util.Log
 import com.example.nasaapplication.Constants
 
 // Класс с логикой проекта - построение и сохранение списка избранных данных
@@ -123,6 +124,16 @@ class FavoriteLogic {
     // Проверка на то, что новые данные уже есть в списке "Избранное"
     fun checkSimilarFavoriteData(newFavorite: Favorite): Boolean {
         for (counter in 0 until fullDatesList.size) {
+            Log.d("mylogs",
+                "\n$counter:\n" +
+                    "${fullDatesList[counter].getTypeSource()} ? ${newFavorite.getTypeSource()}\n" +
+                    "${fullDatesList[counter].getLinkSource()} ? ${newFavorite.getLinkSource()}\n" +
+                    "${fullDatesList[counter].getTitle()} ? ${newFavorite.getTitle()}\n" +
+                    "${fullDatesList[counter].getDescription()} ? ${newFavorite.getDescription()}\n" +
+                    "${fullDatesList[counter].getSearchRequest()} ? ${newFavorite.getSearchRequest()}\n" +
+                    "${fullDatesList[counter].getLinkImage()} ? ${newFavorite.getLinkImage()}\n" +
+                    "-------\n"
+            )
             if (fullDatesList[counter].getTypeSource() == newFavorite.getTypeSource()) {
                 if ((fullDatesList[counter].getLinkSource() == newFavorite.getLinkSource())
                     && (fullDatesList[counter].getTitle() == newFavorite.getTitle())
@@ -130,10 +141,12 @@ class FavoriteLogic {
                     && (fullDatesList[counter].getSearchRequest() == newFavorite.getSearchRequest())
                     && (fullDatesList[counter].getLinkImage() == newFavorite.getLinkImage())
                 ) {
+                    Log.d("mylogs", "TRUE COMPARED = $counter END BLOCK \n")
                     return true
                 }
             }
         }
+        Log.d("mylogs", "FALSE COMPARED END BLOCK \n")
         return false
     }
 

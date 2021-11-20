@@ -1,5 +1,8 @@
 package com.example.nasaapplication.controller.observers
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import com.example.nasaapplication.Constants
@@ -22,7 +25,7 @@ class UIObserversManager(
     // АКТИВИТИ "MainActivity"
     // События:
     // 1) нажатие на кнопку "Бургер" для вызова меню переключения на фрагменты;
-    // 2) короткое нажатие на кнопку "FAB" для переключение нижнего меню в состояние поиска;
+    // 2) короткое нажатие на кнопку "FAB" для переключения нижнего меню в состояние поиска;
     // 3) длинное нажатие на кнопку "FAB";
     //    для появления навигационных кнопок переключения между фрагментами;
     // 4) нажатие на кнопку с сердцем для занесения/удаления информации в/из список/а "Избранное";
@@ -35,10 +38,9 @@ class UIObserversManager(
 
     // ФРАГМЕНТ "Фото дня"
     // События:
-    // 1) появление;
-    // 2) нажатие на кнопку "Позавчера" (кнопка назад);
-    // 3) нажатие на кнопку "Вчера" (кнопка вперёд);
-    // 4) нажатие на кнопку "Сегодня".
+    // 1) нажатие на кнопку "Позавчера" (кнопка назад);
+    // 2) нажатие на кнопку "Вчера" (кнопка вперёд);
+    // 3) нажатие на кнопку "Сегодня".
 
     // ФРАГМЕНТ "Поиск"
     // События:
@@ -71,9 +73,10 @@ class UIObserversManager(
     private var isFavorite: Boolean = false
     // Данные для сохранения в "Избранное"
     private var newFavorite: Favorite = Favorite()
+    private var dayPhotoFavorite: Favorite = Favorite()
     private var favoriteLogic: FavoriteLogic = FavoriteLogic()
     private var facadeFavoriteLogic: FacadeFavoriteLogic =
-        FacadeFavoriteLogic(favoriteLogic, localRoomImpl, newFavorite)
+        FacadeFavoriteLogic(favoriteLogic, localRoomImpl, this)
     //endregion
 
     //region МЕТОДЫ КЛАССА "MainActivity"
@@ -84,7 +87,7 @@ class UIObserversManager(
             it.showBottomNavigationDrawerDialogFragment(mainActivity)
         }
     }
-    // 2) короткое нажатие на кнопку "FAB" для переключение нижнего меню в состояние поиска;
+    // 2) короткое нажатие на кнопку "FAB" для переключения нижнего меню в состояние поиска;
     fun shortClickOnFABButton() {
 
     }
@@ -153,19 +156,15 @@ class UIObserversManager(
 
     //region МЕТОДЫ ФРАГМЕНТА "Фото дня"
     // События:
-    // 1) появление;
-    fun showDayPhotoFragment() {
-
-    }
-    // 2) нажатие на кнопку "Позавчера" (кнопка назад);
+    // 1) нажатие на кнопку "Позавчера" (кнопка назад);
     fun clickOnBackDayButton() {
 
     }
-    // 3) нажатие на кнопку "Вчера" (кнопка вперёд);
+    // 2) нажатие на кнопку "Вчера" (кнопка вперёд);
     fun clickOnForwardDayButton() {
 
     }
-    // 4) нажатие на кнопку "Сегодня".
+    // 3) нажатие на кнопку "Сегодня".
     fun clickOnTodayButton() {
 
     }
@@ -293,28 +292,71 @@ class UIObserversManager(
 
     //region МЕТОДЫ ДЛЯ ПОЛУЧЕНИЯ ДАННЫХ ДЛЯ СПИСКА "ИЗБРАННОЕ"
     fun setListFavoriteDataTypeSource(newTypeSource: Int) {
+        Log.d("mylogs", "newTypeSource: $newTypeSource\n")
         newFavorite.setTypeSource(newTypeSource)
     }
     fun setListFavoriteDataPriority(newPriority: Int) {
+        Log.d("mylogs", "newPriority: $newPriority\n")
         newFavorite.setPriority(newPriority)
     }
     fun setListFavoriteDataLinkSource(newLinkSource: String) {
+        Log.d("mylogs", "newLinkSource: $newLinkSource\n")
         newFavorite.setLinkSource(newLinkSource)
     }
     fun setListFavoriteDataTitle(newTitle: String) {
+        Log.d("mylogs", "newTitle: $newTitle\n")
         newFavorite.setTitle(newTitle)
     }
     fun setListFavoriteDataDescription(newDescription: String) {
+        Log.d("mylogs", "newDescription: $newDescription\n")
         newFavorite.setDescription(newDescription)
     }
     fun setListFavoriteDataSearchRequest(newSearchRequest: String) {
+        Log.d("mylogs", "newSearchRequest: $newSearchRequest\n")
         newFavorite.setSearchRequest(newSearchRequest)
     }
     fun setListFavoriteDataLinkImage(newLinkImage: String) {
+        Log.d("mylogs", "newLinkImage: $newLinkImage\n")
         newFavorite.setLinkImage(newLinkImage)
     }
     fun setListFavoriteEmptyData() {
         newFavorite = Favorite()
     }
     //endregion
+
+
+    // Метод с начальной настройкой фрагмента "Фото дня"
+    fun initialSettingDayPhotoFragment() {
+        mainActivity?.let { mainActivity ->
+            // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
+            setListFavoriteDataTypeSource(dayPhotoFavorite.getTypeSource())
+            setListFavoriteDataTitle(dayPhotoFavorite.getTitle())
+            setListFavoriteDataDescription(dayPhotoFavorite.getDescription())
+            setListFavoriteDataLinkSource(dayPhotoFavorite.getLinkSource())
+            setListFavoriteDataPriority(dayPhotoFavorite.getPriority())
+            setListFavoriteDataSearchRequest(dayPhotoFavorite.getSearchRequest())
+            setListFavoriteDataLinkImage(dayPhotoFavorite.getLinkImage())
+            // Метод проверки наличия текущей информации в списке "Избранное"
+            // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+            checkAndChangeHeartIconState()
+        }
+    }
+    // Метод проверки наличия текущей информации в списке "Избранное"
+    // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+    fun checkAndChangeHeartIconState() {
+        mainActivity?.let { mainActivity ->
+            if (getFacadeFavoriteLogic().checkSimilarFavoriteData())
+                changeHeartIconState(mainActivity, true, false)
+            else
+                changeHeartIconState(mainActivity, false, true)
+        }
+    }
+    // Метод получения newFavorite
+    fun getNewFavorite(): Favorite {
+        return newFavorite
+    }
+    // Метод получения dayPhotoFavorite
+    fun getDayPhotoFavorite(): Favorite {
+        return dayPhotoFavorite
+    }
 }

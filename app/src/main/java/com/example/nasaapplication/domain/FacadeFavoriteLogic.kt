@@ -1,5 +1,6 @@
 package com.example.nasaapplication.domain
 
+import com.example.nasaapplication.controller.observers.UIObserversManager
 import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.domain.logic.FavoriteLogic
 import com.example.nasaapplication.repository.facadeuser.room.LocalRoomImpl
@@ -7,7 +8,7 @@ import com.example.nasaapplication.repository.facadeuser.room.LocalRoomImpl
 class FacadeFavoriteLogic(
     val favoriteLogic: FavoriteLogic,
     val localRoomImpl: LocalRoomImpl,
-    val newFavorite: Favorite
+    val uiObserversManager: UIObserversManager
 ) {
     // Обновление списка "Избранное" в базе данных перед закрытием приложения
     fun updateFavoriteDataBase() {
@@ -39,7 +40,7 @@ class FacadeFavoriteLogic(
     }
     // Проверка на то, что новые данные уже есть в списке "Избранное"
     fun checkSimilarFavoriteData(): Boolean {
-        return favoriteLogic.checkSimilarFavoriteData(newFavorite)
+        return favoriteLogic.checkSimilarFavoriteData(uiObserversManager.getNewFavorite())
     }
     // Установка фильтра для выбора нужной информации из списка "Избранное"
     fun setFilterWord(newFilterWord: String) {

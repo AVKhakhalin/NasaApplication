@@ -63,9 +63,7 @@ class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
                     viewPager?.let { it.currentItem = 0 }
                     hideShowDismissElements()
                     // Начальная настройка фрагмента "Картинка дня"
-                    (mainActivity.getViewPagerAdapter()
-                        .getFragments()[Constants.DAY_PHOTO_FRAGMENT_INDEX]
-                            as DayPhotoFragment).initialSettingFragment()
+                    mainActivity.getUIObserversManager().initialSettingDayPhotoFragment()
                 }
                 R.id.action_bottom_bar_search_to_wiki -> {
                     viewPager?.let { it.currentItem = 1 }
