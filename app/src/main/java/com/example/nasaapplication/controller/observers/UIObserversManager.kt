@@ -1,9 +1,6 @@
 package com.example.nasaapplication.controller.observers
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.util.Log
-import android.view.Menu
 import android.view.View
 import com.example.nasaapplication.Constants
 import com.example.nasaapplication.R
@@ -38,11 +35,9 @@ class UIObserversManager(
 
     // ФРАГМЕНТ "Фото дня"
     // События:
-    // 1) нажатие на кнопку "Позавчера" (кнопка назад);
-    // 2) нажатие на кнопку "Вчера" (кнопка вперёд);
-    // 3) нажатие на кнопку "Сегодня".
+    // 1) нажатие на кнопки изменения дней.
 
-    // ФРАГМЕНТ "Поиск"
+    // ФРАГМЕНТ "Поиск в архиве NASA"
     // События:
     // 1) появление;
     // 2) нажатие на кнопку поиска в "Википедии".
@@ -74,6 +69,7 @@ class UIObserversManager(
     // Данные для сохранения в "Избранное"
     private var newFavorite: Favorite = Favorite()
     private var dayPhotoFavorite: Favorite = Favorite()
+    private var searchWikiFavorite: Favorite = Favorite()
     private var favoriteLogic: FavoriteLogic = FavoriteLogic()
     private var facadeFavoriteLogic: FacadeFavoriteLogic =
         FacadeFavoriteLogic(favoriteLogic, localRoomImpl, this)
@@ -156,29 +152,41 @@ class UIObserversManager(
 
     //region МЕТОДЫ ФРАГМЕНТА "Фото дня"
     // События:
-    // 1) нажатие на кнопку "Позавчера" (кнопка назад);
-    fun clickOnBackDayButton() {
-
-    }
-    // 2) нажатие на кнопку "Вчера" (кнопка вперёд);
-    fun clickOnForwardDayButton() {
-
-    }
-    // 3) нажатие на кнопку "Сегодня".
-    fun clickOnTodayButton() {
-
+    // 1) нажатие на кнопки изменения дней
+    fun clickOnDayButton() {
+        if (!getIsBlockingOtherFABButtons()) {
+            // Очистка текущей информации для добавления в "Избранное"
+            setListFavoriteEmptyData()
+            // Изменение вида иконки сердца на контурное
+            changeHeartIconState(mainActivity, false, true)
+        }
     }
     //endregion
 
-    //region МЕТОДЫ ФРАГМЕНТА "Поиск"
+    //region МЕТОДЫ ФРАГМЕНТА "Поиск в архиве NASA"
     // События:
     // 1) появление;
     fun showSearchWikiFragment() {
-
+        // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
+        setListFavoriteDataTypeSource(searchWikiFavorite.getTypeSource())
+        setListFavoriteDataTitle(searchWikiFavorite.getTitle())
+        setListFavoriteDataDescription(searchWikiFavorite.getDescription())
+        setListFavoriteDataLinkSource(searchWikiFavorite.getLinkSource())
+        setListFavoriteDataPriority(searchWikiFavorite.getPriority())
+        setListFavoriteDataSearchRequest(searchWikiFavorite.getSearchRequest())
+        setListFavoriteDataLinkImage(searchWikiFavorite.getLinkImage())
+        // Метод проверки наличия текущей информации в списке "Избранное"
+        // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+        checkAndChangeHeartIconState()
     }
     // 2) нажатие на кнопку поиска в "Википедии".
     fun clickOnSearchInWIKI() {
-
+        if (!getIsBlockingOtherFABButtons()) {
+            // Очистка текущей информации для добавления в список "Избранное"
+            setListFavoriteEmptyData()
+            // Изменение вида иконки сердца на контурное
+            changeHeartIconState(mainActivity, false, true)
+        }
     }
     //endregion
 
@@ -358,5 +366,9 @@ class UIObserversManager(
     // Метод получения dayPhotoFavorite
     fun getDayPhotoFavorite(): Favorite {
         return dayPhotoFavorite
+    }
+    // Метод получения searchWikiFavorite
+    fun getSearchWikiFavorite(): Favorite {
+        return searchWikiFavorite
     }
 }

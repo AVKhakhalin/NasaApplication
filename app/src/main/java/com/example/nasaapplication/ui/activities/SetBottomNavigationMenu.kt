@@ -271,9 +271,7 @@ class SetBottomNavigationMenu(
                 // Разблокировка кликов по закладкам во View Pager 2
                 mainActivity.getTouchableListTabLayout().forEach { it.isEnabled = true }
                 // Начальная настройка фрагмента "Поиск в Википедии"
-                (mainActivity.getViewPagerAdapter()
-                    .getFragments()[Constants.SEARCH_WIKI_FRAGMENT_INDEX]
-                        as SearchWikiFragment).initialSettingFragment()
+                mainActivity.getUIObserversManager().showSearchWikiFragment()
             }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в архиве NASA
         mainActivity.binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_nasa_archive)

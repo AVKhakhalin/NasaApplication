@@ -3,34 +3,37 @@ package com.example.nasaapplication.controller.observers.viewmodels.WIKI
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.provider.Telephony.Mms.Part.TEXT
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.nasaapplication.R
 import com.example.nasaapplication.Constants
 import com.example.nasaapplication.domain.logic.Favorite
-import com.example.nasaapplication.repository.facadeuser.POD.PODRetrofitImpl
-import com.example.nasaapplication.repository.facadeuser.POD.PODServerResponseData
 import com.example.nasaapplication.ui.activities.MainActivity
 import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
 import okhttp3.internal.toHexString
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.BufferedReader
 import java.io.FileNotFoundException
 import java.io.InputStreamReader
 import java.net.URL
-import java.util.*
 import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
 class WIKIViewModel (
     val searchWikiFragment: SearchWikiFragment,
-    var searchWikiFavorite: Favorite,
     val transparientValue: Float
     ) {
+
+    //region ЗАДАНИЕ ПЕРЕМЕННЫХ
+    var searchWikiFavorite: Favorite = Favorite()
+    //
+
+    // Метод установки searchWikiFavorite
+    @JvmName("setSearchWikiFavorite1")
+    fun setSearchWikiFavorite(searchWikiFavorite: Favorite) {
+        this.searchWikiFavorite = searchWikiFavorite
+    }
 
     fun showUrlInWiki(urlString: String, mainActivity: MainActivity?){
         mainActivity?.let { mainActivity ->

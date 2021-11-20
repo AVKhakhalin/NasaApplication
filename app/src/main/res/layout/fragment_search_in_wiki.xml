@@ -41,25 +41,16 @@
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="@dimen/nested_scroll_view_zero_width"
+        <WebView
+            android:id="@+id/web_view_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorOnBackground"
-            android:scrollbars="vertical"
+            android:backgroundTint="?attr/colorOnBackground"
+            android:backgroundTintMode="screen"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/input_wiki_field"
-            app:layout_constraintWidth_percent="1"
-            tools:ignore="WebViewLayout">
-
-            <WebView
-                android:id="@+id/web_view_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:backgroundTint="?attr/colorOnBackground"
-                android:backgroundTintMode="screen"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.core.widget.NestedScrollView>
+            app:layout_constraintWidth_percent="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

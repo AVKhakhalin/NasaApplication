@@ -11,7 +11,6 @@ import android.transition.ChangeBounds
 import android.transition.ChangeImageTransform
 import android.transition.TransitionManager
 import android.transition.TransitionSet
-import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
@@ -227,21 +226,13 @@ class DayPhotoFragment:
                 buttonChipToday?.let {
                     it.setOnClickListener {
                         if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
-                            // Очистка текущей информации для добавления в "Избранное"
-                            mainActivity.getUIObserversManager().setListFavoriteEmptyData()
-                            // Изменение вида иконки сердца на контурное
-                            mainActivity.getUIObserversManager().changeHeartIconState(
-                                mainActivity, false, true)
+                            mainActivity.getUIObserversManager().clickOnDayButton()
                             // Получение данных о картинке сегодняшего дня
-                            currentDateTextView!!.text =
+                            currentDateTextView?.let { it.text =
                                 "${mainActivity.resources.getString(
-                                R.string.photo_of_the_day_text)} ${getDate(0)}"
+                                R.string.photo_of_the_day_text)} ${getDate(0)}" }
                             viewModel.getData(curDate)
                                 .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
-                            // Сохранение запроса в "Избранное"
-//                            mainActivity.getUIObserversManager()
-//                                .setListFavoriteDataSearchRequest(curDate)
-//                            dayPhotoFavorite.setSearchRequest(curDate)
                         }
                     }
                 }
@@ -249,21 +240,13 @@ class DayPhotoFragment:
                 buttonChipYesterday?.let {
                     it.setOnClickListener {
                         if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
-                            // Очистка текущей информации для добавления в "Избранное"
-                            mainActivity.getUIObserversManager().setListFavoriteEmptyData()
-                            // Изменение вида иконки сердца на контурное
-                            mainActivity.getUIObserversManager().changeHeartIconState(
-                                mainActivity, false, true)
+                            mainActivity.getUIObserversManager().clickOnDayButton()
                             // Получение данных о картинке вчерашнего дня
-                            currentDateTextView!!.text =
+                            currentDateTextView?.let { it.text =
                                 "${mainActivity.resources.getString(
-                                    R.string.photo_of_the_day_text)} ${getDate(-1)}"
+                                    R.string.photo_of_the_day_text)} ${getDate(-1)}" }
                             viewModel.getData(curDate)
                                 .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
-                            // Сохранение запроса в "Избранное"
-//                            mainActivity.getUIObserversManager()
-//                                .setListFavoriteDataSearchRequest(curDate)
-//                            dayPhotoFavorite.setSearchRequest(curDate)
                         }
                     }
                 }
@@ -271,21 +254,13 @@ class DayPhotoFragment:
                 buttonChipBeforeYesterday?.let {
                     it.setOnClickListener {
                         if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
-                            // Очистка текущей информации для добавления в "Избранное"
-                            mainActivity.getUIObserversManager().setListFavoriteEmptyData()
-                            // Изменение вида иконки сердца на контурное
-                            mainActivity.getUIObserversManager().changeHeartIconState(
-                                mainActivity, false, true)
+                            mainActivity.getUIObserversManager().clickOnDayButton()
                             // Получение данных о картинке позавчерашнего дня
-                            currentDateTextView!!.text =
+                            currentDateTextView?.let { it.text =
                                 "${mainActivity.resources.getString(
-                                    R.string.photo_of_the_day_text)} ${getDate(-2)}"
+                                    R.string.photo_of_the_day_text)} ${getDate(-2)}" }
                             viewModel.getData(curDate)
                                 .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
-                            // Сохранение запроса в "Избранное"
-//                            mainActivity.getUIObserversManager()
-//                                .setListFavoriteDataSearchRequest(curDate)
-//                            dayPhotoFavorite.setSearchRequest(curDate)
                         }
                     }
                 }
@@ -348,10 +323,6 @@ class DayPhotoFragment:
                     }
                     viewModel.getData(favoriteData.getSearchRequest())
                         .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
-                    // Сохранение запроса в "Избранное"
-//                    mainActivity.getUIObserversManager()
-//                        .setListFavoriteDataSearchRequest(favoriteData.getSearchRequest())
-//                    dayPhotoFavorite.setSearchRequest(favoriteData.getSearchRequest())
                 }
             }
         }

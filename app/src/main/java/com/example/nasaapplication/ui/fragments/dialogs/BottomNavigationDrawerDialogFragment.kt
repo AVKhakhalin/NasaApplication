@@ -69,9 +69,7 @@ class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
                     viewPager?.let { it.currentItem = 1 }
                     hideShowDismissElements()
                     // Начальная настройка фрагмента "Поиск в Википедии"
-                    (mainActivity.getViewPagerAdapter()
-                        .getFragments()[Constants.SEARCH_WIKI_FRAGMENT_INDEX]
-                            as SearchWikiFragment).initialSettingFragment()
+                    mainActivity.getUIObserversManager().showSearchWikiFragment()
                 }
                 R.id.action_bottom_bar_search_to_nasa_archive -> {
                     viewPager?.let { it.currentItem = 2 }
