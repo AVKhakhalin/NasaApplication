@@ -54,7 +54,7 @@ class SettingsFragment:
             buttonStyleChooseNight = view.findViewById(R.id.button_style_night)
             buttonStyleChooseDay?.let {
                 it.setOnClickListener {
-                    if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                    if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
                         buttonStyleChooseNight?.let { it.visibility = View.INVISIBLE }
                         (requireActivity() as MainActivity).setIsThemeDay(true)
                         val sharedPreferences: SharedPreferences =
@@ -77,7 +77,7 @@ class SettingsFragment:
 
             buttonStyleChooseNight?.let {
                 it.setOnClickListener {
-                    if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                    if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
                         buttonStyleChooseDay?.let { it.visibility = View.INVISIBLE }
                         (requireActivity() as MainActivity).setIsThemeDay(false)
                         val sharedPreferences: SharedPreferences =
@@ -85,7 +85,8 @@ class SettingsFragment:
                                 Constants.SHARED_PREFERENCES_KEY,
                                 AppCompatActivity.MODE_PRIVATE
                             )
-                        var sharedPreferencesEditor: SharedPreferences.Editor = sharedPreferences.edit()
+                        var sharedPreferencesEditor: SharedPreferences.Editor =
+                            sharedPreferences.edit()
                         sharedPreferencesEditor.putBoolean(
                             Constants.SHARED_PREFERENCES_THEME_KEY,
                             false

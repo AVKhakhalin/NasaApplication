@@ -35,14 +35,16 @@ class WIKIViewModel (
     fun showUrlInWiki(urlString: String, mainActivity: MainActivity?){
         mainActivity?.let { mainActivity ->
             // Сохранение запроса в "Избранное"
-            mainActivity.setListFavoriteDataSearchRequest(
+            mainActivity.getUIObserversManager().setListFavoriteDataSearchRequest(
                 "${searchWikiFragment.binding.inputWikiFieldText.text.toString()}")
-            mainActivity.setListFavoriteDataTypeSource(
+            mainActivity.getUIObserversManager().setListFavoriteDataTypeSource(
                 Constants.SEARCH_WIKI_FRAGMENT_INDEX)
-            mainActivity.setListFavoriteDataPriority(Constants.PRIORITY_LOW)
-            mainActivity.setListFavoriteDataLinkSource("${Constants.WIKI_URL}${
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataPriority(Constants.PRIORITY_LOW)
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataLinkSource("${Constants.WIKI_URL}${
                 searchWikiFragment.binding.inputWikiFieldText.text.toString()}")
-            mainActivity.setListFavoriteDataTitle(
+            mainActivity.getUIObserversManager().setListFavoriteDataTitle(
                 "${searchWikiFragment.binding.inputWikiFieldText.text.toString()}")
             searchWikiFavorite.setSearchRequest(
                 "${searchWikiFragment.binding.inputWikiFieldText.text.toString()}")
@@ -74,7 +76,7 @@ class WIKIViewModel (
                                 .subSequence(2, 8)}${Constants.WEBVIEW_TEXT_HEADER_SUCCESS_END}${
                             getLines(reader)}${Constants.WEBVIEW_TEXT_FOOTER}"
                         // Сохранение результата запроса в "Избранное"
-                        mainActivity.setListFavoriteDataDescription(result)
+                        mainActivity.getUIObserversManager().setListFavoriteDataDescription(result)
                         searchWikiFavorite.setDescription(result)
 
                         // Отображение результата запроса
@@ -91,7 +93,7 @@ class WIKIViewModel (
                 } else {
                     mainActivity.getThemeColor()?.let {
                         // Сохранение результата запроса в "Избранное"
-                        mainActivity.setListFavoriteDataDescription(
+                        mainActivity.getUIObserversManager().setListFavoriteDataDescription(
                             mainActivity.resources.getString(R.string.error_wiki_empty_request)
                                 .replace("<Br><Br>"," "))
                         searchWikiFavorite.setDescription(

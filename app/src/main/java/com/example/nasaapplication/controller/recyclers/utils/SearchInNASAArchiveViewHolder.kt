@@ -36,24 +36,30 @@ class SearchInNASAArchiveViewHolder(
                 itemFavoriteData.setPriority(Constants.PRIORITY_HIGH)
                 changeSearchInNASAArchiveImageOnPriority(
                     itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                mainActivity.getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                favoriteData = mainActivity.getFacadeFavoriteLogic().getFavoriteDataList()
+                mainActivity.getUIObserversManager()
+                    .getFacadeFavoriteLogic().priorityRangeFullDatesList()
+                favoriteData = mainActivity.getUIObserversManager()
+                    .getFacadeFavoriteLogic().getFavoriteDataList()
                 favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
             }
             recyclerItemSearchInNasaPriorityNormal.setOnClickListener {
                 itemFavoriteData.setPriority(Constants.PRIORITY_NORMAL)
                 changeSearchInNASAArchiveImageOnPriority(
                     itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                mainActivity.getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                favoriteData = mainActivity.getFacadeFavoriteLogic().getFavoriteDataList()
+                mainActivity.getUIObserversManager()
+                    .getFacadeFavoriteLogic().priorityRangeFullDatesList()
+                favoriteData = mainActivity.getUIObserversManager()
+                    .getFacadeFavoriteLogic().getFavoriteDataList()
                 favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
             }
             recyclerItemSearchInNasaPriorityLow.setOnClickListener {
                 itemFavoriteData.setPriority(Constants.PRIORITY_LOW)
                 changeSearchInNASAArchiveImageOnPriority(
                     itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                mainActivity.getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                favoriteData = mainActivity.getFacadeFavoriteLogic().getFavoriteDataList()
+                mainActivity.getUIObserversManager()
+                    .getFacadeFavoriteLogic().priorityRangeFullDatesList()
+                favoriteData = mainActivity.getUIObserversManager()
+                    .getFacadeFavoriteLogic().getFavoriteDataList()
                 favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
             }
             //endregion

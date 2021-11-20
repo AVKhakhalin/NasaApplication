@@ -59,11 +59,12 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
             binding.webViewContainer.setBackgroundColor(Color.TRANSPARENT)
             // Установка слушателя при нажатии на кнопку поиска в "Википедии"
             binding.inputWikiField.setEndIconOnClickListener {
-                if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
                     // Очистка текущей информации для добавления в список "Избранное"
-                    mainActivity.setListFavoriteEmptyData()
+                    mainActivity.getUIObserversManager().setListFavoriteEmptyData()
                     // Изменение вида иконки сердца на контурное
-                    mainActivity.changeHeartIconState(mainActivity, false, true)
+                    mainActivity.getUIObserversManager()
+                        .changeHeartIconState(mainActivity, false, true)
                     // Получение новой информации из "Википедии"
                     if ((binding.inputWikiFieldText.text != null) &&
                     (binding.inputWikiFieldText.text!!.length <=
@@ -196,10 +197,13 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     // и отрисовка соответствующего значка сердца (контурная или с заливкой)
     private fun checkAndChangeHeartIconState() {
         mainActivity?.let { mainActivity ->
-            if (mainActivity.getFacadeFavoriteLogic().checkSimilarFavoriteData())
-                mainActivity.changeHeartIconState(mainActivity, true, false)
+            if (mainActivity.getUIObserversManager()
+                    .getFacadeFavoriteLogic().checkSimilarFavoriteData())
+                mainActivity.getUIObserversManager()
+                    .changeHeartIconState(mainActivity, true, false)
             else
-                mainActivity.changeHeartIconState(mainActivity, false, true)
+                mainActivity.getUIObserversManager()
+                    .changeHeartIconState(mainActivity, false, true)
         }
     }
 
@@ -207,13 +211,20 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     fun initialSettingFragment() {
         mainActivity?.let { mainActivity ->
             // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
-            mainActivity.setListFavoriteDataTypeSource(searchWikiFavorite.getTypeSource())
-            mainActivity.setListFavoriteDataTitle(searchWikiFavorite.getTitle())
-            mainActivity.setListFavoriteDataDescription(searchWikiFavorite.getDescription())
-            mainActivity.setListFavoriteDataLinkSource(searchWikiFavorite.getLinkSource())
-            mainActivity.setListFavoriteDataPriority(searchWikiFavorite.getPriority())
-            mainActivity.setListFavoriteDataSearchRequest(searchWikiFavorite.getSearchRequest())
-            mainActivity.setListFavoriteDataLinkImage(searchWikiFavorite.getLinkImage())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataTypeSource(searchWikiFavorite.getTypeSource())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataTitle(searchWikiFavorite.getTitle())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataDescription(searchWikiFavorite.getDescription())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataLinkSource(searchWikiFavorite.getLinkSource())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataPriority(searchWikiFavorite.getPriority())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataSearchRequest(searchWikiFavorite.getSearchRequest())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataLinkImage(searchWikiFavorite.getLinkImage())
             // Метод проверки наличия текущей информации в списке "Избранное"
             // и отрисовка соответствующего значка сердца (контурная или с заливкой)
             checkAndChangeHeartIconState()

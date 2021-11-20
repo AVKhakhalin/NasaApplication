@@ -97,10 +97,12 @@ class FavoriteRecyclerListFragmentAdapter (
 
     //region МЕТОДЫ ДЛЯ УДАЛЕНИЯ И ДОБАВЛЕНИЯ ЭЛЕМЕНТОВ В ОСНОВНОМ СПИСКЕ
     private fun removeAtInFullDatesList(removedElementIndex: Int) {
-        mainActivity.getFacadeFavoriteLogic().removeFavoriteDataByCorrectedData(removedElementIndex)
+        mainActivity.getUIObserversManager()
+            .getFacadeFavoriteLogic().removeFavoriteDataByCorrectedData(removedElementIndex)
     }
     fun removeAtAndAddInFullDatesList(removedElementIndex: Int, addedElementIndex: Int) {
-        mainActivity.getFacadeFavoriteLogic().removeAndAddFavoriteDataByCorrectedData(
+        mainActivity.getUIObserversManager()
+            .getFacadeFavoriteLogic().removeAndAddFavoriteDataByCorrectedData(
             removedElementIndex, addedElementIndex)
     }
     //endregion

@@ -61,21 +61,25 @@ class SearchNASAArchiveFragmentAdapter(
                 if (!searchNASAArchiveFragment.getIsBlockingOtherFABButtons()) {
                     searchNASAArchiveFragment.getMainActivity()?.let { mainActivity ->
                         // Очистка текущей информации для добавления в список "Избранное"
-                        mainActivity.setListFavoriteEmptyData()
+                        mainActivity.getUIObserversManager().setListFavoriteEmptyData()
                         // Изменение вида иконки сердца на контурное
-                        mainActivity.changeHeartIconState(mainActivity, false, true)
+                        mainActivity.getUIObserversManager()
+                            .changeHeartIconState(mainActivity, false, true)
 
                         // Сохранение запроса, ссылки на картинку, заголовка и описания в "Избранное"
-                        mainActivity.setListFavoriteDataSearchRequest(
+                        mainActivity.getUIObserversManager().setListFavoriteDataSearchRequest(
                                 "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}")
-                        mainActivity.setListFavoriteDataTypeSource(
+                        mainActivity.getUIObserversManager().setListFavoriteDataTypeSource(
                                 Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
-                        mainActivity.setListFavoriteDataLinkImage(entitiesLinks[position])
-                        mainActivity.setListFavoriteDataTitle(newNASAArchiveEntityList[position])
-                        mainActivity.setListFavoriteDataDescription(entitiesTexts[position])
-                        mainActivity.setListFavoriteDataLinkSource(
+                        mainActivity.getUIObserversManager()
+                            .setListFavoriteDataLinkImage(entitiesLinks[position])
+                        mainActivity.getUIObserversManager()
+                            .setListFavoriteDataTitle(newNASAArchiveEntityList[position])
+                        mainActivity.getUIObserversManager()
+                            .setListFavoriteDataDescription(entitiesTexts[position])
+                        mainActivity.getUIObserversManager().setListFavoriteDataLinkSource(
                                 searchNASAArchiveFragment.getDataViewModel().getRequestUrl())
-                        mainActivity.setListFavoriteDataPriority(0)
+                        mainActivity.getUIObserversManager().setListFavoriteDataPriority(0)
                     }
                     searchNASAArchiveFragment.getSearchNASAArchiveFavorite().setSearchRequest(
                         "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}")

@@ -102,15 +102,19 @@ class DayPhotoFragment:
                     } else {
                         //showSuccess()
                         // Сохранение данных для списка "Избранное"
-                        mainActivity.setListFavoriteDataSearchRequest(curDate)
-                        mainActivity.setListFavoriteDataLinkSource(viewModel.getRequestUrl())
-                        mainActivity.setListFavoriteDataTitle(serverResponseData.title ?: "")
-                        mainActivity.setListFavoriteDataDescription(
+                        mainActivity.getUIObserversManager()
+                            .setListFavoriteDataSearchRequest(curDate)
+                        mainActivity.getUIObserversManager()
+                            .setListFavoriteDataLinkSource(viewModel.getRequestUrl())
+                        mainActivity.getUIObserversManager()
+                            .setListFavoriteDataTitle(serverResponseData.title ?: "")
+                        mainActivity.getUIObserversManager().setListFavoriteDataDescription(
                             serverResponseData.explanation ?: "")
-                        mainActivity.setListFavoriteDataLinkImage(url)
-                        mainActivity.setListFavoriteDataTypeSource(
+                        mainActivity.getUIObserversManager().setListFavoriteDataLinkImage(url)
+                        mainActivity.getUIObserversManager().setListFavoriteDataTypeSource(
                             Constants.DAY_PHOTO_FRAGMENT_INDEX)
-                        mainActivity.setListFavoriteDataPriority(Constants.PRIORITY_LOW)
+                        mainActivity.getUIObserversManager()
+                            .setListFavoriteDataPriority(Constants.PRIORITY_LOW)
                         dayPhotoFavorite.setSearchRequest(curDate)
                         dayPhotoFavorite.setLinkSource(viewModel.getRequestUrl())
                         dayPhotoFavorite.setTitle(serverResponseData.title ?: "")
@@ -224,11 +228,11 @@ class DayPhotoFragment:
                 buttonChipToday = binding.buttonTodayPhoto
                 buttonChipToday?.let {
                     it.setOnClickListener {
-                        if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                        if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
                             // Очистка текущей информации для добавления в "Избранное"
-                            mainActivity.setListFavoriteEmptyData()
+                            mainActivity.getUIObserversManager().setListFavoriteEmptyData()
                             // Изменение вида иконки сердца на контурное
-                            mainActivity.changeHeartIconState(
+                            mainActivity.getUIObserversManager().changeHeartIconState(
                                 mainActivity, false, true)
                             // Получение данных о картинке сегодняшего дня
                             currentDateTextView!!.text = "${mainActivity.resources.getString(
@@ -236,7 +240,8 @@ class DayPhotoFragment:
                             viewModel.getData(curDate)
                                 .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
                             // Сохранение запроса в "Избранное"
-                            mainActivity.setListFavoriteDataSearchRequest(curDate)
+                            mainActivity.getUIObserversManager()
+                                .setListFavoriteDataSearchRequest(curDate)
                             dayPhotoFavorite.setSearchRequest(curDate)
                         }
                     }
@@ -244,19 +249,21 @@ class DayPhotoFragment:
                 buttonChipYesterday = binding.buttonYesterdayPhoto
                 buttonChipYesterday?.let {
                     it.setOnClickListener {
-                        if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                        if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
                             // Очистка текущей информации для добавления в "Избранное"
-                            mainActivity.setListFavoriteEmptyData()
+                            mainActivity.getUIObserversManager().setListFavoriteEmptyData()
                             // Изменение вида иконки сердца на контурное
-                            mainActivity.changeHeartIconState(
+                            mainActivity.getUIObserversManager().changeHeartIconState(
                                 mainActivity, false, true)
                             // Получение данных о картинке вчерашнего дня
-                            currentDateTextView!!.text = "${mainActivity.resources.getString(
+                            currentDateTextView!!.text =
+                                "${mainActivity.resources.getString(
                                     R.string.photo_of_the_day_text)} ${getDate(-1)}"
                             viewModel.getData(curDate)
                                 .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
                             // Сохранение запроса в "Избранное"
-                            mainActivity.setListFavoriteDataSearchRequest(curDate)
+                            mainActivity.getUIObserversManager()
+                                .setListFavoriteDataSearchRequest(curDate)
                             dayPhotoFavorite.setSearchRequest(curDate)
                         }
                     }
@@ -264,19 +271,21 @@ class DayPhotoFragment:
                 buttonChipBeforeYesterday = binding.buttonBeforeYesterdayPhoto
                 buttonChipBeforeYesterday?.let {
                     it.setOnClickListener {
-                        if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                        if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
                             // Очистка текущей информации для добавления в "Избранное"
-                            mainActivity.setListFavoriteEmptyData()
+                            mainActivity.getUIObserversManager().setListFavoriteEmptyData()
                             // Изменение вида иконки сердца на контурное
-                            mainActivity.changeHeartIconState(
+                            mainActivity.getUIObserversManager().changeHeartIconState(
                                 mainActivity, false, true)
                             // Получение данных о картинке позавчерашнего дня
-                            currentDateTextView!!.text = "${mainActivity.resources.getString(
+                            currentDateTextView!!.text =
+                                "${mainActivity.resources.getString(
                                     R.string.photo_of_the_day_text)} ${getDate(-2)}"
                             viewModel.getData(curDate)
                                 .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
                             // Сохранение запроса в "Избранное"
-                            mainActivity.setListFavoriteDataSearchRequest(curDate)
+                            mainActivity.getUIObserversManager()
+                                .setListFavoriteDataSearchRequest(curDate)
                             dayPhotoFavorite.setSearchRequest(curDate)
                         }
                     }
@@ -285,7 +294,7 @@ class DayPhotoFragment:
 
             // Установка слушателя на картинку для изменения её размеров по желанию пользователя
             binding.pODImageView.setOnClickListener {
-                if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
                     val set = TransitionSet()
                         .addTransition(ChangeBounds())
                         .addTransition(ChangeImageTransform())
@@ -331,7 +340,7 @@ class DayPhotoFragment:
         mainActivity?.let { mainActivity ->
             // Отображение элемента из списка "Избранное" для просмотра в данном фрагменте
             favoriteData?.let { favoriteData ->
-                if (!mainActivity.getIsBlockingOtherFABButtons()) {
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
                     curDate = favoriteData.getSearchRequest()
                     currentDateTextView?.let {
                         it.text = "${mainActivity.resources.getString(
@@ -341,7 +350,8 @@ class DayPhotoFragment:
                     viewModel.getData(favoriteData.getSearchRequest())
                         .observe(viewLifecycleOwner, Observer<PODData> { renderData(it) })
                     // Сохранение запроса в "Избранное"
-                    mainActivity.setListFavoriteDataSearchRequest(favoriteData.getSearchRequest())
+                    mainActivity.getUIObserversManager()
+                        .setListFavoriteDataSearchRequest(favoriteData.getSearchRequest())
                     dayPhotoFavorite.setSearchRequest(favoriteData.getSearchRequest())
                 }
             }
@@ -352,10 +362,13 @@ class DayPhotoFragment:
     // и отрисовка соответствующего значка сердца (контурная или с заливкой)
     private fun checkAndChangeHeartIconState() {
         mainActivity?.let { mainActivity ->
-            if (mainActivity.getFacadeFavoriteLogic().checkSimilarFavoriteData())
-                mainActivity.changeHeartIconState(mainActivity, true, false)
+            if (mainActivity.getUIObserversManager()
+                    .getFacadeFavoriteLogic().checkSimilarFavoriteData())
+                mainActivity.getUIObserversManager()
+                    .changeHeartIconState(mainActivity, true, false)
             else
-                mainActivity.changeHeartIconState(mainActivity, false, true)
+                mainActivity.getUIObserversManager()
+                    .changeHeartIconState(mainActivity, false, true)
         }
     }
 
@@ -363,13 +376,20 @@ class DayPhotoFragment:
     fun initialSettingFragment() {
         mainActivity?.let { mainActivity ->
             // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
-            mainActivity.setListFavoriteDataTypeSource(dayPhotoFavorite.getTypeSource())
-            mainActivity.setListFavoriteDataTitle(dayPhotoFavorite.getTitle())
-            mainActivity.setListFavoriteDataDescription(dayPhotoFavorite.getDescription())
-            mainActivity.setListFavoriteDataLinkSource(dayPhotoFavorite.getLinkSource())
-            mainActivity.setListFavoriteDataPriority(dayPhotoFavorite.getPriority())
-            mainActivity.setListFavoriteDataSearchRequest(dayPhotoFavorite.getSearchRequest())
-            mainActivity.setListFavoriteDataLinkImage(dayPhotoFavorite.getLinkImage())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataTypeSource(dayPhotoFavorite.getTypeSource())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataTitle(dayPhotoFavorite.getTitle())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataDescription(dayPhotoFavorite.getDescription())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataLinkSource(dayPhotoFavorite.getLinkSource())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataPriority(dayPhotoFavorite.getPriority())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataSearchRequest(dayPhotoFavorite.getSearchRequest())
+            mainActivity.getUIObserversManager()
+                .setListFavoriteDataLinkImage(dayPhotoFavorite.getLinkImage())
             // Метод проверки наличия текущей информации в списке "Избранное"
             // и отрисовка соответствующего значка сердца (контурная или с заливкой)
             checkAndChangeHeartIconState()

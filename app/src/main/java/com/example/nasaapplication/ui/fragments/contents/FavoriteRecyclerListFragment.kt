@@ -55,7 +55,7 @@ class FavoriteRecyclerListFragment(
                         Constants.DAY_PHOTO_FRAGMENT_INDEX -> {
                             // Очистка текущей информации для списка "Избранное"
                             // при переключении на фрагмент "Картинка дня"
-                            mainActivity.setListFavoriteEmptyData()
+                            mainActivity.getUIObserversManager().setListFavoriteEmptyData()
                             // Открытие выбранной информации во фрагменте "Картинка дня"
                             mainActivity.getViewPager().currentItem =
                                 Constants.DAY_PHOTO_FRAGMENT_INDEX
@@ -69,7 +69,7 @@ class FavoriteRecyclerListFragment(
                         Constants.SEARCH_WIKI_FRAGMENT_INDEX -> {
                             // Очистка текущей информации для списка "Избранное"
                             // при переключении на фрагмент с поиском в Википедии
-                            mainActivity.setListFavoriteEmptyData()
+                            mainActivity.getUIObserversManager().setListFavoriteEmptyData()
                             // Открытие выбранной информации во фрагменте с поиском в Википедии
                             mainActivity.getViewPager().currentItem =
                                 Constants.SEARCH_WIKI_FRAGMENT_INDEX
@@ -82,7 +82,7 @@ class FavoriteRecyclerListFragment(
                         Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX -> {
                             // Очистка текущей информации для списка "Избранное"
                             // при переключении на фрагмент с поиском в архиве NASA
-                            mainActivity.setListFavoriteEmptyData()
+                            mainActivity.getUIObserversManager().setListFavoriteEmptyData()
                             // Открытие выбранной информации во фрагменте с поиском в архиве NASA
                             mainActivity.binding.viewPager.visibility = View.VISIBLE
                             mainActivity.binding.tabLayout.visibility = View.VISIBLE
@@ -102,7 +102,8 @@ class FavoriteRecyclerListFragment(
                         }
                     }
                 }
-            }, mainActivity.getFacadeFavoriteLogic().getFavoriteDataList(), mainActivity)
+            }, mainActivity.getUIObserversManager()
+                    .getFacadeFavoriteLogic().getFavoriteDataList(), mainActivity)
             binding.favoriteRecyclerListView.adapter = adapter
             adapter?.let { ItemTouchHelper(ItemTouchHelperCallback(it))
                 .attachToRecyclerView(binding.favoriteRecyclerListView) }

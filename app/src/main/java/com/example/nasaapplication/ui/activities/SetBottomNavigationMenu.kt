@@ -38,7 +38,7 @@ class SetBottomNavigationMenu(
                     transparientValue, durationAnimation, false)
                 // Установка признака блокировки кнопок во всем приложении,
                 // при появления меню из нижней FAB
-                mainActivity.setIsBlockingOtherFABButtons(false)
+                mainActivity.getUIObserversManager().setIsBlockingOtherFABButtons(false)
                 // Разблокировка перелистывания во View Pager 2
                 mainActivity.binding.viewPager.setUserInputEnabled(true)
                 // Разблокировка кликов по закладкам во View Pager 2
@@ -52,7 +52,7 @@ class SetBottomNavigationMenu(
                     notTransparientValue, durationAnimation, false)
                 // Установка признака блокировки кнопок во всем приложении,
                 // при появления меню из нижней FAB
-                mainActivity.setIsBlockingOtherFABButtons(true)
+                mainActivity.getUIObserversManager().setIsBlockingOtherFABButtons(true)
                 // Блокировка перелистывания во View Pager 2
                 mainActivity.binding.viewPager.setUserInputEnabled(false)
                 // Блокировка кликов по закладкам во View Pager 2
@@ -246,7 +246,7 @@ class SetBottomNavigationMenu(
             // Проба анимации кнопки
 //            TransitionManager.beginDelayedTransition(mainActivity.binding.fabButtonsContainer, Slide(Gravity.END))
 //            mainActivity.binding.fabButtonDayPhoto.visibility = View.GONE
-            mainActivity.setIsBlockingOtherFABButtons(false)
+            mainActivity.getUIObserversManager().setIsBlockingOtherFABButtons(false)
             // Установка анимационного просветления фона
             mainActivity.setHideShowBackgroundAnimation(
                 transparientValue, durationAnimation, true)
@@ -265,7 +265,7 @@ class SetBottomNavigationMenu(
                 mainActivity.hideAndShowFragmentsContainersAndDismissDialogs()
                 mainActivity.setIsFABButtonsGroupView(false)
                 mainActivity.binding.viewPager.currentItem = Constants.SEARCH_WIKI_FRAGMENT_INDEX
-                mainActivity.setIsBlockingOtherFABButtons(false)
+                mainActivity.getUIObserversManager().setIsBlockingOtherFABButtons(false)
                 // Установка анимационного просветления фона
                 mainActivity.setHideShowBackgroundAnimation(
                     transparientValue, durationAnimation, true)
@@ -286,7 +286,7 @@ class SetBottomNavigationMenu(
                 mainActivity.setIsFABButtonsGroupView(false)
                 mainActivity.binding.viewPager.currentItem =
                     Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
-                mainActivity.setIsBlockingOtherFABButtons(false)
+                mainActivity.getUIObserversManager().setIsBlockingOtherFABButtons(false)
                 // Установка анимационного просветления фона
                 mainActivity.setHideShowBackgroundAnimation(
                     transparientValue, durationAnimation, true)
@@ -303,8 +303,8 @@ class SetBottomNavigationMenu(
         mainActivity.binding.fabButtonsContainer.getViewById(R.id.fab_button_settings).setOnClickListener {
             mainActivity.binding.fabButtonsGroup.visibility = View.INVISIBLE
             mainActivity.setIsFABButtonsGroupView(false)
-            mainActivity.setIsBlockingOtherFABButtons(false)
-            mainActivity.showSettingsFragment()
+            mainActivity.getUIObserversManager().setIsBlockingOtherFABButtons(false)
+            mainActivity.getUIObserversManager().showSettingsFragment()
             // Установка анимационного просветления фона
             mainActivity.setHideShowBackgroundAnimation(
                 transparientValue, durationAnimation, true)
@@ -319,7 +319,7 @@ class SetBottomNavigationMenu(
     // с центрального на крайнее правое положение и обратно
     fun switchBottomAppBar() {
         // Отключение блокировки всех кнопок, кроме кнопок, появившихся из FAB
-        mainActivity.setIsBlockingOtherFABButtons(false)
+        mainActivity.getUIObserversManager().setIsBlockingOtherFABButtons(false)
         // Установка анимационного просветления фона
         mainActivity.setHideShowBackgroundAnimation(
             transparientValue, durationAnimation, true)
@@ -354,11 +354,13 @@ class SetBottomNavigationMenu(
             searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     // Отображение полученного поискового запроса
-                    mainActivity.getFacadeFavoriteLogic().setFilterWord(query)
+                    mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().setFilterWord(query)
                     mainActivity.getNavigationContent().getFavoriteRecyclerListFragment()?.let {
                         it.getAdapter()?.let { adapter ->
                             adapter.setFavoriteData(
-                                mainActivity.getFacadeFavoriteLogic().getFavoriteDataList())
+                                mainActivity.getUIObserversManager()
+                                    .getFacadeFavoriteLogic().getFavoriteDataList())
                             adapter.notifyDataSetChanged()
                         }
                     }
@@ -367,11 +369,13 @@ class SetBottomNavigationMenu(
                 // Отслеживание появления каждого символа
                 override fun onQueryTextChange(newText: String): Boolean {
                     // Отображение полученного поискового запроса
-                    mainActivity.getFacadeFavoriteLogic().setFilterWord(newText)
+                    mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().setFilterWord(newText)
                     mainActivity.getNavigationContent().getFavoriteRecyclerListFragment()?.let {
                         it.getAdapter()?.let { adapter ->
                             adapter.setFavoriteData(
-                                mainActivity.getFacadeFavoriteLogic().getFavoriteDataList())
+                                mainActivity.getUIObserversManager()
+                                    .getFacadeFavoriteLogic().getFavoriteDataList())
                             adapter.notifyDataSetChanged()
                         }
                     }
@@ -381,11 +385,13 @@ class SetBottomNavigationMenu(
             // Событие на закрытие поискового окна (обнуление фильтра)
             searchView.setOnCloseListener {
                 // Отображение полученного поискового запроса
-                mainActivity.getFacadeFavoriteLogic().setFilterWord("")
+                mainActivity.getUIObserversManager()
+                    .getFacadeFavoriteLogic().setFilterWord("")
                 mainActivity.getNavigationContent().getFavoriteRecyclerListFragment()?.let {
                     it.getAdapter()?.let {adapter ->
                         adapter.setFavoriteData(
-                            mainActivity.getFacadeFavoriteLogic().getFavoriteDataList())
+                            mainActivity.getUIObserversManager()
+                                .getFacadeFavoriteLogic().getFavoriteDataList())
                         adapter.notifyDataSetChanged()
                     }
                 }
@@ -424,7 +430,8 @@ class SetBottomNavigationMenu(
             mainActivity.binding.bottomNavigationMenu.bottomAppBar
                 .replaceMenu(R.menu.bottom_menu_bottom_bar)
             // Изменение вида иконки сердца
-            mainActivity.changeHeartIconState(mainActivity, false, false)
+            mainActivity.getUIObserversManager()
+                .changeHeartIconState(mainActivity, false, false)
         }
     }
 }

@@ -20,10 +20,8 @@ import com.example.nasaapplication.controller.navigation.contents.NavigationCont
 import com.example.nasaapplication.controller.navigation.contents.ViewPagerAdapter
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogsGetter
+import com.example.nasaapplication.controller.observers.UIObserversManager
 import com.example.nasaapplication.databinding.ActivityMainBinding
-import com.example.nasaapplication.domain.FacadeFavoriteLogic
-import com.example.nasaapplication.domain.logic.Favorite
-import com.example.nasaapplication.domain.logic.FavoriteLogic
 import com.example.nasaapplication.repository.facadeuser.room.LocalRoomImpl
 import com.example.nasaapplication.ui.utils.ThemeColor
 import com.google.android.material.tabs.TabLayoutMediator
@@ -41,8 +39,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Bottom navigation menu
     private var isMain: Boolean = false
     private var isFABButtonsGroupView: Boolean = false
-    // Признак блокировки кнопок во всем приложении, при появлении меню из нижней FAB
-    private var isBlockingOtherFABButtons: Boolean = false
     // Переменные для анимации фона
     private val durationAnimation: Long = 300
     private val transparientValue: Float = 1f
@@ -55,22 +51,19 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     private var themeColor: ThemeColor? = null
     // Menu
     private var bottomMenu: Menu? = null
-    private var isFavorite: Boolean = false
-    private val setBottomNavigationMenu: SetBottomNavigationMenu = 
+    private val setBottomNavigationMenu: SetBottomNavigationMenu =
         SetBottomNavigationMenu(
             this, durationAnimation, transparientValue, notTransparientValue, themeColor)
     // Room
     private val localRoomImpl: LocalRoomImpl = LocalRoomImpl(getFavoriteDAO())
-    // Данные для сохранения в "Избранное"
-    private var newFavorite: Favorite = Favorite()
-    private var favoriteLogic: FavoriteLogic = FavoriteLogic()
-    private var facadeFavoriteLogic: FacadeFavoriteLogic =
-        FacadeFavoriteLogic(favoriteLogic, localRoomImpl, newFavorite)
+    // Создание обработчика событий нажатий на элементы UI
+    private var uiObserversManager: UIObserversManager = UIObserversManager(
+        this, localRoomImpl, navigationContent, navigationDialogs)
     //endregion
 
     override fun onPause() {
         // Обновление списка "Избранное" в базе данных перед закрытием приложения
-        facadeFavoriteLogic.updateFavoriteDataBase()
+        uiObserversManager.onPauseMainActivity()
         super.onPause()
     }
 
@@ -80,11 +73,12 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         readSettingsAndSetupApplication(savedInstanceState)
         
         // Считывание данных по списку "Избранное" из базы данных
-        facadeFavoriteLogic.addListFavoriteData(localRoomImpl.getAllFavorite())
+        uiObserversManager.getFacadeFavoriteLogic()
+            .addListFavoriteData(localRoomImpl.getAllFavorite())
         
         // Получение цветов из аттрибутов темы
         themeColor = ThemeColor(theme)
-        themeColor?.let { it.initiateColors()}
+        themeColor?.let { it.initiateColors() }
         
         // Подключение Binding
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -119,7 +113,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         setBottomNavigationMenu.setMenu()
 
         // Отключение блокировки всех кнопок, кроме кнопок, появившихся из FAB
-        isBlockingOtherFABButtons = false
+        uiObserversManager.setIsBlockingOtherFABButtons(false)
 
         // Отображение содержимого макета
         setContentView(binding.root)
@@ -180,76 +174,18 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         menuInflater.inflate(R.menu.bottom_menu_bottom_bar, menu)
         bottomMenu = menu
         return true
-//        return super.onCreateOptionsMenu(menu)
     }
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_bottom_bar_settings ->
-                if (!isBlockingOtherFABButtons) {
-                    // Отображение фрагмента с настройками приложения
-                    showSettingsFragment()
-                }
-            R.id.action_bottom_bar_open_favorite_list ->
-                if (!isBlockingOtherFABButtons) {
-                    // Очистка текущей информации для добавления в список "Избранное"
-                    setListFavoriteEmptyData()
-                    // Отображение фрагмента со списком "Избранное"
-                    showFavoriteRecyclerListFragment()
-                }
-            R.id.action_bottom_bar_add_to_favorite ->
-                if ((!isBlockingOtherFABButtons) && (newFavorite != Favorite()) &&
-                    (newFavorite.getTitle().isNotEmpty())) {
-                    // Добавление понравившегося содержимого в список "Избранное"
-                    val indexSimilarData: Int = facadeFavoriteLogic.addFavoriteData(newFavorite)
-                    if (indexSimilarData == -1) {
-                        // Изменение вида иконки сердца
-                        changeHeartIconState(this, true, false)
-                        // Добавление новой записи "Избранное" в базу данных
-                        localRoomImpl.saveFavorite(newFavorite)
-                        // Уведомление пользователя о добавлении новой записи в список "Избранное"
-                        // TODO: Сделать изменение нового счётчика в закледке фрагмента
-                    } else {
-                        // Удаление понравившегося содержимого из списка "Избранное"
-                        facadeFavoriteLogic.removeFavoriteData(indexSimilarData)
-                        // Изменение вида иконки сердца
-                        changeHeartIconState(this, false, true)
-                        // Уведомление пользователя об удалении новой записи из списка "Избранное"
-                        // TODO: Сделать изменение нового счётчика в закледке фрагмента
-                    }
-                }
-            android.R.id.home -> {
-                if (!isBlockingOtherFABButtons) {
-                    // Отображение списка основных содержательных разделов приложения
-                    navigationDialogs?.let {
-                        it.showBottomNavigationDrawerDialogFragment(
-                            this
-                        )
-                    }
-                }
-            }
+            R.id.action_bottom_bar_settings -> uiObserversManager.clickOnSettingButton()
+            R.id.action_bottom_bar_open_favorite_list -> uiObserversManager.clickOnListHeartButton()
+            R.id.action_bottom_bar_add_to_favorite -> uiObserversManager.clickOnHeartButton()
+            android.R.id.home -> uiObserversManager.clickOnBurgerButton()
         }
         return super.onOptionsItemSelected(item)
     }
     //endregion
-
-    // Метод отображения фрагмента с настройками приложения
-    fun showSettingsFragment() {
-        navigationContent?.let{
-            binding.activityFragmentsContainer.visibility = View.VISIBLE
-            binding.transparentBackground.visibility = View.INVISIBLE
-            it.showSettingsFragment(false)
-        }
-    }
-
-    // Метод отображения фрагмента со списком "Избранное"
-    fun showFavoriteRecyclerListFragment() {
-        navigationContent?.let{
-            binding.activityFragmentsContainer.visibility = View.VISIBLE
-            binding.transparentBackground.visibility = View.INVISIBLE
-            it.showFavoriteRecyclerListFragment(false)
-        }
-    }
 
     // Метод получения ViewPager2
     fun getViewPager(): ViewPager2 {
@@ -297,57 +233,10 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             })
     }
 
-    //region МЕТОДЫ ДЛЯ ПОЛУЧЕНИЯ ДАННЫХ ДЛЯ СПИСКА "ИЗБРАННОЕ"
-    fun setListFavoriteDataTypeSource(newTypeSource: Int) {
-        newFavorite.setTypeSource(newTypeSource)
-    }
-    fun setListFavoriteDataPriority(newPriority: Int) {
-        newFavorite.setPriority(newPriority)
-    }
-    fun setListFavoriteDataLinkSource(newLinkSource: String) {
-        newFavorite.setLinkSource(newLinkSource)
-    }
-    fun setListFavoriteDataTitle(newTitle: String) {
-        newFavorite.setTitle(newTitle)
-    }
-    fun setListFavoriteDataDescription(newDescription: String) {
-        newFavorite.setDescription(newDescription)
-    }
-    fun setListFavoriteDataSearchRequest(newSearchRequest: String) {
-        newFavorite.setSearchRequest(newSearchRequest)
-    }
-    fun setListFavoriteDataLinkImage(newLinkImage: String) {
-        newFavorite.setLinkImage(newLinkImage)
-    }
-    fun setListFavoriteEmptyData() {
-        newFavorite = Favorite()
-    }
-    //endregion
-
-    //region МЕТОДЫ ДЛЯ ИЗМЕНЕНИЯ ВИДА ИКОНКИ СЕРДЦА
-    // Изменение вида иконки сердца
-    fun changeHeartIconState(mainActivity: MainActivity, forceOn: Boolean, forceOff: Boolean) {
-        if (forceOn) isFavorite = true
-        if (forceOff) isFavorite = false
-        mainActivity.getBottomMenu()?.let {
-            if (it.size() > 0) {
-                if (isFavorite) {
-                    it.getItem(Constants.INDEX_ADD_FAVORITE_MENU_ITEM)
-                        .setIcon(R.drawable.ic_favourite_on)
-                } else {
-                    it.getItem(Constants.INDEX_ADD_FAVORITE_MENU_ITEM)
-                        .setIcon(R.drawable.ic_favourite)
-                }
-            }
-        }
-    }
-    private fun getBottomMenu(): Menu? {
+    // Получение нижнего меню для изменения вида иконки сердца
+    fun getBottomMenu(): Menu? {
         return bottomMenu
     }
-    fun getIsFavorite(): Boolean {
-        return isFavorite
-    }
-    //endregion
 
     // Получение viewPagerAdapter
     fun getViewPagerAdapter(): ViewPagerAdapter {
@@ -360,11 +249,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             setGravity(Gravity.CENTER_VERTICAL, 0, 250)
             show()
         }
-    }
-
-    // Получение фасада класса с логикой "FavoriteLogic"
-    fun getFacadeFavoriteLogic(): FacadeFavoriteLogic {
-        return facadeFavoriteLogic
     }
 
     // Получение класса с цветами темы
@@ -380,14 +264,6 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
     // Получение isFABButtonsGroupView
     fun getIsFABButtonsGroupView(): Boolean {
         return isFABButtonsGroupView
-    }
-    // Установка признака блокировки всех кнопок, кроме появившихся из контекстного меню
-    fun setIsBlockingOtherFABButtons(isBlockingOtherFABButtons: Boolean) {
-        this.isBlockingOtherFABButtons = isBlockingOtherFABButtons
-    }
-    // Получение признака блокировки всех кнопок, кроме появившихся из контекстного меню
-    fun getIsBlockingOtherFABButtons(): Boolean {
-        return isBlockingOtherFABButtons
     }
     // Получение закладок
     fun getTouchableListTabLayout(): ArrayList<View> {
@@ -405,4 +281,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         return setBottomNavigationMenu
     }
     //endregion
+
+    // Метод получения обработчика событий нажатий на элементы UI
+    fun getUIObserversManager(): UIObserversManager {
+        return uiObserversManager
+    }
 }
