@@ -8,6 +8,12 @@
     tools:context=".ui.activities.MainActivity">
 
     <FrameLayout
+        android:id="@+id/activity_fragments_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"/>
+
+    <FrameLayout
         android:id="@+id/transparent_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,12 +32,6 @@
             android:layout_height="?actionBarSize" />
 
     </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/activity_fragments_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fab_buttons_container"

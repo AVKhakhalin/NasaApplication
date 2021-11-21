@@ -2,7 +2,6 @@ package com.example.nasaapplication.controller.observers
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.util.Log
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import coil.load
@@ -478,31 +477,24 @@ class UIObserversManager(
 
     //region МЕТОДЫ ДЛЯ ПОЛУЧЕНИЯ ДАННЫХ ДЛЯ СПИСКА "ИЗБРАННОЕ"
     fun setListFavoriteDataTypeSource(newTypeSource: Int) {
-        Log.d("mylogs", "newTypeSource: $newTypeSource\n")
         newFavorite.setTypeSource(newTypeSource)
     }
     fun setListFavoriteDataPriority(newPriority: Int) {
-        Log.d("mylogs", "newPriority: $newPriority\n")
         newFavorite.setPriority(newPriority)
     }
     fun setListFavoriteDataLinkSource(newLinkSource: String) {
-        Log.d("mylogs", "newLinkSource: $newLinkSource\n")
         newFavorite.setLinkSource(newLinkSource)
     }
     fun setListFavoriteDataTitle(newTitle: String) {
-        Log.d("mylogs", "newTitle: $newTitle\n")
         newFavorite.setTitle(newTitle)
     }
     fun setListFavoriteDataDescription(newDescription: String) {
-        Log.d("mylogs", "newDescription: $newDescription\n")
         newFavorite.setDescription(newDescription)
     }
     fun setListFavoriteDataSearchRequest(newSearchRequest: String) {
-        Log.d("mylogs", "newSearchRequest: $newSearchRequest\n")
         newFavorite.setSearchRequest(newSearchRequest)
     }
     fun setListFavoriteDataLinkImage(newLinkImage: String) {
-        Log.d("mylogs", "newLinkImage: $newLinkImage\n")
         newFavorite.setLinkImage(newLinkImage)
     }
     fun setListFavoriteEmptyData() {

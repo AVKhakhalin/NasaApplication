@@ -313,11 +313,11 @@ class SetBottomNavigationMenu(
         setHideShowBackgroundAnimation(transparientValue, durationAnimation, true)
         // Отображение навигационного меню View Pager
         mainActivity.binding.tabLayout.visibility = View.VISIBLE
-        // Анимация вращения картинки на нижней кнопке FAB
-        ObjectAnimator.ofFloat(mainActivity.binding.bottomNavigationMenu.bottomAppBarFab,
-            "rotation", 0f, Constants.ANGLE_TO_ROTATE_BOTTOM_FAB).start()
 
         if (mainActivity.getIsMain()) {
+            // Анимация вращения картинки на нижней кнопке FAB
+            ObjectAnimator.ofFloat(mainActivity.binding.bottomNavigationMenu.bottomAppBarFab,
+                "rotation", 0f, -Constants.ANGLE_TO_ROTATE_BOTTOM_FAB).start()
             // Изменение нижего меню, выходящего из FAB
             if (mainActivity.getIsFABButtonsGroupView()) {
                 mainActivity.binding.fabButtonsGroup.visibility = View.INVISIBLE
@@ -341,7 +341,6 @@ class SetBottomNavigationMenu(
             // Событие установки поискового запроса
             searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    mainActivity.toast("!!!")
                     // Отображение полученного поискового запроса
                     mainActivity.getUIObserversManager()
                         .getFacadeFavoriteLogic().setFilterWord(query)
@@ -402,6 +401,9 @@ class SetBottomNavigationMenu(
 //                android.R.drawable.ic_menu_search,0,0,0)
             //endregion
         } else {
+            // Анимация вращения картинки на нижней кнопке FAB
+            ObjectAnimator.ofFloat(mainActivity.binding.bottomNavigationMenu.bottomAppBarFab,
+                "rotation", 0f, Constants.ANGLE_TO_ROTATE_BOTTOM_FAB).start()
             // Изменение нижего меню, выходящего из FAB
             if (mainActivity.getIsFABButtonsGroupView()) {
                 mainActivity.binding.fabButtonsGroup.visibility = View.INVISIBLE

@@ -1,6 +1,5 @@
 package com.example.nasaapplication.domain.logic
 
-import android.util.Log
 import com.example.nasaapplication.Constants
 
 // Класс с логикой проекта - построение и сохранение списка избранных данных
@@ -124,30 +123,21 @@ class FavoriteLogic {
     // Проверка на то, что новые данные уже есть в списке "Избранное"
     fun checkSimilarFavoriteData(newFavorite: Favorite): Boolean {
         for (counter in 0 until fullDatesList.size) {
-            Log.d("mylogs",
-                "\n$counter:\n" +
-                    "1) ${fullDatesList[counter].getTypeSource()} ? 1) ${newFavorite.getTypeSource()}\n" +
-                    "2) ${fullDatesList[counter].getLinkSource()} ? 2) ${newFavorite.getLinkSource()}\n" +
-                    "3) ${fullDatesList[counter].getTitle()} ? 3) ${newFavorite.getTitle()}\n" +
-                    "${fullDatesList[counter].getDescription().length} ? ${newFavorite.getDescription().length} ${fullDatesList[counter].getDescription() == newFavorite.getDescription()}\n" +
-                    "4) ${fullDatesList[counter].getDescription()}\n?\n4) ${newFavorite.getDescription()}\n" +
-                    "5) ${fullDatesList[counter].getSearchRequest()} ? 5) ${newFavorite.getSearchRequest()}\n" +
-                    "6) ${fullDatesList[counter].getLinkImage()} ? 6) ${newFavorite.getLinkImage()}\n" +
-                    "-------\n"
-            )
             if (fullDatesList[counter].getTypeSource() == newFavorite.getTypeSource()) {
                 if ((fullDatesList[counter].getLinkSource() == newFavorite.getLinkSource())
                     && (fullDatesList[counter].getTitle() == newFavorite.getTitle())
-                    && (if (newFavorite.getTypeSource() == Constants.SEARCH_WIKI_FRAGMENT_INDEX) (fullDatesList[counter].getDescription().length == newFavorite.getDescription().length) else (fullDatesList[counter].getDescription() == newFavorite.getDescription()))
+                    && (if (newFavorite.getTypeSource() == Constants.SEARCH_WIKI_FRAGMENT_INDEX)
+                            (fullDatesList[counter].getDescription().length ==
+                                    newFavorite.getDescription().length) else
+                                            (fullDatesList[counter].getDescription() ==
+                                                    newFavorite.getDescription()))
                     && (fullDatesList[counter].getSearchRequest() == newFavorite.getSearchRequest())
                     && (fullDatesList[counter].getLinkImage() == newFavorite.getLinkImage())
                 ) {
-                    Log.d("mylogs", "TRUE COMPARED = $counter END BLOCK \n")
                     return true
                 }
             }
         }
-        Log.d("mylogs", "FALSE COMPARED END BLOCK \n")
         return false
     }
 
