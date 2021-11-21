@@ -25,42 +25,50 @@ class SearchInNASAArchiveViewHolder(
             // Загрузка информации по выбранному элементу
             // на странице фрагмента поиска в архиве NASA
             recyclerItemSearchInNasaTypeImage.setOnClickListener {
-                onListItemClickListener.onItemClick(itemFavoriteData)
-                // Переключение режима нижней навигационной кнопки BottomAppBar
-                // с крайнего правого положения в центральное положение
-                mainActivity.setIsMain(false)
-                mainActivity.getSetBottomNavigationMenu().switchBottomAppBar()
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    onListItemClickListener.onItemClick(itemFavoriteData)
+                    // Переключение режима нижней навигационной кнопки BottomAppBar
+                    // с крайнего правого положения в центральное положение
+                    mainActivity.setIsMain(false)
+                    mainActivity.getSetBottomNavigationMenu().switchBottomAppBar()
+                }
             }
             //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
             recyclerItemSearchInNasaPriorityHigh.setOnClickListener {
-                itemFavoriteData.setPriority(Constants.PRIORITY_HIGH)
-                changeSearchInNASAArchiveImageOnPriority(
-                    itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                favoriteData = mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().getFavoriteDataList()
-                favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    itemFavoriteData.setPriority(Constants.PRIORITY_HIGH)
+                    changeSearchInNASAArchiveImageOnPriority(
+                        itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
+                    mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().getFavoriteDataList()
+                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                }
             }
             recyclerItemSearchInNasaPriorityNormal.setOnClickListener {
-                itemFavoriteData.setPriority(Constants.PRIORITY_NORMAL)
-                changeSearchInNASAArchiveImageOnPriority(
-                    itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                favoriteData = mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().getFavoriteDataList()
-                favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    itemFavoriteData.setPriority(Constants.PRIORITY_NORMAL)
+                    changeSearchInNASAArchiveImageOnPriority(
+                        itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
+                    mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().getFavoriteDataList()
+                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                }
             }
             recyclerItemSearchInNasaPriorityLow.setOnClickListener {
-                itemFavoriteData.setPriority(Constants.PRIORITY_LOW)
-                changeSearchInNASAArchiveImageOnPriority(
-                    itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
-                mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                favoriteData = mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().getFavoriteDataList()
-                favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    itemFavoriteData.setPriority(Constants.PRIORITY_LOW)
+                    changeSearchInNASAArchiveImageOnPriority(
+                        itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
+                    mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().getFavoriteDataList()
+                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                }
             }
             //endregion
             // Изменение картинки элемента в зависимости от его приоритета
@@ -68,32 +76,39 @@ class SearchInNASAArchiveViewHolder(
                 itemFavoriteData, this.recyclerItemSearchInNasaTypeImage)
             //region МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
             recyclerItemSearchInNasaArrowUp.setOnClickListener {
-                layoutPosition.takeIf {it > 0}?.also {
-                    favoriteRecyclerListFragmentAdapter
-                        .removeAtAndAddInFullDatesList(it, it - 1)
-                    favoriteData.removeAt(it).apply {
-                        favoriteData.add(it - 1, this)
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    layoutPosition.takeIf { it > 0 }?.also {
+                        favoriteRecyclerListFragmentAdapter
+                            .removeAtAndAddInFullDatesList(it, it - 1)
+                        favoriteData.removeAt(it).apply {
+                            favoriteData.add(it - 1, this)
+                        }
+                        favoriteRecyclerListFragmentAdapter.notifyItemMoved(it, it - 1)
                     }
-                    favoriteRecyclerListFragmentAdapter.notifyItemMoved(it, it - 1)
                 }
             }
             recyclerItemSearchInNasaArrowDown.setOnClickListener {
-                layoutPosition.takeIf {
-                    it < favoriteRecyclerListFragmentAdapter.itemCount - 1}?.also {
-                    favoriteRecyclerListFragmentAdapter
-                        .removeAtAndAddInFullDatesList(it, it + 1)
-                    favoriteData.removeAt(it).apply {
-                        favoriteData.add(it + 1, this)
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    layoutPosition.takeIf {
+                        it < favoriteRecyclerListFragmentAdapter.itemCount - 1
+                    }?.also {
+                        favoriteRecyclerListFragmentAdapter
+                            .removeAtAndAddInFullDatesList(it, it + 1)
+                        favoriteData.removeAt(it).apply {
+                            favoriteData.add(it + 1, this)
+                        }
+                        favoriteRecyclerListFragmentAdapter.notifyItemMoved(it, it + 1)
                     }
-                    favoriteRecyclerListFragmentAdapter.notifyItemMoved(it, it + 1)
                 }
             }
             //endregion
             // Отображение описания элемента при нажатии на его заголовок (Title)
             recyclerItemSearchInNasaItemTitle.setOnClickListener {
-                itemFavoriteData.setIsShowDescription(!itemFavoriteData.getIsShowDescription())
-                recyclerItemSearchInNasaItemDescription.visibility =
-                    if (itemFavoriteData.getIsShowDescription()) View.VISIBLE else View.GONE
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    itemFavoriteData.setIsShowDescription(!itemFavoriteData.getIsShowDescription())
+                    recyclerItemSearchInNasaItemDescription.visibility =
+                        if (itemFavoriteData.getIsShowDescription()) View.VISIBLE else View.GONE
+                }
             }
         }
     }

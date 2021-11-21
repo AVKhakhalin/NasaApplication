@@ -17,6 +17,10 @@ class NavigationContent(
     fun getSettingsFragment(): SettingsFragment? {
         return settingsFragment
     }
+    // Установка SettingsFragment
+    fun setSettingsFragment(settingsFragment: SettingsFragment?) {
+        this.settingsFragment = settingsFragment
+    }
 
     // Получение FavoriteRecyclerListFragment
     fun getFavoriteRecyclerListFragment(): FavoriteRecyclerListFragment? {

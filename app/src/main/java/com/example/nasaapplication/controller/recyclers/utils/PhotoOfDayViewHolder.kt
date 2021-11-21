@@ -24,42 +24,51 @@ class PhotoOfDayViewHolder(
             recyclerItemPhotoOfDayItemDescription.text = itemFavoriteData.getDescription()
             // Загрузка информации по выбранному элементу на странице фрагмента "Картинка дня"
             recyclerItemPhotoOfDayTypeImage.setOnClickListener {
-                onListItemClickListener.onItemClick(itemFavoriteData)
-                // Переключение режима нижней навигационной кнопки BottomAppBar
-                // с крайнего правого положения в центральное положение
-                mainActivity.setIsMain(false)
-                mainActivity.getSetBottomNavigationMenu().switchBottomAppBar()
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    onListItemClickListener.onItemClick(itemFavoriteData)
+                    // Переключение режима нижней навигационной кнопки BottomAppBar
+                    // с крайнего правого положения в центральное положение
+                    mainActivity.setIsMain(false)
+                    mainActivity.getSetBottomNavigationMenu().switchBottomAppBar()
+                }
             }
             //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
             recyclerItemPhotoOfDayPriorityHigh.setOnClickListener {
-                itemFavoriteData.setPriority(Constants.PRIORITY_HIGH)
-                changePhotoOfDayItemImageOnPriority(
-                    itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
-                mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                favoriteData = mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().getFavoriteDataList()
-                favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    itemFavoriteData.setPriority(Constants.PRIORITY_HIGH)
+                    changePhotoOfDayItemImageOnPriority(
+                        itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
+                    mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().getFavoriteDataList()
+                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                }
             }
             recyclerItemPhotoOfDayPriorityNormal.setOnClickListener {
-                itemFavoriteData.setPriority(Constants.PRIORITY_NORMAL)
-                changePhotoOfDayItemImageOnPriority(
-                    itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
-                mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                favoriteData = mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().getFavoriteDataList()
-                favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    itemFavoriteData.setPriority(Constants.PRIORITY_NORMAL)
+                    changePhotoOfDayItemImageOnPriority(
+                        itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage
+                    )
+                    mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().getFavoriteDataList()
+                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                }
             }
             recyclerItemPhotoOfDayPriorityLow.setOnClickListener {
-                itemFavoriteData.setPriority(Constants.PRIORITY_LOW)
-                changePhotoOfDayItemImageOnPriority(
-                    itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
-                mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                favoriteData = mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().getFavoriteDataList()
-                favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    itemFavoriteData.setPriority(Constants.PRIORITY_LOW)
+                    changePhotoOfDayItemImageOnPriority(
+                        itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
+                    mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().getFavoriteDataList()
+                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                }
             }
             //endregion
             // Изменение картинки элемента в зависимости от его приоритета
@@ -67,34 +76,41 @@ class PhotoOfDayViewHolder(
                 itemFavoriteData, this.recyclerItemPhotoOfDayTypeImage)
             //region МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
             recyclerItemPhotoOfDayArrowUp.setOnClickListener {
-                layoutPosition.takeIf {it > 0}?.also {
-                    favoriteRecyclerListFragmentAdapter
-                        .removeAtAndAddInFullDatesList(it, it - 1)
-                    favoriteData.removeAt(it).apply {
-                        favoriteData.add(it - 1, this)
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    layoutPosition.takeIf { it > 0 }?.also {
+                        favoriteRecyclerListFragmentAdapter
+                            .removeAtAndAddInFullDatesList(it, it - 1)
+                        favoriteData.removeAt(it).apply {
+                            favoriteData.add(it - 1, this)
+                        }
+                        favoriteRecyclerListFragmentAdapter.notifyItemMoved(it, it - 1)
                     }
-                    favoriteRecyclerListFragmentAdapter.notifyItemMoved(it, it - 1)
                 }
             }
             recyclerItemPhotoOfDayArrowDown.setOnClickListener {
-                if (layoutPosition < favoriteData.size - 1) {
-                    layoutPosition.takeIf {
-                        it < favoriteRecyclerListFragmentAdapter.itemCount - 1}?.also {
-                        favoriteRecyclerListFragmentAdapter
-                            .removeAtAndAddInFullDatesList(it, it + 1)
-                        favoriteData.removeAt(it).apply {
-                            favoriteData.add(it + 1, this)
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    if (layoutPosition < favoriteData.size - 1) {
+                        layoutPosition.takeIf {
+                            it < favoriteRecyclerListFragmentAdapter.itemCount - 1
+                        }?.also {
+                            favoriteRecyclerListFragmentAdapter
+                                .removeAtAndAddInFullDatesList(it, it + 1)
+                            favoriteData.removeAt(it).apply {
+                                favoriteData.add(it + 1, this)
+                            }
+                            favoriteRecyclerListFragmentAdapter.notifyItemMoved(it, it + 1)
                         }
-                        favoriteRecyclerListFragmentAdapter.notifyItemMoved(it, it + 1)
                     }
                 }
             }
             //endregion
             // Отображение описания элемента при нажатии на его заголовок (Title)
             recyclerItemPhotoOfDayItemTitle.setOnClickListener {
-                itemFavoriteData.setIsShowDescription(!itemFavoriteData.getIsShowDescription())
-                recyclerItemPhotoOfDayItemDescription.visibility =
-                    if (itemFavoriteData.getIsShowDescription()) View.VISIBLE else View.GONE
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    itemFavoriteData.setIsShowDescription(!itemFavoriteData.getIsShowDescription())
+                    recyclerItemPhotoOfDayItemDescription.visibility =
+                        if (itemFavoriteData.getIsShowDescription()) View.VISIBLE else View.GONE
+                }
             }
         }
     }

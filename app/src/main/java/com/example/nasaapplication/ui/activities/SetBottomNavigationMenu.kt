@@ -45,6 +45,11 @@ class SetBottomNavigationMenu(
                 // Скрытие группы кнопок от меню кнопки FAB
                 mainActivity.binding.fabButtonsGroup.visibility = View.INVISIBLE
                 mainActivity.setIsFABButtonsGroupView(!mainActivity.getIsFABButtonsGroupView())
+                // Обновление элементов в списке "Избранное"
+                mainActivity.getNavigationContent().getFavoriteRecyclerListFragment()?.let {
+                        it.getAdapter()?.let { adapter -> adapter.notifyDataSetChanged()
+                    }
+                }
             } else {
                 // Установка анимационного затенения фона
                 setHideShowBackgroundAnimation(
@@ -110,7 +115,8 @@ class SetBottomNavigationMenu(
                             Thread.sleep(deltaTime)
                             handler.post {
                                 val constraintLayout =
-                                    mainActivity.findViewById<ConstraintLayout>(R.id.fab_buttons_container)
+                                    mainActivity.findViewById<ConstraintLayout>(
+                                        R.id.fab_buttons_container)
                                 val constraintSet = ConstraintSet()
                                 constraintSet.clone(constraintLayout)
                                 constraintSet.constrainCircle(
@@ -252,6 +258,8 @@ class SetBottomNavigationMenu(
             mainActivity.getTouchableListTabLayout().forEach { it.isEnabled = true }
             // Начальная настройка фрагмента "Картинка дня"
             mainActivity.getUIObserversManager().initialSettingDayPhotoFragment()
+            // Обнуление фрагмента с настройками приложения
+            mainActivity.getNavigationContent().setSettingsFragment(null)
         }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в Википедии
         mainActivity.binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_wiki)
@@ -269,6 +277,8 @@ class SetBottomNavigationMenu(
                 mainActivity.getTouchableListTabLayout().forEach { it.isEnabled = true }
                 // Начальная настройка фрагмента "Поиск в Википедии"
                 mainActivity.getUIObserversManager().showSearchWikiFragment()
+                // Обнуление фрагмента с настройками приложения
+                mainActivity.getNavigationContent().setSettingsFragment(null)
             }
         // Установка слушателя на нажатие кнопки вызова фрагмента с поиском в архиве NASA
         mainActivity.binding.fabButtonsContainer.getViewById(R.id.fab_button_search_in_nasa_archive)
@@ -287,6 +297,8 @@ class SetBottomNavigationMenu(
                 mainActivity.getTouchableListTabLayout().forEach { it.isEnabled = true }
                 // Начальная настройка фрагмента "Поиск в архиве NASA"
                 mainActivity.getUIObserversManager().showSearchNASAArchiveFragment()
+                // Обнуление фрагмента с настройками приложения
+                mainActivity.getNavigationContent().setSettingsFragment(null)
             }
         // Установка слушателя на нажатие кнопки вызова настроек приложения
         mainActivity.binding.fabButtonsContainer.getViewById(R.id.fab_button_settings)
@@ -294,6 +306,9 @@ class SetBottomNavigationMenu(
             mainActivity.binding.fabButtonsGroup.visibility = View.INVISIBLE
             mainActivity.setIsFABButtonsGroupView(false)
             mainActivity.getUIObserversManager().setIsBlockingOtherFABButtons(false)
+            // Обнуление фрагмента с настройками приложения
+            mainActivity.getNavigationContent().setSettingsFragment(null)
+            // Вызов фрагмента с настройками приложения
             mainActivity.getUIObserversManager().showSettingsFragment()
             // Установка анимационного просветления фона
             setHideShowBackgroundAnimation(transparientValue, durationAnimation, true)
@@ -313,6 +328,11 @@ class SetBottomNavigationMenu(
         setHideShowBackgroundAnimation(transparientValue, durationAnimation, true)
         // Отображение навигационного меню View Pager
         mainActivity.binding.tabLayout.visibility = View.VISIBLE
+        // Обновление элементов в списке "Избранное"
+        mainActivity.getNavigationContent().getFavoriteRecyclerListFragment()?.let {
+            it.getAdapter()?.let { adapter -> adapter.notifyDataSetChanged()
+            }
+        }
 
         if (mainActivity.getIsMain()) {
             // Анимация вращения картинки на нижней кнопке FAB
@@ -346,9 +366,8 @@ class SetBottomNavigationMenu(
                         .getFacadeFavoriteLogic().setFilterWord(query)
                     mainActivity.getNavigationContent().getFavoriteRecyclerListFragment()?.let {
                         it.getAdapter()?.let { adapter ->
-                            adapter.setFavoriteData(
-                                mainActivity.getUIObserversManager()
-                                    .getFacadeFavoriteLogic().getFavoriteDataList())
+                            adapter.setFavoriteData(mainActivity.getUIObserversManager()
+                                .getFacadeFavoriteLogic().getFavoriteDataList())
                             adapter.notifyDataSetChanged()
                         }
                     }
@@ -416,8 +435,7 @@ class SetBottomNavigationMenu(
             mainActivity.binding.bottomNavigationMenu.bottomAppBar.fabAlignmentMode =
                 BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
             mainActivity.binding.bottomNavigationMenu.bottomAppBarFab.setImageDrawable(
-                ContextCompat.getDrawable(mainActivity, R.drawable.ic_plus_fab)
-            )
+                ContextCompat.getDrawable(mainActivity, R.drawable.ic_plus_fab))
             mainActivity.binding.bottomNavigationMenu.bottomAppBar
                 .replaceMenu(R.menu.bottom_menu_bottom_bar)
             // Изменение вида иконки сердца
@@ -429,12 +447,23 @@ class SetBottomNavigationMenu(
     // Установка анимационного затенения/просветления фона
     fun setHideShowBackgroundAnimation (
         alpha: Float, duration: Long, isClickable: Boolean) {
+        // Анимация прозрачности контейнера с фрагментами, находящимися во ViewPager
         mainActivity.binding.transparentBackground.animate()
             .alpha(alpha)
             .setDuration(duration)
             .setListener(object: AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
                     mainActivity.binding.transparentBackground.isClickable = isClickable
+                }
+            })
+        // Анимация прозрачности контейнера
+        // с фрагментами "SettingsFragment" и "FavoriteRecyclerListFragment"
+        mainActivity.binding.activityFragmentsContainer.animate()
+            .alpha(alpha)
+            .setDuration(duration)
+            .setListener(object: AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    mainActivity.binding.activityFragmentsContainer.isClickable = isClickable
                 }
             })
     }

@@ -25,42 +25,50 @@ class SearchInWikiViewHolder(
             // Загрузка информации по выбранному элементу
             // на странице фрагмента с поиском в Википедии
             recyclerItemSearchInWikiTypeImage.setOnClickListener {
-                onListItemClickListener.onItemClick(itemFavoriteData)
-                // Переключение режима нижней навигационной кнопки BottomAppBar
-                // с крайнего правого положения в центральное положение
-                mainActivity.setIsMain(false)
-                mainActivity.getSetBottomNavigationMenu().switchBottomAppBar()
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    onListItemClickListener.onItemClick(itemFavoriteData)
+                    // Переключение режима нижней навигационной кнопки BottomAppBar
+                    // с крайнего правого положения в центральное положение
+                    mainActivity.setIsMain(false)
+                    mainActivity.getSetBottomNavigationMenu().switchBottomAppBar()
+                }
             }
             //region МЕТОДЫ ИЗМЕНЕНИЯ ПРИОРИТЕТОВ ЗАПИСИ
             recyclerItemSearchInWikiPriorityHigh.setOnClickListener {
-                itemFavoriteData.setPriority(Constants.PRIORITY_HIGH)
-                changeSearchInWikiItemImageOnPriority(
-                    itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
-                mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                favoriteData = mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().getFavoriteDataList()
-                favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    itemFavoriteData.setPriority(Constants.PRIORITY_HIGH)
+                    changeSearchInWikiItemImageOnPriority(
+                        itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
+                    mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().getFavoriteDataList()
+                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                }
             }
             recyclerItemSearchInWikiPriorityNormal.setOnClickListener {
-                itemFavoriteData.setPriority(Constants.PRIORITY_NORMAL)
-                changeSearchInWikiItemImageOnPriority(
-                    itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
-                mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                favoriteData = mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().getFavoriteDataList()
-                favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    itemFavoriteData.setPriority(Constants.PRIORITY_NORMAL)
+                    changeSearchInWikiItemImageOnPriority(
+                        itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
+                    mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().getFavoriteDataList()
+                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                }
             }
             recyclerItemSearchInWikiPriorityLow.setOnClickListener {
-                itemFavoriteData.setPriority(Constants.PRIORITY_LOW)
-                changeSearchInWikiItemImageOnPriority(
-                    itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
-                mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().priorityRangeFullDatesList()
-                favoriteData = mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().getFavoriteDataList()
-                favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    itemFavoriteData.setPriority(Constants.PRIORITY_LOW)
+                    changeSearchInWikiItemImageOnPriority(
+                        itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
+                    mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().priorityRangeFullDatesList()
+                    favoriteData = mainActivity.getUIObserversManager()
+                        .getFacadeFavoriteLogic().getFavoriteDataList()
+                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                }
             }
             //endregion
             // Изменение картинки элемента в зависимости от его приоритета
@@ -68,32 +76,39 @@ class SearchInWikiViewHolder(
                 itemFavoriteData, this.recyclerItemSearchInWikiTypeImage)
             //region МЕТОДЫ ИЗМЕНЕНИЯ ПОЛОЖЕНИЯ ЭЛЕМЕНТА В СПИСКЕ ПРИ НАЖАТИИ НА СТРЕЛОЧКИ
             recyclerItemSearchInWikiArrowUp.setOnClickListener {
-                layoutPosition.takeIf {it > 0}?.also {
-                    favoriteRecyclerListFragmentAdapter
-                        .removeAtAndAddInFullDatesList(it, it - 1)
-                    favoriteData.removeAt(it).apply {
-                        favoriteData.add(it - 1, this)
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    layoutPosition.takeIf { it > 0 }?.also {
+                        favoriteRecyclerListFragmentAdapter
+                            .removeAtAndAddInFullDatesList(it, it - 1)
+                        favoriteData.removeAt(it).apply {
+                            favoriteData.add(it - 1, this)
+                        }
+                        favoriteRecyclerListFragmentAdapter.notifyItemMoved(it, it - 1)
                     }
-                    favoriteRecyclerListFragmentAdapter.notifyItemMoved(it, it - 1)
                 }
             }
             recyclerItemSearchInWikiArrowDown.setOnClickListener {
-                layoutPosition.takeIf {
-                    it < favoriteRecyclerListFragmentAdapter.itemCount - 1}?.also {
-                    favoriteRecyclerListFragmentAdapter
-                        .removeAtAndAddInFullDatesList(it, it + 1)
-                    favoriteData.removeAt(it).apply {
-                        favoriteData.add(it + 1, this)
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    layoutPosition.takeIf {
+                        it < favoriteRecyclerListFragmentAdapter.itemCount - 1
+                    }?.also {
+                        favoriteRecyclerListFragmentAdapter
+                            .removeAtAndAddInFullDatesList(it, it + 1)
+                        favoriteData.removeAt(it).apply {
+                            favoriteData.add(it + 1, this)
+                        }
+                        favoriteRecyclerListFragmentAdapter.notifyItemMoved(it, it + 1)
                     }
-                    favoriteRecyclerListFragmentAdapter.notifyItemMoved(it, it + 1)
                 }
             }
             //endregion
             // Отображение описания элемента при нажатии на его заголовок (Title)
             recyclerItemSearchInWikiItemTitle.setOnClickListener {
-                itemFavoriteData.setIsShowDescription(!itemFavoriteData.getIsShowDescription())
-                recyclerItemSearchInWikiItemDescription.visibility =
-                    if (itemFavoriteData.getIsShowDescription()) View.VISIBLE else View.GONE
+                if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+                    itemFavoriteData.setIsShowDescription(!itemFavoriteData.getIsShowDescription())
+                    recyclerItemSearchInWikiItemDescription.visibility =
+                        if (itemFavoriteData.getIsShowDescription()) View.VISIBLE else View.GONE
+                }
             }
         }
     }

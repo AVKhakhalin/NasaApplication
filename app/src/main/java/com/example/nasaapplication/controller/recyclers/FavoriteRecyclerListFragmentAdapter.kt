@@ -1,12 +1,8 @@
 package com.example.nasaapplication.controller.recyclers
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.nasaapplication.R
 import com.example.nasaapplication.Constants
 import com.example.nasaapplication.controller.recyclers.utils.*
 import com.example.nasaapplication.databinding.FavoriteListRecyclerItemPhotoOfDayBinding
@@ -55,11 +51,9 @@ class FavoriteRecyclerListFragmentAdapter (
     }
     override fun getItemViewType(position: Int): Int {
         return when {
-            favoriteData[position].getTypeSource() ==
-                    Constants.DAY_PHOTO_FRAGMENT_INDEX ->
+            favoriteData[position].getTypeSource() == Constants.DAY_PHOTO_FRAGMENT_INDEX ->
                 Constants.DAY_PHOTO_FRAGMENT_INDEX
-            favoriteData[position].getTypeSource() ==
-                    Constants.SEARCH_WIKI_FRAGMENT_INDEX ->
+            favoriteData[position].getTypeSource() == Constants.SEARCH_WIKI_FRAGMENT_INDEX ->
                 Constants.SEARCH_WIKI_FRAGMENT_INDEX
             favoriteData[position].getTypeSource() ==
                     Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX ->
@@ -82,16 +76,20 @@ class FavoriteRecyclerListFragmentAdapter (
 
     //region БАЗОВЫЕ МЕТОДЫ ДЛЯ РЕАЛИЗАЦИИ СМАХИВАНИЯ (УДАЛЕНИЯ) ЭЛЕМЕНТОВ
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
-        removeAtAndAddInFullDatesList(fromPosition, toPosition)
-        favoriteData.removeAt(fromPosition).apply {
-            favoriteData.add(toPosition, this)
+        if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+            removeAtAndAddInFullDatesList(fromPosition, toPosition)
+            favoriteData.removeAt(fromPosition).apply {
+                favoriteData.add(toPosition, this)
+            }
+            notifyItemMoved(fromPosition, toPosition)
         }
-        notifyItemMoved(fromPosition, toPosition)
     }
     override fun onItemDismiss(position: Int) {
-        removeAtInFullDatesList(position)
-        favoriteData.removeAt(position)
-        notifyItemRemoved(position)
+        if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
+            removeAtInFullDatesList(position)
+            favoriteData.removeAt(position)
+            notifyItemRemoved(position)
+        }
     }
     //endregion
 
