@@ -49,7 +49,6 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
     override fun onResume() {
         // Начальная настройка фрагмента
         mainActivity?.let { it.getUIObserversManager().showSearchWikiFragment() }
-
         super.onResume()
     }
 

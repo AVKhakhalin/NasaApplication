@@ -71,6 +71,12 @@ class DayPhotoFragment:
         viewModel.setMainActivity(mainActivity)
     }
 
+    override fun onResume() {
+        // Начальная настройка фрагмента
+        mainActivity?.let { it.getUIObserversManager().showSearchDayPhotoFragment() }
+        super.onResume()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getDate(0)

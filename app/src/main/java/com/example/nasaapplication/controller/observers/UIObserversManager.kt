@@ -42,7 +42,8 @@ class UIObserversManager(
 
     // ФРАГМЕНТ "Фото дня"
     // События:
-    // 1) нажатие на кнопки изменения дней.
+    // 1) появление;
+    // 2) нажатие на кнопки изменения дней.
 
     // ФРАГМЕНТ "Поиск в Википедии"
     // События:
@@ -159,7 +160,21 @@ class UIObserversManager(
 
     //region МЕТОДЫ ФРАГМЕНТА "Фото дня"
     // События:
-    // 1) нажатие на кнопки изменения дней
+    // 1) появление;
+    fun showSearchDayPhotoFragment() {
+        // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
+        setListFavoriteDataTypeSource(dayPhotoFavorite.getTypeSource())
+        setListFavoriteDataTitle(dayPhotoFavorite.getTitle())
+        setListFavoriteDataDescription(dayPhotoFavorite.getDescription())
+        setListFavoriteDataLinkSource(dayPhotoFavorite.getLinkSource())
+        setListFavoriteDataPriority(dayPhotoFavorite.getPriority())
+        setListFavoriteDataSearchRequest(dayPhotoFavorite.getSearchRequest())
+        setListFavoriteDataLinkImage(dayPhotoFavorite.getLinkImage())
+        // Метод проверки наличия текущей информации в списке "Избранное"
+        // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+        checkAndChangeHeartIconState()
+    }
+    // 2) нажатие на кнопки изменения дней
     fun clickOnDayButton() {
         clearFavoriteDataAndChangeHeartIconState()
     }
@@ -363,6 +378,24 @@ class UIObserversManager(
                     .setAndShowFavoriteData(favoriteData)
                 mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
                 mainActivity.binding.transparentBackground.visibility = View.VISIBLE
+                // Подготовка данных для исключения данных из "Избранного"
+                setListFavoriteDataSearchRequest(favoriteData.getSearchRequest())
+                setListFavoriteDataTypeSource(favoriteData.getTypeSource())
+                setListFavoriteDataLinkImage(favoriteData.getLinkImage())
+                setListFavoriteDataTitle(favoriteData.getTitle())
+                setListFavoriteDataDescription(favoriteData.getDescription())
+                setListFavoriteDataLinkSource(favoriteData.getLinkSource())
+                setListFavoriteDataPriority(favoriteData.getPriority())
+
+                searchNASAArchiveFavorite.setSearchRequest(favoriteData.getSearchRequest())
+                searchNASAArchiveFavorite.setTypeSource(favoriteData.getTypeSource())
+                searchNASAArchiveFavorite.setLinkImage(favoriteData.getLinkImage())
+                searchNASAArchiveFavorite.setTitle(favoriteData.getTitle())
+                searchNASAArchiveFavorite.setDescription(favoriteData.getDescription())
+                searchNASAArchiveFavorite.setLinkSource(favoriteData.getLinkSource())
+                searchNASAArchiveFavorite.setPriority(favoriteData.getPriority())
+                // Изменение иконки сердца на закрашенную
+                changeHeartIconState(mainActivity, true, false)
             }
             else -> {
                 mainActivity.toast("${mainActivity.getString(R.string.error)}: ${
