@@ -51,56 +51,8 @@ class FavoriteRecyclerListFragment(
             object: FavoriteRecyclerListFragmentOnItemClickListener {
                 override fun onItemClick(favoriteData: Favorite) {
                     // Открытие данных во фрагментах
-                    when(favoriteData.getTypeSource()) {
-                        Constants.DAY_PHOTO_FRAGMENT_INDEX -> {
-                            // Очистка текущей информации для списка "Избранное"
-                            // при переключении на фрагмент "Картинка дня"
-                            mainActivity.getUIObserversManager().setListFavoriteEmptyData()
-                            // Открытие выбранной информации во фрагменте "Картинка дня"
-                            mainActivity.getViewPager().currentItem =
-                                Constants.DAY_PHOTO_FRAGMENT_INDEX
-                            (mainActivity.getViewPagerAdapter()
-                                .getFragments()[Constants.DAY_PHOTO_FRAGMENT_INDEX]
-                                    as DayPhotoFragment).setAndShowFavoriteData(favoriteData)
-                            mainActivity.binding.activityFragmentsContainer.visibility =
-                                View.INVISIBLE
-                            mainActivity.binding.transparentBackground.visibility = View.VISIBLE
-                        }
-                        Constants.SEARCH_WIKI_FRAGMENT_INDEX -> {
-                            // Очистка текущей информации для списка "Избранное"
-                            // при переключении на фрагмент с поиском в Википедии
-                            mainActivity.getUIObserversManager().setListFavoriteEmptyData()
-                            // Открытие выбранной информации во фрагменте с поиском в Википедии
-                            mainActivity.getViewPager().currentItem =
-                                Constants.SEARCH_WIKI_FRAGMENT_INDEX
-                            (mainActivity.getViewPagerAdapter()
-                                .getFragments()[Constants.SEARCH_WIKI_FRAGMENT_INDEX]
-                                    as SearchWikiFragment).setAndShowFavoriteData(favoriteData)
-                            mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
-                            mainActivity.binding.transparentBackground.visibility = View.VISIBLE
-                        }
-                        Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX -> {
-                            // Очистка текущей информации для списка "Избранное"
-                            // при переключении на фрагмент с поиском в архиве NASA
-                            mainActivity.getUIObserversManager().setListFavoriteEmptyData()
-                            // Открытие выбранной информации во фрагменте с поиском в архиве NASA
-                            mainActivity.binding.viewPager.visibility = View.VISIBLE
-                            mainActivity.binding.tabLayout.visibility = View.VISIBLE
-                            mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
-
-                            mainActivity.getViewPager().currentItem =
-                                Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
-                            (mainActivity.getViewPagerAdapter()
-                                .getFragments()[Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
-                                    as SearchNASAArchiveFragment).setAndShowFavoriteData(favoriteData)
-                            mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
-                            mainActivity.binding.transparentBackground.visibility = View.VISIBLE
-                        }
-                        else -> {
-                            mainActivity.toast("${getString(R.string.error)}: ${
-                                getString(R.string.unknown_type_source_favorite_data)}")
-                        }
-                    }
+                    mainActivity.getUIObserversManager()
+                        .clickOnFragmentImageFavoriteItem(favoriteData)
                 }
             }, mainActivity.getUIObserversManager()
                     .getFacadeFavoriteLogic().getFavoriteDataList(), mainActivity)

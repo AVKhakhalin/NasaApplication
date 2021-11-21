@@ -13,9 +13,6 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.example.nasaapplication.Constants
 import com.example.nasaapplication.R
-import com.example.nasaapplication.ui.fragments.contents.DayPhotoFragment
-import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragment
-import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
 import com.example.nasaapplication.ui.utils.ThemeColor
 import com.google.android.material.bottomappbar.BottomAppBar
 import kotlin.math.round
@@ -289,9 +286,7 @@ class SetBottomNavigationMenu(
                 // Разблокировка кликов по закладкам во ViewPager 2
                 mainActivity.getTouchableListTabLayout().forEach { it.isEnabled = true }
                 // Начальная настройка фрагмента "Поиск в архиве NASA"
-                (mainActivity.getViewPagerAdapter()
-                    .getFragments()[Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
-                        as SearchNASAArchiveFragment).initialSettingFragment()
+                mainActivity.getUIObserversManager().showSearchNASAArchiveFragment()
             }
         // Установка слушателя на нажатие кнопки вызова настроек приложения
         mainActivity.binding.fabButtonsContainer.getViewById(R.id.fab_button_settings)
@@ -346,6 +341,7 @@ class SetBottomNavigationMenu(
             // Событие установки поискового запроса
             searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
+                    mainActivity.toast("!!!")
                     // Отображение полученного поискового запроса
                     mainActivity.getUIObserversManager()
                         .getFacadeFavoriteLogic().setFilterWord(query)
@@ -381,7 +377,7 @@ class SetBottomNavigationMenu(
                 mainActivity.getUIObserversManager()
                     .getFacadeFavoriteLogic().setFilterWord("")
                 mainActivity.getNavigationContent().getFavoriteRecyclerListFragment()?.let {
-                    it.getAdapter()?.let {adapter ->
+                    it.getAdapter()?.let { adapter ->
                         adapter.setFavoriteData(
                             mainActivity.getUIObserversManager()
                                 .getFacadeFavoriteLogic().getFavoriteDataList())

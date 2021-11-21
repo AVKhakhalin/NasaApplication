@@ -9,23 +9,15 @@ import android.transition.ChangeBounds
 import android.transition.ChangeImageTransform
 import android.transition.TransitionManager
 import android.transition.TransitionSet
-import android.util.Log
-import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.Group
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.nasaapplication.R
-import com.example.nasaapplication.Constants
-import com.example.nasaapplication.controller.navigation.contents.NavigationContent
-import com.example.nasaapplication.controller.navigation.dialogs.NavigationDialogs
 import com.example.nasaapplication.controller.observers.viewmodels.NASAArchive.NASAArchiveData
 import com.example.nasaapplication.controller.observers.viewmodels.NASAArchive.NASAArchiveDataViewModel
 import com.example.nasaapplication.controller.recyclers.SearchNASAArchiveFragmentAdapter
@@ -57,8 +49,6 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
     private val durationAnimation: Long = 800
     private val transparientValue: Float = 0f
     private val notTransparientValue: Float = 1f
-    // Данные для списка "Избранное"
-    private var searchNASAArchiveFavorite: Favorite = Favorite()
     // MainActivity
     private var mainActivity: MainActivity? = null
     //endregion
@@ -76,7 +66,7 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
 
     override fun onResume() {
         // Начальная настройка фрагмента
-        initialSettingFragment()
+        mainActivity?.let { it.getUIObserversManager().showSearchNASAArchiveFragment() }
         super.onResume()
     }
 
@@ -91,7 +81,8 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                     entitiesLinks,
                     entitiesTexts,
                     isRecyclerViewWindowHide,
-                    this)
+                    this
+                )
         }
     }
     private fun updateRecyclerViewList(
@@ -120,11 +111,7 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
             // Установка слушателя при нажатии на кнопку поиска в архиве NASA
             binding.inputNasaField.setEndIconOnClickListener {
                 if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
-                    // Очистка текущей информации для добавления в список "Избранное"
-                    mainActivity.getUIObserversManager().setListFavoriteEmptyData()
-                    // Изменение вида иконки сердца на контурное
-                    mainActivity.getUIObserversManager()
-                        .changeHeartIconState(mainActivity, false, true)
+                    mainActivity.getUIObserversManager().clickOnSearchInNASA()
                     // Получение информации из архива NASA
                     if ((binding.inputNasaFieldText.text != null) &&
                     (binding.inputNasaFieldText.text!!.length <=
@@ -238,14 +225,6 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                         updateRecyclerViewList(serverResponseData.collection.items)
                         // Сброс типа анимации для изменения размера фотографии
                         typeChangeImage = 0
-                        // Сохранение в "Избранное" найденных ответов от сервера NASA
-                        var tempDescription: String = ""
-                        serverResponseData.collection.items.forEach {
-                            tempDescription += "$it\n"
-                        }
-                        mainActivity?.let { it.getUIObserversManager()
-                            .setListFavoriteDataDescription(tempDescription) }
-                        searchNASAArchiveFavorite.setDescription(tempDescription)
                     }
                 } else {
                     // Скрытие неиспользуемых полей
@@ -254,15 +233,9 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                     binding.searchInNasaArchiveDescriptionTextView.visibility = View.INVISIBLE
                     binding.nasaArchiveEntityListContainer.visibility = View.INVISIBLE
                     // Отображение информации об отсутствии найденной информации по запросу
-                    mainActivity?.let { binding.searchInNasaArchiveTitleTextView.text = "${
-                        it.resources.getString(R.string.error_empty_download_dates)}" }
+                    mainActivity?.let { binding.searchInNasaArchiveTitleTextView.text =
+                        "${it.resources.getString(R.string.error_empty_download_dates)}" }
                     binding.searchInNasaArchiveTitleTextView.visibility = View.VISIBLE
-                    // Сохранение в "Избранное" ответа об отсутствии информации на сервере NASA
-                    mainActivity?.let { it.getUIObserversManager()
-                        .setListFavoriteDataDescription("${
-                        it.resources.getString(R.string.error_empty_download_dates)}") }
-                    mainActivity?.let { searchNASAArchiveFavorite.setDescription(
-                        "${it.resources.getString(R.string.error_empty_download_dates)}") }
                 }
             }
             is NASAArchiveData.Loading -> {
@@ -294,14 +267,6 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                 .observe(viewLifecycleOwner, Observer<NASAArchiveData> { renderData(it) })
         }
         return finalRequest
-    }
-
-    // Получение признака блокировки всех кнопок, кроме появившихся из контекстного меню
-    fun getIsBlockingOtherFABButtons(): Boolean {
-        mainActivity?.let {
-            return it.getUIObserversManager().getIsBlockingOtherFABButtons()
-        }
-        return false
     }
 
     // Передача MainActivity
@@ -364,53 +329,9 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
         }
     }
 
-    // Получение текущих данных для "Избранное" на фрагменте с поиском в архиве NASA
-    fun getSearchNASAArchiveFavorite(): Favorite {
-        return searchNASAArchiveFavorite
-    }
-
     // Получение dataViewModel
     @JvmName("getDataViewModel1")
     fun getDataViewModel(): NASAArchiveDataViewModel {
         return dataViewModel
-    }
-
-    // Метод с начальной настройкой фрагмента
-    fun initialSettingFragment() {
-        mainActivity?.let { mainActivity ->
-            // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
-            mainActivity.getUIObserversManager()
-                .setListFavoriteDataTypeSource(searchNASAArchiveFavorite.getTypeSource())
-            mainActivity.getUIObserversManager()
-                .setListFavoriteDataTitle(searchNASAArchiveFavorite.getTitle())
-            mainActivity.getUIObserversManager()
-                .setListFavoriteDataDescription(searchNASAArchiveFavorite.getDescription())
-            mainActivity.getUIObserversManager()
-                .setListFavoriteDataLinkSource(searchNASAArchiveFavorite.getLinkSource())
-            mainActivity.getUIObserversManager()
-                .setListFavoriteDataPriority(searchNASAArchiveFavorite.getPriority())
-            mainActivity.getUIObserversManager()
-                .setListFavoriteDataSearchRequest(
-                searchNASAArchiveFavorite.getSearchRequest())
-            mainActivity.getUIObserversManager()
-                .setListFavoriteDataLinkImage(searchNASAArchiveFavorite.getLinkImage())
-            // Метод проверки наличия текущей информации в списке "Избранное"
-            // и отрисовка соответствующего значка сердца (контурная или с заливкой)
-            checkAndChangeHeartIconState()
-        }
-    }
-
-    // Метод проверки наличия текущей информации в списке "Избранное"
-    // и отрисовка соответствующего значка сердца (контурная или с заливкой)
-    fun checkAndChangeHeartIconState() {
-        mainActivity?.let { mainActivity ->
-            if (mainActivity.getUIObserversManager()
-                    .getFacadeFavoriteLogic().checkSimilarFavoriteData())
-                mainActivity.getUIObserversManager()
-                    .changeHeartIconState(mainActivity, true, false)
-            else
-                mainActivity.getUIObserversManager()
-                    .changeHeartIconState(mainActivity, false, true)
-        }
     }
 }

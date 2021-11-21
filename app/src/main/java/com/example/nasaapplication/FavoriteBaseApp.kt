@@ -18,16 +18,18 @@ class FavoriteBaseApp: Application() {
 
         fun getFavoriteDAO(): FavoriteDAO {
             if (db == null) {
-                if (appInstance != null) {
-                    db = Room.databaseBuilder(appInstance!!.applicationContext,
+                appInstance?.let {
+                    db = Room.databaseBuilder(it.applicationContext,
                         FavoriteDataBase::class.java, DB_NAME)
                         .allowMainThreadQueries()
                         .build()
-                } else {
+                }
+                if (appInstance == null) {
                     throw IllegalStateException("appInstance==null")
                 }
             }
-            return db!!.favoriteDAO()
+            db?.let { return it.favoriteDAO() }
+            throw IllegalStateException("db==null")
         }
     }
 }

@@ -1,7 +1,11 @@
 package com.example.nasaapplication.controller.observers
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.util.Log
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
+import coil.load
 import com.example.nasaapplication.Constants
 import com.example.nasaapplication.R
 import com.example.nasaapplication.controller.navigation.contents.NavigationContent
@@ -11,6 +15,9 @@ import com.example.nasaapplication.domain.logic.Favorite
 import com.example.nasaapplication.domain.logic.FavoriteLogic
 import com.example.nasaapplication.repository.facadeuser.room.LocalRoomImpl
 import com.example.nasaapplication.ui.activities.MainActivity
+import com.example.nasaapplication.ui.fragments.contents.DayPhotoFragment
+import com.example.nasaapplication.ui.fragments.contents.SearchNASAArchiveFragment
+import com.example.nasaapplication.ui.fragments.contents.SearchWikiFragment
 
 class UIObserversManager(
     val mainActivity: MainActivity,
@@ -37,17 +44,16 @@ class UIObserversManager(
     // События:
     // 1) нажатие на кнопки изменения дней.
 
-    // ФРАГМЕНТ "Поиск в архиве NASA"
+    // ФРАГМЕНТ "Поиск в Википедии"
     // События:
     // 1) появление;
     // 2) нажатие на кнопку поиска в "Википедии".
 
-    // ФРАГМЕНТ "Архив"
+    // ФРАГМЕНТ "Поиск в архиве NASA"
     // События:
     // 1) появление;
     // 2) нажатие на кнопку поиска в архиве "NASA";
-    // 3) нажатие на кнопку вызова/скрытия списка найденной в архиве "NASA" информации;
-    // 4) нажатие на элемент списка с найденной в архиве "NASA" информацией.
+    // 3) нажатие на элемент списка с найденной в архиве "NASA" информацией.
 
     // ФРАГМЕНТ "Избранное"
     // События:
@@ -70,6 +76,7 @@ class UIObserversManager(
     private var newFavorite: Favorite = Favorite()
     private var dayPhotoFavorite: Favorite = Favorite()
     private var searchWikiFavorite: Favorite = Favorite()
+    private var searchNASAArchiveFavorite: Favorite = Favorite()
     private var favoriteLogic: FavoriteLogic = FavoriteLogic()
     private var facadeFavoriteLogic: FacadeFavoriteLogic =
         FacadeFavoriteLogic(favoriteLogic, localRoomImpl, this)
@@ -154,16 +161,11 @@ class UIObserversManager(
     // События:
     // 1) нажатие на кнопки изменения дней
     fun clickOnDayButton() {
-        if (!getIsBlockingOtherFABButtons()) {
-            // Очистка текущей информации для добавления в "Избранное"
-            setListFavoriteEmptyData()
-            // Изменение вида иконки сердца на контурное
-            changeHeartIconState(mainActivity, false, true)
-        }
+        clearFavoriteDataAndChangeHeartIconState()
     }
     //endregion
 
-    //region МЕТОДЫ ФРАГМЕНТА "Поиск в архиве NASA"
+    //region МЕТОДЫ ФРАГМЕНТА "Поиск в Википедии"
     // События:
     // 1) появление;
     fun showSearchWikiFragment() {
@@ -181,32 +183,127 @@ class UIObserversManager(
     }
     // 2) нажатие на кнопку поиска в "Википедии".
     fun clickOnSearchInWIKI() {
-        if (!getIsBlockingOtherFABButtons()) {
-            // Очистка текущей информации для добавления в список "Избранное"
-            setListFavoriteEmptyData()
-            // Изменение вида иконки сердца на контурное
-            changeHeartIconState(mainActivity, false, true)
-        }
+        clearFavoriteDataAndChangeHeartIconState()
+
     }
     //endregion
 
-    //region МЕТОДЫ ФРАГМЕНТА "Архив"
+    //region МЕТОДЫ ФРАГМЕНТА "Поиск в архиве NASA"
     // События:
     // 1) появление;
     fun showSearchNASAArchiveFragment() {
-
+            // Очистка текущей информации для "Избранное" при переключении на данный фрагмент
+            setListFavoriteDataTypeSource(searchNASAArchiveFavorite.getTypeSource())
+            setListFavoriteDataTitle(searchNASAArchiveFavorite.getTitle())
+            setListFavoriteDataDescription(searchNASAArchiveFavorite.getDescription())
+            setListFavoriteDataLinkSource(searchNASAArchiveFavorite.getLinkSource())
+            setListFavoriteDataPriority(searchNASAArchiveFavorite.getPriority())
+            setListFavoriteDataSearchRequest(searchNASAArchiveFavorite.getSearchRequest())
+            setListFavoriteDataLinkImage(searchNASAArchiveFavorite.getLinkImage())
+            // Метод проверки наличия текущей информации в списке "Избранное"
+            // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+            checkAndChangeHeartIconState()
     }
     // 2) нажатие на кнопку поиска в архиве "NASA";
     fun clickOnSearchInNASA() {
-
+        clearFavoriteDataAndChangeHeartIconState()
     }
-    // 3) нажатие на кнопку вызова/скрытия списка найденной в архиве "NASA" информации;
-    fun clickOnShowAndHideFoundedInNASAInformation() {
+    // 3) нажатие на элемент списка с найденной в архиве "NASA" информацией.
+    fun clickOnFoundedInNASAInformationItem(searchNASAArchiveFragment: SearchNASAArchiveFragment,
+    entityLink: String, newNASAArchiveEntity: String, entityText: String,
+    durationAnimation: Long, transparientValue: Float, notTransparientValue: Float) {
+        if (!getIsBlockingOtherFABButtons()) {
+            clearFavoriteDataAndChangeHeartIconState()
+            // Сохранение запроса, ссылки на картинку, заголовка и описания в "Избранное"
+            setListFavoriteDataSearchRequest(
+                "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}")
+            setListFavoriteDataTypeSource(Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
+            setListFavoriteDataLinkImage(entityLink)
+            setListFavoriteDataTitle(newNASAArchiveEntity)
+            setListFavoriteDataDescription(entityText)
+            setListFavoriteDataLinkSource(
+                searchNASAArchiveFragment.getDataViewModel().getRequestUrl())
+            setListFavoriteDataPriority(0)
 
-    }
-    // 4) нажатие на элемент списка с найденной в архиве "NASA" информацией.
-    fun clickOnFoundedInNASAInformationItem() {
+            searchNASAArchiveFavorite.setSearchRequest(
+                    "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}")
+            searchNASAArchiveFavorite.setTypeSource(Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
+            searchNASAArchiveFavorite.setLinkImage(entityLink)
+            searchNASAArchiveFavorite.setTitle(newNASAArchiveEntity)
+            searchNASAArchiveFavorite.setDescription(entityText)
+            searchNASAArchiveFavorite.setLinkSource(
+                    searchNASAArchiveFragment.getDataViewModel().getRequestUrl())
+            searchNASAArchiveFavorite.setPriority(0)
 
+            // Анимированное появление найденной картинки по запросу в архиве NASA
+            searchNASAArchiveFragment.binding.searchInNasaArchiveImageView.alpha = transparientValue
+            searchNASAArchiveFragment.binding.searchInNasaArchiveImageView
+                .load(entityLink) {
+                    lifecycle(searchNASAArchiveFragment)
+                    error(R.drawable.ic_load_error_vector)
+                    // Анимация появления картинки
+                    searchNASAArchiveFragment.binding.searchInNasaArchiveImageView.animate()
+                        .alpha(notTransparientValue)
+                        .setDuration(durationAnimation)
+                        .setListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                searchNASAArchiveFragment.binding
+                                    .searchInNasaArchiveImageView.isClickable = true
+                            }
+                        })
+                }
+
+            // Анимационный показ заголовка и описания фотографии по запрошенному событию
+            searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView.alpha =
+                transparientValue
+            searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView.text =
+                newNASAArchiveEntity
+            searchNASAArchiveFragment.binding.searchInNasaArchiveDescriptionTextView.alpha =
+                transparientValue
+            searchNASAArchiveFragment.binding.searchInNasaArchiveDescriptionTextView.text =
+                entityText
+            // Анимация появления заголовка картинки
+            searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView.animate()
+                .alpha(notTransparientValue)
+                .setDuration(durationAnimation)
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView
+                            .isClickable = true
+                    }
+                })
+            // Анимация появления описания картинки
+            searchNASAArchiveFragment.binding.searchInNasaArchiveDescriptionTextView
+                .animate()
+                .alpha(notTransparientValue)
+                .setDuration(durationAnimation)
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        searchNASAArchiveFragment.binding
+                            .searchInNasaArchiveDescriptionTextView.isClickable = true
+                    }
+                })
+
+            // Отобразить элементы View для вывода полученной информации
+            searchNASAArchiveFragment.binding.fragmentSearchInNasaArchiveGroupElements
+                .visibility = View.VISIBLE
+            searchNASAArchiveFragment.binding.searchInNasaArchiveLoadingLayout
+                .visibility = View.INVISIBLE
+
+            // Скрытие списка Recycler View с результатами поиска в архиве NASA
+            val constraintLayout = searchNASAArchiveFragment.binding.nasaArchiveEntityListContainer
+            val timeLayoutParams: (ConstraintLayout.LayoutParams) =
+                constraintLayout.layoutParams as ConstraintLayout.LayoutParams
+            timeLayoutParams.constrainedWidth = true
+            constraintLayout.layoutParams = timeLayoutParams
+            searchNASAArchiveFragment.setIsRecyclerViewWindowHide(true)
+            searchNASAArchiveFragment.binding.fragmentSearchInNasaArchiveRecyclerView
+                .visibility = View.INVISIBLE
+
+            // Метод проверки наличия текущей информации в списке "Избранное"
+            // и отрисовка соответствующего значка сердца (контурная или с заливкой)
+            checkAndChangeHeartIconState()
+        }
     }
     //endregion
 
@@ -221,10 +318,58 @@ class UIObserversManager(
 
     }
     // 3) нажатие на эмблему фрагмента, где создан элемент списка для отображения информации,
-    fun clickOnFragmentImageFavoriteItem() {
-
-    }
     //    содержащейся в элементе списка;
+    fun clickOnFragmentImageFavoriteItem(favoriteData: Favorite) {
+        when(favoriteData.getTypeSource()) {
+            Constants.DAY_PHOTO_FRAGMENT_INDEX -> {
+                // Очистка текущей информации для списка "Избранное"
+                // при переключении на фрагмент "Картинка дня"
+                setListFavoriteEmptyData()
+                // Открытие выбранной информации во фрагменте "Картинка дня"
+                mainActivity.getViewPager().currentItem =
+                    Constants.DAY_PHOTO_FRAGMENT_INDEX
+                (mainActivity.getViewPagerAdapter()
+                    .getFragments()[Constants.DAY_PHOTO_FRAGMENT_INDEX]
+                        as DayPhotoFragment).setAndShowFavoriteData(favoriteData)
+                mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
+                mainActivity.binding.transparentBackground.visibility = View.VISIBLE
+            }
+            Constants.SEARCH_WIKI_FRAGMENT_INDEX -> {
+                // Очистка текущей информации для списка "Избранное"
+                // при переключении на фрагмент с поиском в Википедии
+                setListFavoriteEmptyData()
+                // Открытие выбранной информации во фрагменте с поиском в Википедии
+                (mainActivity.getViewPagerAdapter()
+                    .getFragments()[Constants.SEARCH_WIKI_FRAGMENT_INDEX]
+                        as SearchWikiFragment).setAndShowFavoriteData(favoriteData)
+                mainActivity.getViewPager().currentItem = Constants.SEARCH_WIKI_FRAGMENT_INDEX
+                mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
+                mainActivity.binding.transparentBackground.visibility = View.VISIBLE
+            }
+            Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX -> {
+                // Очистка текущей информации для списка "Избранное"
+                // при переключении на фрагмент с поиском в архиве NASA
+                setListFavoriteEmptyData()
+                // Открытие выбранной информации во фрагменте с поиском в архиве NASA
+                mainActivity.binding.viewPager.visibility = View.VISIBLE
+                mainActivity.binding.tabLayout.visibility = View.VISIBLE
+                mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
+
+                mainActivity.getViewPager().currentItem =
+                    Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX
+                (mainActivity.getViewPagerAdapter()
+                    .getFragments()[Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
+                        as SearchNASAArchiveFragment)
+                    .setAndShowFavoriteData(favoriteData)
+                mainActivity.binding.activityFragmentsContainer.visibility = View.INVISIBLE
+                mainActivity.binding.transparentBackground.visibility = View.VISIBLE
+            }
+            else -> {
+                mainActivity.toast("${mainActivity.getString(R.string.error)}: ${
+                    mainActivity.getString(R.string.unknown_type_source_favorite_data)}")
+            }
+        }
+    }
     // 4) нажатие на одну из 3-х кнопок выбора приоритета элемента в списке;
     fun clickOnPriorityButtonFavoriteItem() {
 
@@ -370,5 +515,20 @@ class UIObserversManager(
     // Метод получения searchWikiFavorite
     fun getSearchWikiFavorite(): Favorite {
         return searchWikiFavorite
+    }
+    // Метод получения searchNASAArchiveFavorite
+    fun getSearchNASAArchiveFavorite(): Favorite {
+        return searchNASAArchiveFavorite
+    }
+
+    // Метод очистки текущей информации для добавления в "Избранное"
+    // и изменения вида иконки сердца на контурное
+    fun clearFavoriteDataAndChangeHeartIconState() {
+        if (!getIsBlockingOtherFABButtons()) {
+            // Очистка текущей информации для добавления в "Избранное"
+            setListFavoriteEmptyData()
+            // Изменение вида иконки сердца на контурное
+            changeHeartIconState(mainActivity, false, true)
+        }
     }
 }

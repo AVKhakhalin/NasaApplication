@@ -126,18 +126,19 @@ class FavoriteLogic {
         for (counter in 0 until fullDatesList.size) {
             Log.d("mylogs",
                 "\n$counter:\n" +
-                    "${fullDatesList[counter].getTypeSource()} ? ${newFavorite.getTypeSource()}\n" +
-                    "${fullDatesList[counter].getLinkSource()} ? ${newFavorite.getLinkSource()}\n" +
-                    "${fullDatesList[counter].getTitle()} ? ${newFavorite.getTitle()}\n" +
-                    "${fullDatesList[counter].getDescription()} ? ${newFavorite.getDescription()}\n" +
-                    "${fullDatesList[counter].getSearchRequest()} ? ${newFavorite.getSearchRequest()}\n" +
-                    "${fullDatesList[counter].getLinkImage()} ? ${newFavorite.getLinkImage()}\n" +
+                    "1) ${fullDatesList[counter].getTypeSource()} ? 1) ${newFavorite.getTypeSource()}\n" +
+                    "2) ${fullDatesList[counter].getLinkSource()} ? 2) ${newFavorite.getLinkSource()}\n" +
+                    "3) ${fullDatesList[counter].getTitle()} ? 3) ${newFavorite.getTitle()}\n" +
+                    "${fullDatesList[counter].getDescription().length} ? ${newFavorite.getDescription().length} ${fullDatesList[counter].getDescription() == newFavorite.getDescription()}\n" +
+                    "4) ${fullDatesList[counter].getDescription()}\n?\n4) ${newFavorite.getDescription()}\n" +
+                    "5) ${fullDatesList[counter].getSearchRequest()} ? 5) ${newFavorite.getSearchRequest()}\n" +
+                    "6) ${fullDatesList[counter].getLinkImage()} ? 6) ${newFavorite.getLinkImage()}\n" +
                     "-------\n"
             )
             if (fullDatesList[counter].getTypeSource() == newFavorite.getTypeSource()) {
                 if ((fullDatesList[counter].getLinkSource() == newFavorite.getLinkSource())
                     && (fullDatesList[counter].getTitle() == newFavorite.getTitle())
-                    && (fullDatesList[counter].getDescription() == newFavorite.getDescription())
+                    && (if (newFavorite.getTypeSource() == Constants.SEARCH_WIKI_FRAGMENT_INDEX) (fullDatesList[counter].getDescription().length == newFavorite.getDescription().length) else (fullDatesList[counter].getDescription() == newFavorite.getDescription()))
                     && (fullDatesList[counter].getSearchRequest() == newFavorite.getSearchRequest())
                     && (fullDatesList[counter].getLinkImage() == newFavorite.getLinkImage())
                 ) {

@@ -58,114 +58,11 @@ class SearchNASAArchiveFragmentAdapter(
         }
         holder.newNASAArchiveEntityTextViewContainer?.let {
             it.setOnClickListener {
-                if (!searchNASAArchiveFragment.getIsBlockingOtherFABButtons()) {
-                    searchNASAArchiveFragment.getMainActivity()?.let { mainActivity ->
-                        // Очистка текущей информации для добавления в список "Избранное"
-                        mainActivity.getUIObserversManager().setListFavoriteEmptyData()
-                        // Изменение вида иконки сердца на контурное
-                        mainActivity.getUIObserversManager()
-                            .changeHeartIconState(mainActivity, false, true)
-
-                        // Сохранение запроса, ссылки на картинку, заголовка и описания в "Избранное"
-                        mainActivity.getUIObserversManager().setListFavoriteDataSearchRequest(
-                                "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}")
-                        mainActivity.getUIObserversManager().setListFavoriteDataTypeSource(
-                                Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
-                        mainActivity.getUIObserversManager()
-                            .setListFavoriteDataLinkImage(entitiesLinks[position])
-                        mainActivity.getUIObserversManager()
-                            .setListFavoriteDataTitle(newNASAArchiveEntityList[position])
-                        mainActivity.getUIObserversManager()
-                            .setListFavoriteDataDescription(entitiesTexts[position])
-                        mainActivity.getUIObserversManager().setListFavoriteDataLinkSource(
-                                searchNASAArchiveFragment.getDataViewModel().getRequestUrl())
-                        mainActivity.getUIObserversManager().setListFavoriteDataPriority(0)
-                    }
-                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite().setSearchRequest(
-                        "${searchNASAArchiveFragment.binding.inputNasaFieldText.text}")
-                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite()
-                        .setTypeSource(Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)
-                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite()
-                        .setLinkImage(entitiesLinks[position])
-                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite()
-                        .setTitle(newNASAArchiveEntityList[position])
-                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite()
-                        .setDescription(entitiesTexts[position])
-                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite()
-                        .setLinkSource(
-                    searchNASAArchiveFragment.getDataViewModel().getRequestUrl())
-                    searchNASAArchiveFragment.getSearchNASAArchiveFavorite().setPriority(0)
-                    // Анимированное появление найденной картинки по запросу в архиве NASA
-                    searchNASAArchiveFragment.binding.searchInNasaArchiveImageView.alpha =
-                        transparientValue
-                    searchNASAArchiveFragment.binding.searchInNasaArchiveImageView
-                        .load(entitiesLinks[position]) {
-                            lifecycle(searchNASAArchiveFragment)
-                            error(R.drawable.ic_load_error_vector)
-                            // Анимация появления картинки
-                            searchNASAArchiveFragment.binding.searchInNasaArchiveImageView.animate()
-                                .alpha(notTransparientValue)
-                                .setDuration(durationAnimation)
-                                .setListener(object: AnimatorListenerAdapter() {
-                                    override fun onAnimationEnd(animation: Animator) {
-                                        searchNASAArchiveFragment.binding
-                                            .searchInNasaArchiveImageView.isClickable = true
-                                    }
-                                })
-                        }
-
-                    // Анимационный показ заголовка и описания фотографии по запрошенному событию
-                    searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView.alpha =
-                        transparientValue
-                    searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView.text =
-                        newNASAArchiveEntityList[position]
-                    searchNASAArchiveFragment.binding.searchInNasaArchiveDescriptionTextView.alpha =
-                        transparientValue
-                    searchNASAArchiveFragment.binding.searchInNasaArchiveDescriptionTextView.text =
-                        entitiesTexts[position]
-                    // Анимация появления заголовка картинки
-                    searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView.animate()
-                        .alpha(notTransparientValue)
-                        .setDuration(durationAnimation)
-                        .setListener(object: AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator) {
-                                searchNASAArchiveFragment.binding.searchInNasaArchiveTitleTextView
-                                    .isClickable = true
-                            }
-                        })
-                    // Анимация появления описания картинки
-                    searchNASAArchiveFragment.binding.searchInNasaArchiveDescriptionTextView
-                        .animate()
-                        .alpha(notTransparientValue)
-                        .setDuration(durationAnimation)
-                        .setListener(object: AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator) {
-                                searchNASAArchiveFragment.binding
-                                    .searchInNasaArchiveDescriptionTextView.isClickable = true
-                            }
-                        })
-
-                    // Отобразить элементы View для вывода полученной информации
-                    searchNASAArchiveFragment.binding.fragmentSearchInNasaArchiveGroupElements
-                        .visibility = View.VISIBLE
-                    searchNASAArchiveFragment.binding.searchInNasaArchiveLoadingLayout
-                        .visibility = View.INVISIBLE
-
-                    // Скрытие списка Recycler View с результатами поиска в архиве NASA
-                    val constraintLayout =
-                        searchNASAArchiveFragment.binding.nasaArchiveEntityListContainer
-                    val timeLayoutParams: (ConstraintLayout.LayoutParams) =
-                        constraintLayout.layoutParams as ConstraintLayout.LayoutParams
-                    timeLayoutParams.constrainedWidth = true
-                    isRecyclerViewWindowHide = true
-                    constraintLayout.layoutParams = timeLayoutParams
-                    searchNASAArchiveFragment.setIsRecyclerViewWindowHide(isRecyclerViewWindowHide)
-                    searchNASAArchiveFragment.binding.fragmentSearchInNasaArchiveRecyclerView
-                        .visibility = View.INVISIBLE
-
-                    // Метод проверки наличия текущей информации в списке "Избранное"
-                    // и отрисовка соответствующего значка сердца (контурная или с заливкой)
-                    searchNASAArchiveFragment.checkAndChangeHeartIconState()
+                searchNASAArchiveFragment.getMainActivity()?.let {
+                    it.getUIObserversManager().clickOnFoundedInNASAInformationItem(
+                        searchNASAArchiveFragment, entitiesLinks[position],
+                        newNASAArchiveEntityList[position], entitiesTexts[position],
+                        durationAnimation, transparientValue, notTransparientValue)
                 }
             }
         }

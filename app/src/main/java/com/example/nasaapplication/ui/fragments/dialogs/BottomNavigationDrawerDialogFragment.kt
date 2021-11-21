@@ -75,9 +75,7 @@ class BottomNavigationDrawerDialogFragment: BottomSheetDialogFragment() {
                     viewPager?.let { it.currentItem = 2 }
                     hideShowDismissElements()
                     // Начальная настройка фрагмента "Поиск в архиве NASA"
-                    (mainActivity.getViewPagerAdapter()
-                        .getFragments()[Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX]
-                            as SearchNASAArchiveFragment).initialSettingFragment()
+                    mainActivity.getUIObserversManager().showSearchNASAArchiveFragment()
                 }
             }
             true
