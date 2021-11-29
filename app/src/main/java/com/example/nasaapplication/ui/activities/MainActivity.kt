@@ -90,8 +90,9 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
         textTabLayouts = listOf(resources.getString(R.string.tablayout_photo_of_day_icon_text),
             resources.getString(R.string.tablayout_search_in_wiki_icon_text),
             resources.getString(R.string.tablayout_search_in_nasa_archive_text))
-        TabLayoutMediator(binding.tabLayout, binding.viewPager, true, true)
-        {tab, position -> tab.text = textTabLayouts[position] }.attach()
+        TabLayoutMediator(binding.tabLayout, binding.viewPager, true, true) {
+                tab, position -> tab.text = textTabLayouts[position]
+        }.attach()
         // Получение списка View закладок TabLayout
         touchableListTabLayout = binding.tabLayout.touchables
         // Настройка TabLayout (установка на него картинок)
@@ -99,8 +100,7 @@ class MainActivity: AppCompatActivity(), NavigationDialogsGetter, NavigationCont
             layoutInflater.inflate(R.layout.tablayout_photo_of_day, null)
         binding.tabLayout.getTabAt(Constants.SEARCH_WIKI_FRAGMENT_INDEX)?.customView =
             layoutInflater.inflate(R.layout.tablayout_search_in_wiki, null)
-        binding.tabLayout.getTabAt(
-            Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)?.customView =
+        binding.tabLayout.getTabAt(Constants.SEARCH_NASA_ARCHIVE_FRAGMENT_INDEX)?.customView =
             layoutInflater.inflate(R.layout.tablayout_search_in_nasa_archive, null)
         //endregion
 
