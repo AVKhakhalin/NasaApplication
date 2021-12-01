@@ -63,11 +63,12 @@ class SearchWikiFragment: ViewBindingFragment<FragmentSearchInWikiBinding>(
                 if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
                     mainActivity.getUIObserversManager().clickOnSearchInWIKI()
                     // Получение новой информации из "Википедии"
-                    if ((binding.inputWikiFieldText.text != null) &&
-                    (binding.inputWikiFieldText.text!!.length <=
-                            binding.inputWikiField.counterMaxLength)) {
-                            viewModel.showUrlInWiki("${Constants.WIKI_URL}${
-                                binding.inputWikiFieldText.text.toString()}", mainActivity)
+                    binding.inputWikiFieldText.text?.let { text ->
+                        if ((text != null) &&
+                            (text.length <= binding.inputWikiField.counterMaxLength)) {
+                                viewModel.showUrlInWiki("${Constants.WIKI_URL}${
+                                    binding.inputWikiFieldText.text.toString()}", mainActivity)
+                        }
                     }
                 }
             }

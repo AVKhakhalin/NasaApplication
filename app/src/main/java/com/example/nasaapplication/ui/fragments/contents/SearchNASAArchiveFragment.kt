@@ -117,10 +117,11 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
                 if (!mainActivity.getUIObserversManager().getIsBlockingOtherFABButtons()) {
                     mainActivity.getUIObserversManager().clickOnSearchInNASA()
                     // Получение информации из архива NASA
-                    if ((binding.inputNasaFieldText.text != null) &&
-                    (binding.inputNasaFieldText.text!!.length <=
-                            binding.inputNasaField.counterMaxLength)) {
-                        sendRequestToNASAArchive("${binding.inputNasaFieldText.text}")
+                    binding.inputNasaFieldText.text?.let { text ->
+                        if ((text != null) && (text.length <=
+                                binding.inputNasaField.counterMaxLength)) {
+                            sendRequestToNASAArchive("${binding.inputNasaFieldText.text}")
+                        }
                     }
                 }
             }

@@ -161,8 +161,7 @@ class DayPhotoFragment:
                                 Toast.makeText(mainActivity.applicationContext,
                                     "${mainActivity.resources.getString(R.string.error)}: ${
                                     mainActivity.resources.getString(R.string.
-                                    error_underline_creation_for_title)}",
-                                    Toast.LENGTH_LONG).show()
+                                    error_underline_creation_for_title)}", Toast.LENGTH_LONG).show()
                             }
                         }
                         bottomSheetDescriptionTitle.animate()
