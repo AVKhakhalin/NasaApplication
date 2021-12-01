@@ -93,4 +93,37 @@ class Favorite(
         return linkImage
     }
     //endregion
+
+    // Установка правила сравнения двух классов Favorite
+    override fun equals(other: Any?): Boolean {
+        if (javaClass != other?.javaClass) {
+            return false
+        }
+
+        other as Favorite
+
+        if (typeSource != other.typeSource) {
+            return false
+        }
+        if (priority != other.priority) {
+            return false
+        }
+        if (linkSource != other.linkSource) {
+            return false
+        }
+        if (title != other.title) {
+            return false
+        }
+        if (description != other.description) {
+            return false
+        }
+        if (searchRequest != other.searchRequest) {
+            return false
+        }
+        if (linkImage != other.linkImage) {
+            return false
+        }
+
+        return true
+    }
 }

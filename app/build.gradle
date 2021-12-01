@@ -77,4 +77,7 @@ dependencies {
     // Библиотека Room для работы с базами данных
     implementation 'androidx.room:room-runtime:2.3.0'
     kapt 'androidx.room:room-compiler:2.3.0'
+    // RecyclerView
+//    def recyclerview_version = "1.1.0-beta03"
+//    implementation "@androidx.recyclerview:recyclerview:$recyclerview_version"
 }

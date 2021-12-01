@@ -1,7 +1,10 @@
 package com.example.nasaapplication.controller.recyclers
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nasaapplication.Constants
 import com.example.nasaapplication.controller.recyclers.utils.*
@@ -16,6 +19,7 @@ class FavoriteRecyclerListFragmentAdapter (
     private var favoriteData: MutableList<Favorite>,
     private val mainActivity: MainActivity,
 ): RecyclerView.Adapter<BaseViewHolder>(), ItemTouchHelperAdapter {
+
     //region БАЗОВЫЕ МЕТОДЫ ДЛЯ РАБОТЫ АДАПТЕРА
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when(viewType) {
@@ -102,6 +106,39 @@ class FavoriteRecyclerListFragmentAdapter (
         mainActivity.getUIObserversManager()
             .getFacadeFavoriteLogic().removeAndAddFavoriteDataByCorrectedData(
             removedElementIndex, addedElementIndex)
+    }
+    //endregion
+
+    //region МЕТОД И КЛАСС ДЛЯ ДИНАМИЧЕСКОГО ОБНОВЛЕНИЯ СПИСКА
+    fun submitList(newFavoriteData: List<Favorite>) {
+        val oldFavoriteData: List<Favorite> = favoriteData
+        val diffResult: DiffUtil.DiffResult =
+            DiffUtil.calculateDiff(DiffCallback(oldFavoriteData, newFavoriteData))
+        favoriteData.clear()
+        newFavoriteData.forEach {
+            favoriteData.add(it)
+        }
+        diffResult.dispatchUpdatesTo(this)
+    }
+    class DiffCallback(
+        var oldList: List<Favorite>,
+        var newList: List<Favorite>
+    ): DiffUtil.Callback() {
+        override fun getOldListSize(): Int {
+            return oldList.size
+        }
+
+        override fun getNewListSize(): Int {
+            return newList.size
+        }
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
     }
     //endregion
 }

@@ -47,7 +47,10 @@ class SetBottomNavigationMenu(
                 mainActivity.setIsFABButtonsGroupView(!mainActivity.getIsFABButtonsGroupView())
                 // Обновление элементов в списке "Избранное"
                 mainActivity.getNavigationContent().getFavoriteRecyclerListFragment()?.let {
-                        it.getAdapter()?.let { adapter -> adapter.notifyDataSetChanged()
+                        it.getAdapter()?.let { adapter -> adapter.submitList(
+                            mainActivity.getUIObserversManager()
+                                .getFacadeFavoriteLogic().getFavoriteDataList()
+                        )
                     }
                 }
             } else {
@@ -330,7 +333,9 @@ class SetBottomNavigationMenu(
         mainActivity.binding.tabLayout.visibility = View.VISIBLE
         // Обновление элементов в списке "Избранное"
         mainActivity.getNavigationContent().getFavoriteRecyclerListFragment()?.let {
-            it.getAdapter()?.let { adapter -> adapter.notifyDataSetChanged()
+            it.getAdapter()?.let { adapter -> adapter.submitList(
+                mainActivity.getUIObserversManager()
+                    .getFacadeFavoriteLogic().getFavoriteDataList())
             }
         }
 
@@ -368,7 +373,10 @@ class SetBottomNavigationMenu(
                         it.getAdapter()?.let { adapter ->
                             adapter.setFavoriteData(mainActivity.getUIObserversManager()
                                 .getFacadeFavoriteLogic().getFavoriteDataList())
-                            adapter.notifyDataSetChanged()
+                            adapter.submitList(
+                                mainActivity.getUIObserversManager()
+                                    .getFacadeFavoriteLogic().getFavoriteDataList()
+                            )
                         }
                     }
                     return false
@@ -399,7 +407,10 @@ class SetBottomNavigationMenu(
                         adapter.setFavoriteData(
                             mainActivity.getUIObserversManager()
                                 .getFacadeFavoriteLogic().getFavoriteDataList())
-                        adapter.notifyDataSetChanged()
+                        adapter.submitList(
+                            mainActivity.getUIObserversManager()
+                                .getFacadeFavoriteLogic().getFavoriteDataList()
+                        )
                     }
                 }
                 true

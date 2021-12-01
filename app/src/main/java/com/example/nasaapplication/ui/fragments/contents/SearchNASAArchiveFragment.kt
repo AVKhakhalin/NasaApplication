@@ -99,7 +99,11 @@ class SearchNASAArchiveFragment: ViewBindingFragment<FragmentSearchInNasaArchive
             binding.nasaArchiveEntityListContainer.visibility = View.VISIBLE
             showRecyclerViewWindowWithResults(false)
         }
-        recyclerView?.adapter?.notifyDataSetChanged()
+        recyclerView?.let { recyclerView ->
+            recyclerView.adapter?.let { adapter ->
+                adapter.notifyDataSetChanged()
+            }
+        }
     }
     fun setIsRecyclerViewWindowHide(isRecyclerViewWindowHide: Boolean) {
         this.isRecyclerViewWindowHide = isRecyclerViewWindowHide

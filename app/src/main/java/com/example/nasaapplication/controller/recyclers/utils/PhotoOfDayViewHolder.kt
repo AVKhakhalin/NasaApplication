@@ -42,7 +42,10 @@ class PhotoOfDayViewHolder(
                         .getFacadeFavoriteLogic().priorityRangeFullDatesList()
                     favoriteData = mainActivity.getUIObserversManager()
                         .getFacadeFavoriteLogic().getFavoriteDataList()
-                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                    favoriteRecyclerListFragmentAdapter.submitList(
+                        mainActivity.getUIObserversManager()
+                            .getFacadeFavoriteLogic().getFavoriteDataList()
+                    )
                 }
             }
             recyclerItemPhotoOfDayPriorityNormal.setOnClickListener {
@@ -55,7 +58,10 @@ class PhotoOfDayViewHolder(
                         .getFacadeFavoriteLogic().priorityRangeFullDatesList()
                     favoriteData = mainActivity.getUIObserversManager()
                         .getFacadeFavoriteLogic().getFavoriteDataList()
-                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                    favoriteRecyclerListFragmentAdapter.submitList(
+                        mainActivity.getUIObserversManager()
+                            .getFacadeFavoriteLogic().getFavoriteDataList()
+                    )
                 }
             }
             recyclerItemPhotoOfDayPriorityLow.setOnClickListener {
@@ -67,7 +73,10 @@ class PhotoOfDayViewHolder(
                         .getFacadeFavoriteLogic().priorityRangeFullDatesList()
                     favoriteData = mainActivity.getUIObserversManager()
                         .getFacadeFavoriteLogic().getFavoriteDataList()
-                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                    favoriteRecyclerListFragmentAdapter.submitList(
+                        mainActivity.getUIObserversManager()
+                            .getFacadeFavoriteLogic().getFavoriteDataList()
+                    )
                 }
             }
             //endregion

@@ -43,7 +43,10 @@ class SearchInNASAArchiveViewHolder(
                         .getFacadeFavoriteLogic().priorityRangeFullDatesList()
                     favoriteData = mainActivity.getUIObserversManager()
                         .getFacadeFavoriteLogic().getFavoriteDataList()
-                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                    favoriteRecyclerListFragmentAdapter.submitList(
+                        mainActivity.getUIObserversManager()
+                            .getFacadeFavoriteLogic().getFavoriteDataList()
+                    )
                 }
             }
             recyclerItemSearchInNasaPriorityNormal.setOnClickListener {
@@ -55,7 +58,10 @@ class SearchInNASAArchiveViewHolder(
                         .getFacadeFavoriteLogic().priorityRangeFullDatesList()
                     favoriteData = mainActivity.getUIObserversManager()
                         .getFacadeFavoriteLogic().getFavoriteDataList()
-                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                    favoriteRecyclerListFragmentAdapter.submitList(
+                        mainActivity.getUIObserversManager()
+                            .getFacadeFavoriteLogic().getFavoriteDataList()
+                    )
                 }
             }
             recyclerItemSearchInNasaPriorityLow.setOnClickListener {
@@ -67,7 +73,10 @@ class SearchInNASAArchiveViewHolder(
                         .getFacadeFavoriteLogic().priorityRangeFullDatesList()
                     favoriteData = mainActivity.getUIObserversManager()
                         .getFacadeFavoriteLogic().getFavoriteDataList()
-                    favoriteRecyclerListFragmentAdapter.notifyDataSetChanged()
+                    favoriteRecyclerListFragmentAdapter.submitList(
+                        mainActivity.getUIObserversManager()
+                            .getFacadeFavoriteLogic().getFavoriteDataList()
+                    )
                 }
             }
             //endregion
