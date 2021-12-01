@@ -46,6 +46,11 @@ class FacadeFavoriteLogic(
     fun setFilterWord(newFilterWord: String) {
         favoriteLogic.setFilterWord(newFilterWord)
     }
+    // Получение фильтра для выбора нужно информации из списка "Избранное"
+    fun getFilterWord(): String {
+        return favoriteLogic.getFilterWord()
+    }
+
     // Удаление данных в списке FullDates
     fun removeFavoriteDataByCorrectedData(indexRemovedFavoriteCorrectedData: Int) {
         favoriteLogic.removeFavoriteDataByCorrectedData(indexRemovedFavoriteCorrectedData)

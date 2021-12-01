@@ -363,6 +363,11 @@ class SetBottomNavigationMenu(
             val searchViewActionView = mainActivity.binding.bottomNavigationMenu.bottomAppBar.menu
                 .findItem(R.id.action_bottom_bar_search_request_form).actionView
             val searchView = searchViewActionView as SearchView
+            // Отображение текущего значения фильтра
+            // для выбора нужной информации из списка "Избранное"
+            searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+                .setText(mainActivity.getUIObserversManager()
+                    .getFacadeFavoriteLogic().getFilterWord())
             // Событие установки поискового запроса
             searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
@@ -397,6 +402,7 @@ class SetBottomNavigationMenu(
                     return false
                 }
             })
+
             // Событие на закрытие поискового окна (обнуление фильтра)
             searchView.setOnCloseListener {
                 // Отображение полученного поискового запроса

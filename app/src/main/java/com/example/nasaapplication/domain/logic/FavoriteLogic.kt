@@ -145,7 +145,10 @@ class FavoriteLogic {
     fun setFilterWord(newFilterWord: String) {
         this.filterWord = newFilterWord
     }
-
+    // Получение фильтра для выбора нужной информации из списка "Избранное"
+    fun getFilterWord(): String {
+        return filterWord
+    }
     // Поиск элемента в списке correctedDatesList
     fun searchElementInCorrectedDatesList(searchedFavoriteData: Favorite): Int {
         for (counter in 0 until correctedDatesList.size) {
