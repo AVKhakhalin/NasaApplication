@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_bottom_bar_add_to_favorite"
+        android:icon="@drawable/ic_favourite"
+        android:title="@string/action_bottom_bar_add_to_favorite_title"
+        android:fontFamily="@font/convergence"
+        app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_bottom_bar_open_favorite_list"
+        android:icon="@drawable/ic_favorite_list"
+        android:title="@string/action_bottom_bar_open_favorite_list_title"
+        android:fontFamily="@font/convergence"
+        app:showAsAction="always" />
+
+<!--    <item
+        android:id="@+id/action_bottom_bar_navigation_to_send"
+        android:icon="@drawable/ic_send"
+        android:title="@string/action_bottom_bar_navigation_to_send_title"
+        android:fontFamily="@font/convergence"
+        app:showAsAction="always" /> -->
+
+<!--    <item
+        android:id="@+id/action_bottom_bar_save"
+        android:icon="@drawable/ic_save"
+        android:title="@string/action_bottom_bar_save_title"
+        android:fontFamily="@font/convergence"
+        app:showAsAction="ifRoom" /> -->
+
+    <item
+        android:id="@+id/action_bottom_bar_settings"
+        android:icon="@drawable/ic_settings_menu"
+        android:title="@string/action_bottom_bar_settings_title"
+        android:fontFamily="@font/convergence"
+        app:showAsAction="ifRoom" />
+</menu>
